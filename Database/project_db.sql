@@ -16,12 +16,18 @@ create table workouts (
     foreign key (user_id) references users(id) on delete cascade
 );
 
+create table exercise_names (
+	id int primary key auto_increment,
+    name varchar(30) unique not null
+);
+
 create table exercises (
 	id int primary key auto_increment,
-    name varchar(30) not null,
+    name_id int not null,
 	sets int null,
     workout_id int,
-    foreign key (workout_id) references workout(id) on delete cascade
+    foreign key (workout_id) references workouts(id) on delete cascade,	
+    foreign key (name_id) references exercise_names(id) on delete cascade
 );
 
 create table sets (
@@ -30,3 +36,4 @@ create table sets (
     exercise_id	 int,
     foreign key (exercise_id) references exercises(id) on delete cascade
 );
+
