@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitnessApp"
+    x:Class="FitnessApp.Views.DetailPage"
+    Title="News Detail"
+    x:Name="root">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <!-- Style for Indicator View -->
+            <Style x:Key="IndicatorViewStyle" TargetType="IndicatorView">
+                <Setter Property="IndicatorColor" Value="{ DynamicResource BackgroundTertiaryColor }" />
+                <Setter Property="SelectedIndicatorColor" Value="{ DynamicResource PrimaryColor }" />
+                <Setter Property="IndicatorTemplate">
+                    <Setter.Value>
+                        <DataTemplate>
+                            <BoxView
+                                Margin="2,0"
+                                HeightRequest="3"
+                                WidthRequest="26"
+                                CornerRadius="1.5"
+                            />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <!-- Main Container -->
+        <VerticalStackLayout Padding="{ OnIdiom Phone='30,30,30,0', Tablet='100,30,100,0' }">
+            <!-- ARTICLE HEADER -->
+            <Grid RowDefinitions="{ OnIdiom Phone='210,Auto', Tablet='190,Auto' }">
+                <!-- Background Image -->
+                <Image
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Source="{ Binding SelectedArticle.DetailImage }"
+                    Margin="{ OnIdiom
+                        Phone='-30,-30,-30,0',
+                        Tablet='-100,-30,-100,0'
+                    }"
+                    HeightRequest="300"
+                    Aspect="AspectFill"
+                    VerticalOptions="Start"
+                />
+
+                <!-- Over Image Gradient Effect -->
+                <Border
+                    HeightRequest="170"
+                    Grid.RowSpan="2"
+                    Margin="{ OnIdiom
+                        Phone='-30,120,-30,0',
+                        Tablet='-100,120,-100,0'
+                    }"
+                    VerticalOptions="Start"
+                    StrokeThickness="0">
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0,1">
+                            <GradientStop Color="#00FFFFFF" Offset="0.1" />
+                            <GradientStop Color="{ DynamicResource BackgroundSecondaryColor }" Offset="0.6" />
+                            <GradientStop Color="{ DynamicResource BackgroundSecondaryColor }" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+
+                <!-- Top Right Corner Icon -->
+                <local:RoundedIcon
+                    BackgroundColor="{ DynamicResource BackgroundSecondaryColor }"
+                    IconText="{ x:Static local:MaterialCommunityIconsFont.BookmarkOutline }"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                    IconFontSize="{ StaticResource TitleFontSize }"
+                    IconColor="{ DynamicResource PrimaryColor }"
+                    WidthRequest="44"
+                    HeightRequest="44"
+                    HorizontalOptions="End"
+                    VerticalOptions="Start"
+                    CornerRadius="14">
+                    <local:RoundedIcon.GestureRecognizers>
+                        <TapGestureRecognizer
+                            Command="{ Binding BindingContext.ToggleFavoriteCommand, Source={x:Reference root} }"
+                            CommandParameter="{ Binding SelectedArticle }"
+                        />
+                    </local:RoundedIcon.GestureRecognizers>
+
+                    <local:RoundedIcon.Triggers>
+                        <DataTrigger
+                            TargetType="local:RoundedIcon"
+                            Binding="{ Binding SelectedArticle.IsFavorite }"
+                            Value="True">
+                            <Setter Property="IconText" Value="{ x:Static local:MaterialCommunityIconsFont.Bookmark }" />
+                        </DataTrigger>
+                    </local:RoundedIcon.Triggers>
+                </local:RoundedIcon>
+
+                <!-- Header Bottom Content Container -->
+                <VerticalStackLayout
+                    Grid.Row="1"
+                    VerticalOptions="End"
+                    Spacing="15">
+
+                    <!-- Title -->
+                    <Label
+                        Text="{ Binding SelectedArticle.Title }"
+                        FontSize="{ StaticResource TitleFontSize }"
+                    />
+
+                    <!-- Tag / Reading / Date Container -->
+                    <HorizontalStackLayout
+                        Spacing="8"
+                        VerticalOptions="Center">
+                        <!-- Section Tag -->
+                        <Border
+                            StrokeShape="RoundRectangle 8"
+                            Style="{ DynamicResource BorderTagStyle }">
+                            <Label
+                                Text="{ Binding SelectedArticle.Section }"
+                                TextColor="{ DynamicResource TagItemTextColor }"
+                                FontSize="{ DynamicResource TagItemFontSize }"
+                                VerticalOptions="Center"
+                            />
+                        </Border>
+                        <!-- Dot Separator -->
+                        <Label
+                            Text="•"
+                            FontSize="{ StaticResource BaseFontSize }"
+                            TextColor="{ DynamicResource TextSecondaryColor }"
+                            VerticalOptions="Center"
+                        />
+                        <!-- Reading Time -->
+                        <Label
+                            Text="{ Binding SelectedArticle.Length }"
+                            FontSize="{ StaticResource BaseFontSize }"
+                            VerticalOptions="Center"
+                        />
+                        <!-- Dot Separator -->
+                        <Label
+                            Text="•"
+                            FontSize="{ StaticResource BaseFontSize }"
+                            TextColor="{ DynamicResource TextSecondaryColor }"
+                            VerticalOptions="Center"
+                        />
+                        <!-- Publication Date -->
+                        <Label
+                            Text="{ Binding SelectedArticle.When }"
+                            FontSize="{ StaticResource BaseFontSize }"
+                            VerticalOptions="Center"
+                        />
+
+                    </HorizontalStackLayout>
+
+                    <!-- News Source / Author / Follow Button Container -->
+                    <Grid
+                        ColumnDefinitions="Auto,*,Auto"
+                        RowDefinitions="Auto,Auto"
+                        ColumnSpacing="14">
+                        <!-- Source Logo -->
+                        <Border
+                            Grid.RowSpan="2"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="7"
+                            HeightRequest="40"
+                            WidthRequest="40"
+                            StrokeThickness="1"
+                            Stroke="{ DynamicResource BackgroundTertiaryColor }"
+                            BackgroundColor="Transparent">
+
+                            <!-- Image -->
+                            <Image
+                                Source="{ Binding SelectedArticle.SourceLogo }"
+                                Aspect="AspectFit"
+                            />
+                        </Border>
+
+                        <!-- News Source -->
+                        <Label
+                            Grid.Column="1"
+                            Text="{ Binding SelectedArticle.SourceId }"
+                            FontSize="16"
+                            VerticalOptions="Center"
+                        />
+
+                        <!-- Author -->
+                        <Label
+                            Grid.Column="1"
+                            Grid.Row="1"
+                            Text="{ Binding SelectedArticle.Author }"
+                            FontSize="12"
+                            TextColor="{ DynamicResource TextSecondaryColor }"
+                            VerticalTextAlignment="Center"
+                        />
+
+                        <!-- Follow Button -->
+                        <Button
+                            Grid.Column="2"
+                            Grid.RowSpan="2"
+                            VerticalOptions="Center"
+                            HorizontalOptions="End"
+                            Style="{ StaticResource PrimaryActionButtonStyle }"
+                            Text="Follow"
+                            WidthRequest="77"
+                            HeightRequest="36"
+                            CornerRadius="8"
+                            Command="{ Binding BindingContext.ToggleFollowCommand, Source={x:Reference root} }">
+                            <Button.Triggers>
+                                <DataTrigger
+                                    TargetType="Button"
+                                    Binding="{ Binding ArticleSource.IsFollowing }"
+                                    Value="True">
+                                    <Setter Property="Text" Value="Following" />
+                                    <Setter Property="Style" Value="{ DynamicResource PrimaryActionOutlineButtonStyle }" />
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- ARTICLE BODY -->
+            <VerticalStackLayout
+                Margin="0,30"
+                VerticalOptions="Start"
+                Spacing="24">
+
+                <!-- Body -->
+                <Label
+                    Text="{ Binding SelectedArticle.Body }"
+                    FontSize="{ StaticResource BaseFontSize }"
+                />
+
+                <!-- Body Image / Image Copy Container -->
+                <VerticalStackLayout
+                    Margin="{ OnIdiom
+                        Phone='-30,0',
+                        Tablet='-100,0'
+                    }"
+                    VerticalOptions="Start">
+
+                    <!-- Body Image -->
+                    <Image
+                        x:Name="bodyimage"
+                        Source="{ Binding SelectedArticle.BodyImage }"
+                        Aspect="AspectFill"
+                        HeightRequest="{ OnIdiom
+                            Phone='200',
+                            Tablet='250'
+                        }"
+                    />
+
+                    <!-- Body Image Copy -->
+                    <Border
+                        Grid.Row="1"
+                        TranslationY="{ OnPlatform Android=-2 }"
+                        BackgroundColor="{ DynamicResource SecondaryCardBackgroundColor }"
+                        VerticalOptions="Start"
+                        Padding="{ OnIdiom
+                            Phone='30,6',
+                            Tablet='100,6'
+                        }">
+
+                        <Label
+                            Text="{ Binding SelectedArticle.BodyImageCopy }"
+                            TextColor="{ DynamicResource TextSecondaryColor }"
+                        />
+                    </Border>
+                </VerticalStackLayout>
+
+                <!-- Body Subsection -->
+                <!-- Title -->
+                <Label
+                    Text="{ Binding SelectedArticle.SubSectionTitle }"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    VerticalTextAlignment="Center"
+                    HorizontalTextAlignment="Start"
+                />
+
+                <!-- Text -->
+                <Label
+                    Text="{ Binding SelectedArticle.SubSection }"
+                    FontSize="{ StaticResource BaseFontSize }"
+                />
+
+            </VerticalStackLayout>
+
+            <!-- RELATED STORIES -->
+            <!-- Content Container -->
+            <VerticalStackLayout
+                BackgroundColor="{ DynamicResource SecondaryCardBackgroundColor }"
+                Margin="{ OnIdiom
+                    Phone='-30,0,-30,-30',
+                    Tablet='-100,0,-100,-30'
+                }"
+                Padding="{ OnIdiom
+                    Phone='30',
+                    Tablet='100,30'
+                }"
+                VerticalOptions="Start">
+
+                <!-- Title -->
+                <Label
+                    Text="Related Stories"
+                    FontSize="{ StaticResource TitleFontSize }"
+                />
+
+                <!-- Carousel View -->
+                <CarouselView
+                    ItemsSource="{ Binding Related }"
+                    IndicatorView="indicatorView"
+                    HeightRequest="110"
+                    Margin="{ OnIdiom
+                        Phone='-30,10',
+                        Tablet='-100,30'
+                    }"
+                    HorizontalScrollBarVisibility="Never">
+
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            <local:NewsListItemTemplate
+                                IsRelatedStory="True"
+                                Padding="30,0"
+                            />
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                </CarouselView>
+
+                <!-- Indicator View -->
+                <IndicatorView
+                    x:Name="indicatorView"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Start"
+                    Margin="{ OnPlatform
+                        Android='0,0,0,30',
+                        iOS='0,0,0,15'
+                    }"
+                    Style="{ DynamicResource IndicatorViewStyle }"
+                />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

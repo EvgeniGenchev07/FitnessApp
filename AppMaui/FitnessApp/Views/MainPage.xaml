@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+     xmlns:local="clr-namespace:FitnessApp.Views" 
+     xmlns:font="clr-namespace:FitnessApp.Controls"
+     xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    x:Class="FitnessApp.Views.MainPage"
+    BarBackgroundColor="{ DynamicResource BackgroundSecondaryColor }"
+    UnselectedTabColor="{ DynamicResource TextTertiaryColor }"
+    SelectedTabColor="{ DynamicResource PrimaryColor }"
+    android:TabbedPage.ToolbarPlacement="Bottom"
+    android:TabbedPage.IsSwipePagingEnabled="False"
+    Title="News Feed">
+    <TabbedPage.ToolbarItems>
+        <ToolbarItem
+            Clicked="OnProfileTapped">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource
+                    FontFamily="{ StaticResource NewsIconsFontFamily }"
+                    Glyph= "{StaticResource Account}" 
+                    Color="Black"
+                    Size="24" />
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </TabbedPage.ToolbarItems>
+
+    <!-- Pages --><local:ListPage /><local:TopicsPage /><local:SourcesPage /></TabbedPage>

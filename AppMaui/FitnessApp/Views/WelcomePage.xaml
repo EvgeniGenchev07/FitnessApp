@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitnessApp"
+    x:Class="FitnessApp.Views.WelcomePage"
+    BackgroundColor="{ DynamicResource BackgroundColor }"
+    Title="">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="SocialButtonStyle" TargetType="Button" BasedOn="{ StaticResource RoundedButtonStyle }">
+                <Setter Property="BackgroundColor" Value="{ DynamicResource BackgroundSecondaryColor }" />
+                <Setter Property="TextColor" Value="{ DynamicResource TextColor }" />
+                <Setter Property="BorderColor" Value="Transparent" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- Main Container -->
+    <ScrollView>
+        <Grid
+            Padding="{ OnIdiom
+                Phone='24',
+                Tablet='100,24'
+            }"
+            RowDefinitions="3.5*,6.5*">
+
+            <!-- Title / Subtitle -->
+            <VerticalStackLayout VerticalOptions="Center">
+                <!-- Title -->
+                <Label
+                    Text="Welcome to Grial Ui Kit"
+                    LineBreakMode="WordWrap"
+                    FontSize="{ StaticResource LargeTitleFontSize }"
+                    HorizontalTextAlignment="Center"
+                />
+                <!-- Subtitle -->
+                <Label
+                    Text="Welcome back"
+                    Margin="0,8,0,0"
+                    FontSize="12"
+                    TextColor="{ DynamicResource TextSecondaryColor }"
+                    HorizontalTextAlignment="Center"
+                />
+            </VerticalStackLayout>
+
+            <!-- Buttons Container -->
+            <VerticalStackLayout
+                Grid.Row="1"
+                VerticalOptions="Start"
+                Spacing="16">
+
+                <local:IconButton
+                    Text="Continue with Email"
+                    ButtonStyle="{ StaticResource PrimaryActionButtonStyle }"
+                    IconText="{ StaticResource Email }"
+                    IconFontSize="{ StaticResource LargeFontSize }"
+                    IconColor="{ DynamicResource OnSurfaceColor }"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                    Clicked="SignUpButtonClicked"
+                />
+                <local:IconButton
+                    Text="Continue with Google"
+                    ButtonStyle="{ DynamicResource SocialButtonStyle }"
+                    IconText="{ x:Static local:MaterialCommunityIconsFont.Google }"
+                    IconFontSize="{ StaticResource LargeFontSize }"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                />
+                <local:IconButton
+                    Text="Continue with Facebook"
+                    ButtonStyle="{ DynamicResource SocialButtonStyle }"
+                    IconText="{ x:Static local:MaterialCommunityIconsFont.Facebook }"
+                    IconFontSize="{ StaticResource LargeFontSize }"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                />
+
+                <!-- Button/Text Container -->
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <!-- Text -->
+                    <Label
+                        Text="Already have an account? "
+                        FontSize="12"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        HorizontalTextAlignment="Center"
+                    />
+                    <!-- Login Button -->
+                    <Button
+                        Text="Login"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Style="{ DynamicResource LinkButtonStyle }"
+                        Clicked="LoginButtonClicked"
+                    />
+
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:FitnessApp.Views"
+    x:Class="FitnessApp.Views.SignUpPage"
+    BackgroundColor="{ DynamicResource BackgroundColor }"
+    Title="">
+    <!-- Main Container -->
+    <ScrollView>
+        <Grid
+            RowDefinitions="*,*,*"
+            Padding="{ OnIdiom
+                Phone='24',
+                Tablet='100,24'
+            }">
+
+            <!-- Title / Subtitle -->
+            <VerticalStackLayout
+                VerticalOptions="Center"
+                Margin="0,0,0,10">
+                <!-- Title -->
+                <Label
+                    Text="Sign Up"
+                    FontSize="{ StaticResource LargeTitleFontSize }"
+                    HorizontalOptions="Center"
+                />
+
+                <!-- Subtitle -->
+                <Label
+                    Text="It only takes a minute to create   your account"
+                    FontSize="12"
+                    TextColor="{ DynamicResource TextSecondaryColor }"
+                    Margin="0,8,0,0"
+                    HorizontalTextAlignment="Center"
+                />
+            </VerticalStackLayout>
+
+
+            <!-- Entries Container -->
+            <VerticalStackLayout
+                Grid.Row="1"
+                Margin="0,0,0,10"
+                VerticalOptions="Start"
+                Spacing="16">
+
+                <Entry Placeholder="Full Name" />
+                <Entry Placeholder="Email" />
+
+                <!-- Password Entry w/Icon -->
+                <Grid
+                    BackgroundColor="Transparent"
+                    ColumnDefinitions="*,Auto">
+                    <Rectangle
+                        RadiusX="20"
+                        RadiusY="20"
+                        Fill="{ Binding BackgroundColor, Source={x:Reference entry} }"
+                        Grid.ColumnSpan="2"
+                    />
+
+                    <!-- Entry -->
+                    <Entry
+                        x:Name="entry"
+                        Placeholder="Password"
+                        IsPassword="True"
+                    />
+
+                    <!-- Icon -->
+                    <Label
+                        x:Name="icon"
+                        Grid.Column="1"
+                        FontSize="20"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        FontFamily="{ StaticResource NewsIconsFontFamily }"
+                        HorizontalOptions="End"
+                        VerticalOptions="Center"
+                        WidthRequest="34"
+                        Margin="0,0,8,0">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnEyeTapped" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </Grid>
+
+            </VerticalStackLayout>
+
+            <!-- Container -->
+            <VerticalStackLayout
+                Grid.Row="2"
+                VerticalOptions="End"
+                Spacing="26"
+                Margin="0,10,0,30">
+                <!-- Create Account -->
+                <Button
+                    Text="Create Account"
+                    Style="{ StaticResource PrimaryActionButtonStyle }"
+                    Clicked="CreateButtonClicked"
+                />
+                <!-- Button/Text Container -->
+                <HorizontalStackLayout HorizontalOptions="Center">
+                    <!-- Text -->
+                    <Label
+                        Text="Already have an account? "
+                        FontSize="12"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        HorizontalTextAlignment="Center"
+                    />
+                    <!-- Login Button -->
+                    <Button
+                        Text="Login"
+                        HorizontalOptions="End"
+                        VerticalOptions="Start"
+                        Clicked="LoginButtonClicked"
+                        Style="{ DynamicResource LinkButtonStyle }"
+                    />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>

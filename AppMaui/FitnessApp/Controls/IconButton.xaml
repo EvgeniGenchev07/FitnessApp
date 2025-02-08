@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:grial="http://uxdivers.com/grial"
+    xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+    xmlns:local="clr-namespace:FitnessApp"
+    x:Class="FitnessApp.IconButton"
+    x:Name="root">
+
+    <Grid>
+        <Button
+            x:Name="button"
+            Style="{ Binding ButtonStyle, Source={x:Reference root} }"
+            Command="{ Binding Command, Source={x:Reference root} }"
+            CommandParameter="{ Binding CommandParameter, Source={x:Reference root} }"
+            Text="{ Binding Text, Source={x:Reference root} }"
+            Clicked="OnButtonClicked"
+        />
+
+        <Grid
+            ColumnDefinitions="*,Auto,*"
+            InputTransparent="True"
+            android:VisualElement.Elevation="10"
+            HorizontalOptions="Fill">
+            <Label
+                x:Name="icon"
+                Opacity="1"
+                VerticalOptions="Center"
+                FontSize="{ Binding IconFontSize, Source={x:Reference root} }"
+                FontFamily="{ Binding IconFontFamily, Source={x:Reference root} }"
+                Text="{ Binding IconText, Source={x:Reference root} }"
+                TextColor="{ Binding IconColor, Source={x:Reference root} }"
+                HorizontalOptions="End"
+                LineHeight="1"
+                Margin="8,0">
+                <Label.Triggers>
+                    <DataTrigger
+                        TargetType="Label"
+                        Binding="{ Binding IsPressed, Source={x:Reference button} }"
+                        Value="True">
+                        <Setter Property="Opacity" Value="{ OnPlatform iOS=0.2, Android=1 }" />
+                    </DataTrigger>
+                </Label.Triggers>
+            </Label>
+
+            <Label
+                Grid.Column="1"
+                Opacity="0"
+                VerticalOptions="Center"
+                Text="{ Binding Text, Source={x:Reference button} }"
+                TextTransform="{ Binding TextTransform, Source={x:Reference button} }"
+                FontSize="{ Binding FontSize, Source={x:Reference button} }"
+                TextColor="{ Binding TextColor, Source={x:Reference button} }"
+            />
+
+        </Grid>
+    </Grid>
+</ContentView>

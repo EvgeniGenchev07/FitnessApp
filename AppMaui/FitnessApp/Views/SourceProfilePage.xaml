@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="FitnessApp.Views.SourceProfilePage"
+    xmlns:local="clr-namespace:FitnessApp"
+    BackgroundColor="{ DynamicResource BackgroundColor }"
+    Title="Source"
+    x:Name="root">
+
+    <ScrollView>
+        <!-- Main Container -->
+        <Grid
+            Padding="{ OnIdiom
+                Phone='30',
+                Tablet='100,30'
+            }"
+            RowDefinitions="Auto,Auto"
+            RowSpacing="30">
+            <!-- Top Section Container -->
+            <VerticalStackLayout
+                Spacing="16"
+                Margin="{ OnIdiom
+                    Phone='-30,-30,-30,0',
+                    Tablet='-100,-30,-100,0'
+                }"
+                Padding="{ OnIdiom
+                    Phone='30',
+                    Tablet='100,30'
+                }"
+                BackgroundColor="{ DynamicResource BackgroundSecondaryColor }"
+                BindingContext="{ Binding ProfileData }">
+                <!-- AVATAR -->
+                <Grid
+                    ColumnDefinitions="Auto,*,Auto"
+                    RowDefinitions="Auto,Auto"
+                    ColumnSpacing="16"
+                    RowSpacing="5"
+                    VerticalOptions="Start">
+                    <!-- Rounded Corners Border -->
+                    <Border
+                        Grid.RowSpan="2"
+                        StrokeShape="RoundRectangle 20"
+                        HeightRequest="64"
+                        WidthRequest="64"
+                        Padding="10"
+                        HorizontalOptions="Center"
+                        VerticalOptions="Center"
+                        StrokeThickness="1"
+                        Stroke="{ DynamicResource BackgroundTertiaryColor }"
+                        BackgroundColor="Transparent">
+                        <!--
+                            Grid required, issue: https://github.com/dotnet/maui/issues/9952
+                        -->
+                        <Grid>
+                            <!-- Avatar Image -->
+                            <Image
+                                Source="{ Binding Avatar }"
+                                Aspect="AspectFill"
+                                HeightRequest="44"
+                                WidthRequest="44"
+                            />
+                        </Grid>
+                    </Border>
+
+                    <!-- Name -->
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="{ Binding Name }"
+                        FontSize="{ StaticResource LargeFontSize }"
+                        FontAttributes="Bold"
+                        VerticalOptions="End"
+                    />
+
+                    <!-- Profession -->
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{ Binding Job }"
+                        FontSize="12"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        VerticalOptions="Start"
+                    />
+
+                    <!-- Follow Button -->
+                    <Button
+                        Grid.Column="2"
+                        Grid.RowSpan="2"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"
+                        Style="{ StaticResource PrimaryActionButtonStyle }"
+                        Text="Follow"
+                        FontSize="14"
+                        WidthRequest="100"
+                        HeightRequest="36"
+                        CornerRadius="8"
+                        Command="{ Binding BindingContext.ToggleFollowCommand, Source={x:Reference root} }">
+
+                        <Button.Triggers>
+                            <DataTrigger
+                                TargetType="Button"
+                                Binding="{ Binding BindingContext.IsFollowing, Source={x:Reference root} }"
+                                Value="True">
+                                <Setter Property="Text" Value="Following" />
+                                <Setter Property="Style" Value="{ DynamicResource PrimaryActionOutlineButtonStyle }" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+
+                <!-- DESCRIPTION -->
+                <Label
+                    Text="{ Binding Quote }"
+                    FontSize="{ StaticResource BaseFontSize }"
+                />
+
+                <!-- TWITTER -->
+                <local:IconText
+                    Text="{ Binding Media1 }"
+                    TextFontSize="{ StaticResource BaseFontSize }"
+                    Icon="{ Binding Media1Icon }"
+                    IconColor="{ DynamicResource TextTertiaryColor }"
+                    IconAttribute="Fill"
+                    IconFontSize="20"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                    Margin="0,8,0,0"
+                />
+
+                <!-- WEB -->
+                <local:IconText
+                    Text="{ Binding Media2 }"
+                    TextFontSize="{ StaticResource BaseFontSize }"
+                    Icon="{ Binding Media2Icon }"
+                    IconColor="{ DynamicResource TextTertiaryColor }"
+                    IconFontSize="20"
+                    IconFontFamily="{ StaticResource NewsIconsFontFamily }"
+                />
+
+                <!-- Stats Container -->
+                <Grid
+                    RowDefinitions="Auto,Auto"
+                    ColumnDefinitions="*,*,*"
+                    RowSpacing="4"
+                    Margin="0,20,0,0">
+                    <!-- ARTICLES -->
+                    <!-- Data -->
+                    <Label
+                        Text="{ Binding Articles }"
+                        FontSize="{ StaticResource SmallTitleFontSize }"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                    />
+                    <!-- Title -->
+                    <Label
+                        Grid.Row="1"
+                        Text="Articles"
+                        FontSize="14"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        HorizontalOptions="Center"
+                    />
+                    <!-- FOLLOWERS -->
+                    <!-- Data -->
+                    <Label
+                        Grid.Column="1"
+                        Text="{ Binding Followers }"
+                        FontSize="{ StaticResource SmallTitleFontSize }"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                    />
+                    <!-- Title -->
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="Followers"
+                        FontSize="14"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        HorizontalOptions="Center"
+                    />
+                    <!-- FOLLOWING -->
+                    <!-- Data -->
+                    <Label
+                        Grid.Column="2"
+                        Text="{ Binding Following }"
+                        FontSize="{ StaticResource SmallTitleFontSize }"
+                        FontAttributes="Bold"
+                        HorizontalOptions="Center"
+                    />
+                    <!-- Title -->
+                    <Label
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Text="Following"
+                        FontSize="14"
+                        TextColor="{ DynamicResource TextSecondaryColor }"
+                        HorizontalOptions="Center"
+                    />
+
+                </Grid>
+            </VerticalStackLayout>
+
+            <!-- Bottom Section Container -->
+            <Grid
+                Grid.Row="1"
+                RowDefinitions="Auto,Auto">
+                <!-- Title -->
+                <Label
+                    Text="Most Relevant"
+                    FontSize="{ StaticResource TitleFontSize }"
+                />
+                <!-- Content List -->
+                <CollectionView
+                    Grid.Row="1"
+                    Margin="{ OnIdiom
+                        Phone='0,20,0,0',
+                        Tablet='-100,20,-100,0'
+                    }"
+                    ItemsSource="{ Binding List }"
+                    VerticalScrollBarVisibility="Never">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <local:NewsListItemTemplate ToggleFavoriteCommand="{ Binding BindingContext.ToggleFavoriteCommand, Source={x:Reference root} }" />
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+
+        </Grid>
+    </ScrollView>
+</ContentPage>
