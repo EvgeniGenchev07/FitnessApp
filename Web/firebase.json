@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "strivex",
     "public": "fitness_app",
     "ignore": [
       "firebase.json",
