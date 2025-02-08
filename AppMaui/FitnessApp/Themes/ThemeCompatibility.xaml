@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:grial="http://uxdivers.com/grial">
+
+    <!-- ########################## COMPATIBILITY COLORS ########################### -->
+
+
+
+    <grial:XamlColorAlias x:Key="LightTextColor" Value="{ StaticResource TextSecondaryColor }" />
+
+    <grial:XamlColorAlias x:Key="DateTextColor" Value="{ StaticResource TextTertiaryColor }" />
+
+    <grial:XamlColorAlias x:Key="PipeSeparatorColor" Value="{ StaticResource TextOnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="TranslucidAccentColor" Value="{ StaticResource PrimaryVariantColor }" />
+
+    <grial:XamlColorAlias x:Key="DashboardIndicatorColor" Value="{ StaticResource BackgroundTertiaryColor }" />
+
+    <grial:XamlColorAlias x:Key="AccentColor" Value="{ StaticResource PrimaryColor }" />
+
+    <grial:XamlColorAlias x:Key="BaseTextColor" Value="{ StaticResource TextColor }" />
+
+    <grial:XamlColorAlias x:Key="BaseLightTextColor" Value="{ StaticResource TextSecondaryColor }" />
+
+    <grial:XamlColorAlias x:Key="OverDarkTextColor" Value="{ StaticResource OnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="BasePageColor" Value="{ StaticResource BackgroundSecondaryColor }" />
+
+    <grial:XamlColorAlias x:Key="MainWrapperBackgroundColor" Value="{ StaticResource BackgroundColor }" />
+
+    <grial:XamlColorAlias x:Key="SecondaryWrapperBackgroundColor" Value="{ StaticResource BackgroundSecondaryColor }" />
+
+    <grial:XamlColorAlias x:Key="ComplementColor" Value="{ StaticResource FavoriteColor }" />
+
+    <grial:XamlColorAlias x:Key="OkColor" Value="{ StaticResource SuccessColor }" />
+
+    <grial:XamlColorAlias x:Key="NotificationColor" Value="{ StaticResource InfoColor }" />
+
+    <grial:XamlColorAlias x:Key="PlaceholderColor" Value="{ StaticResource TextTertiaryColor }" />
+
+    <grial:XamlColorAlias x:Key="EcommercePriceTextColor" Value="{ StaticResource SuccessColor }" />
+
+    <grial:XamlColorAlias x:Key="BaseTabbedPageColor" Value="{ StaticResource BackgroundSecondaryColor }" />
+
+    <grial:XamlColorAlias x:Key="ArticleHeaderBackgroundColor" Value="{ StaticResource OnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="DashboardIconColor" Value="{ StaticResource TextOnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="InverseTextColor" Value="{ StaticResource OnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="ChatTimelineWhenColor" Value="{ StaticResource TextOnSurfaceColor }" />
+
+    <grial:XamlColorAlias x:Key="DialogsShimBackgroundColor" Value="{ StaticResource OverlayColor }" />
+
+    <grial:XamlColorAlias x:Key="CustomActionSheetShimBackgroundColor" Value="{ StaticResource OverlayColor }" />
+
+    <grial:XamlColorAlias x:Key="TranslucidBlack" Value="{ StaticResource OverlayVariantColor }" />
+
+    <grial:XamlColorAlias x:Key="DashboardBadgeColor" Value="{ StaticResource TextTertiaryColor }" />
+
+    <grial:XamlColorAlias x:Key="ListViewSeparatorColor" Value="{ StaticResource DisabledSecondaryColor }" />
+
+</ResourceDictionary>

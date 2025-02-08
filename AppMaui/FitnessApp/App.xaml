@@ -10,16 +10,23 @@
                     Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary
                     Source="Resources/Styles/Styles.xaml" />
+                        <ResourceDictionary
+                    Source="Themes/ThemeCompatibility.xaml" />
             </ResourceDictionary.MergedDictionaries>
         
             <x:String
                 x:Key="NewsIconsFontFamily">Material Design Icons</x:String>
 
-            <x:String x:Key="EyeOutline">&#xf06e;</x:String>
-            <x:String x:Key="BookmarkOutline">&#xf02e;</x:String>
-            <x:String x:Key="HeartOutline">&#xf08b;</x:String>
-            <x:String x:Key="Account">\uF004;</x:String>
-            <x:String x:Key="Email">\uF1EE;</x:String>
+            <x:String
+                x:Key="EyeOutline"></x:String>
+            <x:String
+                x:Key="BookmarkOutline"></x:String>
+            <x:String
+                x:Key="HeartOutline"></x:String>
+            <x:String
+                x:Key="Account">\uF004;</x:String>
+            <x:String
+                x:Key="Email">\uF1EE;</x:String>
 
             <Style
                 TargetType="ContentPage"
@@ -226,69 +233,147 @@
                     Value="{ DynamicResource PrimaryColor }" />
             </Style>
 
-            <x:String x:Key="IconsFontFamily">GrialIconsLine</x:String>
+            <x:String
+                x:Key="IconsFontFamily">GrialIconsLine</x:String>
 
-            <grial:NegateBooleanConverter x:Key="NegateBooleanConverter" />
+            <grial:NegateBooleanConverter
+                x:Key="NegateBooleanConverter" />
 
-            <Style TargetType="ContentView" ApplyToDerivedTypes="true">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="grial:LayoutProperties.IgnoreSafeArea" Value="True" />
+            <Style
+                TargetType="ContentView"
+                ApplyToDerivedTypes="true">
+                <Setter
+                    Property="BackgroundColor"
+                    Value="Transparent" />
+                <Setter
+                    Property="grial:LayoutProperties.IgnoreSafeArea"
+                    Value="True" />
             </Style>
 
-            <Style TargetType="AbsoluteLayout" ApplyToDerivedTypes="true">
-                <Setter Property="grial:LayoutProperties.IgnoreSafeArea" Value="True" />
+            <Style
+                TargetType="AbsoluteLayout"
+                ApplyToDerivedTypes="true">
+                <Setter
+                    Property="grial:LayoutProperties.IgnoreSafeArea"
+                    Value="True" />
             </Style>
 
-            <Style TargetType="BoxView" ApplyToDerivedTypes="true">
+            <Style
+                TargetType="BoxView"
+                ApplyToDerivedTypes="true">
                 <!-- Workaround for BoxViews for this Android issue: https://github.com/xamarin/Xamarin.Forms/issues/7218 -->
-                <Setter Property="android:VisualElement.Elevation" Value="0" />
+                <Setter
+                    Property="android:VisualElement.Elevation"
+                    Value="0" />
             </Style>
 
-            <Style TargetType="local:RoundedIcon" ApplyToDerivedTypes="True">
-                <Setter Property="IconFontFamily" Value="{ DynamicResource IconsFontFamily }" />
+            <Style
+                TargetType="local:RoundedIcon"
+                ApplyToDerivedTypes="True">
+                <Setter
+                    Property="IconFontFamily"
+                    Value="{ DynamicResource IconsFontFamily }" />
             </Style>
 
-            <Style TargetType="local:IconText" ApplyToDerivedTypes="True">
-                <Setter Property="IconFontSize" Value="{ StaticResource BaseFontSize }" />
-                <Setter Property="TextFontSize" Value="{ StaticResource BaseFontSize }" />
-                <Setter Property="TextColor" Value="{ DynamicResource TextColor }" />
-                <Setter Property="IconFontFamily" Value="{ DynamicResource IconsFontFamily }" />
+            <Style
+                TargetType="local:IconText"
+                ApplyToDerivedTypes="True">
+                <Setter
+                    Property="IconFontSize"
+                    Value="{ StaticResource BaseFontSize }" />
+                <Setter
+                    Property="TextFontSize"
+                    Value="{ StaticResource BaseFontSize }" />
+                <Setter
+                    Property="TextColor"
+                    Value="{ DynamicResource TextColor }" />
+                <Setter
+                    Property="IconFontFamily"
+                    Value="{ DynamicResource IconsFontFamily }" />
             </Style>
 
-            <Style TargetType="TabbedPage" ApplyToDerivedTypes="true">
-                <Setter Property="BackgroundColor" Value="{ DynamicResource BackgroundSecondaryColor }" />
-                <Setter Property="NavigationPage.BackButtonTitle" Value="" />
+            <Style
+                TargetType="TabbedPage"
+                ApplyToDerivedTypes="true">
+                <Setter
+                    Property="BackgroundColor"
+                    Value="{ DynamicResource BackgroundSecondaryColor }" />
+                <Setter
+                    Property="NavigationPage.BackButtonTitle"
+                    Value="" />
             </Style>
 
-            <Style TargetType="Image">
-                <Setter Property="Aspect" Value="AspectFill" />
-                <Setter Property="IsOpaque" Value="{ OnPlatform Android=true, Default=false }" />
+            <Style
+                TargetType="Image">
+                <Setter
+                    Property="Aspect"
+                    Value="AspectFill" />
+                <Setter
+                    Property="IsOpaque"
+                    Value="{ OnPlatform Android=true, Default=false }" />
             </Style>
 
-            <Style x:Key="Horizontal1ptLineStyle" TargetType="BoxView">
-                <Setter Property="HeightRequest" Value="1" />
-                <Setter Property="Color" Value="{ DynamicResource ListSeparatorColor }" />
+            <Style
+                x:Key="Horizontal1ptLineStyle"
+                TargetType="BoxView">
+                <Setter
+                    Property="HeightRequest"
+                    Value="1" />
+                <Setter
+                    Property="Color"
+                    Value="{ DynamicResource ListSeparatorColor }" />
             </Style>
 
-            <Style x:Key="OutlineButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="BorderColor" Value="{ DynamicResource TextColor }" />
-                <Setter Property="TextColor" Value="{ DynamicResource TextColor }" />
+            <Style
+                x:Key="OutlineButtonStyle"
+                TargetType="Button">
+                <Setter
+                    Property="BackgroundColor"
+                    Value="Transparent" />
+                <Setter
+                    Property="BorderWidth"
+                    Value="1" />
+                <Setter
+                    Property="BorderColor"
+                    Value="{ DynamicResource TextColor }" />
+                <Setter
+                    Property="TextColor"
+                    Value="{ DynamicResource TextColor }" />
             </Style>
 
-            <Style x:Key="PrimaryActionOutlineButtonStyle" TargetType="Button" BasedOn="{ StaticResource OutlineButtonStyle }">
-                <Setter Property="TextColor" Value="{ DynamicResource PrimaryColor }" />
-                <Setter Property="BorderColor" Value="{ DynamicResource PrimaryColor }" />
+            <Style
+                x:Key="PrimaryActionOutlineButtonStyle"
+                TargetType="Button"
+                BasedOn="{ StaticResource OutlineButtonStyle }">
+                <Setter
+                    Property="TextColor"
+                    Value="{ DynamicResource PrimaryColor }" />
+                <Setter
+                    Property="BorderColor"
+                    Value="{ DynamicResource PrimaryColor }" />
             </Style>
 
-            <Style x:Key="BorderTagStyle" TargetType="Border">
-                <Setter Property="Margin" Value="{ DynamicResource TagItemMargin }" />
-                <Setter Property="Stroke" Value="Transparent" />
-                <Setter Property="BackgroundColor" Value="{ DynamicResource TagItemBackgroundColor }" />
-                <Setter Property="HeightRequest" Value="28" />
-                <Setter Property="Padding" Value="{ DynamicResource TagItemPadding }" />
-                <Setter Property="VerticalOptions" Value="Center" />
+            <Style
+                x:Key="BorderTagStyle"
+                TargetType="Border">
+                <Setter
+                    Property="Margin"
+                    Value="{ DynamicResource TagItemMargin }" />
+                <Setter
+                    Property="Stroke"
+                    Value="Transparent" />
+                <Setter
+                    Property="BackgroundColor"
+                    Value="{ DynamicResource TagItemBackgroundColor }" />
+                <Setter
+                    Property="HeightRequest"
+                    Value="28" />
+                <Setter
+                    Property="Padding"
+                    Value="{ DynamicResource TagItemPadding }" />
+                <Setter
+                    Property="VerticalOptions"
+                    Value="Center" />
             </Style>
 
 </ResourceDictionary>

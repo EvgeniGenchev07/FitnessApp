@@ -4171,7 +4171,7 @@ target triple = "x86_64-unknown-linux-android21"
 @.env.5 = private unnamed_addr constant [42 x i8] c"Xamarin.Android.Net.AndroidMessageHandler\00", align 16
 
 ;ApplicationConfig
-@.ApplicationConfig.0_android_package_name = private unnamed_addr constant [27 x i8] c"com.companyname.fitnessapp\00", align 16
+@.ApplicationConfig.0_android_package_name = private unnamed_addr constant [19 x i8] c"com.athloboost.app\00", align 16
 
 ;DSOCacheEntry
 @.DSOCacheEntry.0_name = private unnamed_addr constant [34 x i8] c"libSystem.Globalization.Native.so\00", align 16

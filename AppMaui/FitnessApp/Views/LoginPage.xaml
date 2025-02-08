@@ -3,10 +3,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FitnessApp.Views"
-    
+    xmlns:viewModel="clr-namespace:FitnessApp.ViewModels"
     x:Class="FitnessApp.Views.LoginPage"
-    BackgroundColor="{ DynamicResource BackgroundColor }"
-    Title="">
+    x:DataType="viewModel:LoginViewModel"
+    BackgroundColor="{ DynamicResource BackgroundColor }">
     <!-- Main Container -->
     <ScrollView>
         <Grid
@@ -45,7 +45,9 @@
                 Spacing="16">
 
                 <!-- Email Entry -->
-                <Entry Placeholder="Email" />
+                <Entry
+                    Text="{Binding Email}"
+                    Placeholder="Email" />
 
                 <!-- Password Entry w/Icon -->
                 <Grid
@@ -63,6 +65,7 @@
                         x:Name="entry"
                         Placeholder="Password"
                         IsPassword="True"
+                        Text="{Binding Password}"
                     />
 
                     <!-- Icon -->
@@ -100,7 +103,7 @@
                 <Button
                     Text="Login"
                     Style="{ StaticResource PrimaryActionButtonStyle }"
-                    Clicked="LoginButtonClicked"
+                    Command="{Binding LoginUserCommand}"
                 />
 
                 <HorizontalStackLayout HorizontalOptions="Center">
@@ -117,7 +120,7 @@
                         Text="Sign Up"
                         HorizontalOptions="End"
                         VerticalOptions="Start"
-                        Clicked="SignupButtonClicked"
+                        Command="{Binding GoToSignUpCommand}"
                         Style="{ DynamicResource LinkButtonStyle }"
                     />
                 </HorizontalStackLayout>

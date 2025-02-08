@@ -8,8 +8,13 @@
     Title="FitnessApp">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:SourceProfilePage}"
-        Route="MainPage" />
+        ContentTemplate="{DataTemplate local:SignUpPage}"
+        Route="SignUpPage" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:ListPage}"
+        Route="ListPage" />
+    <ShellContent
+        ContentTemplate="{DataTemplate local:LoginPage}"
+        Route="LoginPage" />
 
 </Shell>

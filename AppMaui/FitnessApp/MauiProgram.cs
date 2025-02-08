@@ -1,4 +1,6 @@
 using CommunityToolkit.Maui;
+using FitnessApp.ViewModels;
+using FitnessApp.Views;
 using Microsoft.Extensions.Logging;
 using UXDivers.Grial;
 
@@ -32,7 +34,8 @@ namespace FitnessApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddTransientWithShellRoute<SignUpPage, SignUpViewModel>(nameof(SignUpPage));
+            builder.Services.AddTransientWithShellRoute<LoginPage, LoginViewModel>(nameof(LoginPage));
             return builder.Build();
         }
     }
