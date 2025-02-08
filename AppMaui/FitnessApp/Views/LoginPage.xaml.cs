@@ -1,22 +1,18 @@
 /* [grial-metadata] id: Grial#NewsLoginPage.cs version: 1.0.1 */
+using FitnessApp.ViewModels;
+
 namespace FitnessApp.Views;
 
 public partial class LoginPage : ContentPage
 {
-	public LoginPage()
+	public LoginPage(LoginViewModel viewModel)
 	{
 		InitializeComponent();
-	}
-
-    private void LoginButtonClicked(object sender, EventArgs e)
-    {
+        icon.Text = MaterialCommunityIconsFont.EyeOutline;
+        BindingContext = viewModel;
 
     }
 
-    private void SignupButtonClicked(object sender, EventArgs e)
-    {
-
-    }
 
     private void OnEyeTapped(object sender, TappedEventArgs e)
     {

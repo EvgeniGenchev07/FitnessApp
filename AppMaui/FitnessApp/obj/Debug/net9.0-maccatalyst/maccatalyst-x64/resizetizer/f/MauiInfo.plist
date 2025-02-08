@@ -5,8 +5,11 @@
   <key>UIAppFonts</key>
   <array>
 	<string>FluentUI.cs</string>
+	<string>MaterialCommunityIconsFont.cs</string>
+	<string>materialdesignicons-webfont.ttf</string>
 	<string>OpenSans-Regular.ttf</string>
 	<string>OpenSans-Semibold.ttf</string>
+	<string>Poppins-Regular.ttf</string>
   </array>
 
 </dict>

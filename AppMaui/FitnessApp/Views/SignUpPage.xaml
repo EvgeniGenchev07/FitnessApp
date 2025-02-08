@@ -3,9 +3,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:FitnessApp.Views"
+    xmlns:viewModel="clr-namespace:FitnessApp.ViewModels"
     x:Class="FitnessApp.Views.SignUpPage"
     BackgroundColor="{ DynamicResource BackgroundColor }"
-    Title="">
+    x:DataType="viewModel:SignUpViewModel">
     <!-- Main Container -->
     <ScrollView>
         <Grid
@@ -44,8 +45,12 @@
                 VerticalOptions="Start"
                 Spacing="16">
 
-                <Entry Placeholder="Full Name" />
-                <Entry Placeholder="Email" />
+                <Entry x:Name="name" 
+                       Text="{Binding Name}" 
+                       Placeholder="Full Name" />
+                <Entry x:Name="email"
+                       Text="{Binding Email}"
+                       Placeholder="Email" />
 
                 <!-- Password Entry w/Icon -->
                 <Grid
@@ -62,6 +67,7 @@
                     <Entry
                         x:Name="entry"
                         Placeholder="Password"
+                        Text="{Binding Password}"
                         IsPassword="True"
                     />
 
@@ -94,7 +100,8 @@
                 <Button
                     Text="Create Account"
                     Style="{ StaticResource PrimaryActionButtonStyle }"
-                    Clicked="CreateButtonClicked"
+                    Command="{Binding CreateUserCommand}"
+                    FontSize="Medium"
                 />
                 <!-- Button/Text Container -->
                 <HorizontalStackLayout HorizontalOptions="Center">
@@ -110,8 +117,8 @@
                         Text="Login"
                         HorizontalOptions="End"
                         VerticalOptions="Start"
-                        Clicked="LoginButtonClicked"
                         Style="{ DynamicResource LinkButtonStyle }"
+                        Command="{Binding GoToLoginCommand}"
                     />
                 </HorizontalStackLayout>
             </VerticalStackLayout>

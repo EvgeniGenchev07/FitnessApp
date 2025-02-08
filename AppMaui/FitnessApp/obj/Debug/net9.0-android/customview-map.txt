@@ -22,7 +22,6 @@ bitmap;obj\Debug\net9.0-android\resizetizer\sp\drawable-v31\maui_splash_image.xm
 cache-path;D:\FitnessApp\AppMaui\FitnessApp\obj\Debug\net9.0-android\lp\174\jl\res\xml\microsoft_maui_essentials_fileprovider_file_paths.xml
 color;D:\FitnessApp\AppMaui\FitnessApp\obj\Debug\net9.0-android\lp\173\jl\res\values\colors.xml
 color;obj\Debug\net9.0-android\res\values\colors.xml
-color;obj\Debug\net9.0-android\resizetizer\sp\values\maui_colors.xml
 com.google.android.material.appbar.AppBarLayout;D:\FitnessApp\AppMaui\FitnessApp\obj\Debug\net9.0-android\lp\171\jl\res\layout\flyoutcontent.xml
 com.google.android.material.appbar.AppBarLayout;D:\FitnessApp\AppMaui\FitnessApp\obj\Debug\net9.0-android\lp\171\jl\res\layout\shellcontent.xml
 com.google.android.material.appbar.AppBarLayout;D:\FitnessApp\AppMaui\FitnessApp\obj\Debug\net9.0-android\lp\173\jl\res\layout\navigationlayout.xml
