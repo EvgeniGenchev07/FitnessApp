@@ -1,4 +1,6 @@
 using System.Text.Json.Serialization;
+using DBContexts;
+using Microsoft.EntityFrameworkCore;
 using Models;
 
 var builder = WebApplication.CreateSlimBuilder(args);
@@ -7,6 +9,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 });
+///            builder.Configuration.GetConnectionString("server=localhost;database=athloboostx;user=root;password=athloboostx"),
+
+builder.Services.AddDbContext<UserDBContext>(options => options.UseMySql(
+    "server=localhost;database=athloboostx;user=root;password=evgeni",
+            ServerVersion.AutoDetect("server=localhost;database=athlobostx;user=evgeni;password=evgeni")));
 
 var app = builder.Build();
 
