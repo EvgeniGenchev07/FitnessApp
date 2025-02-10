@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "strivex",
+    "site": "athloboostx",
     "public": "fitness_app",
     "ignore": [
       "firebase.json",
