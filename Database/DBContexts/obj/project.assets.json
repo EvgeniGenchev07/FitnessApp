@@ -883,6 +883,19 @@
         "build": {
           "buildTransitive/net6.0/_._": {}
         }
+      },
+      "Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "9.0.1"
+        },
+        "compile": {
+          "bin/placeholder/Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Models.dll": {}
+        }
       }
     }
   },
@@ -2738,13 +2751,19 @@
         "system.threading.channels.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Models/1.0.0": {
+      "type": "project",
+      "path": "../Models/Models.csproj",
+      "msbuildProject": "../Models/Models.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.EntityFrameworkCore >= 9.0.1",
       "Microsoft.EntityFrameworkCore.Design >= 9.0.1",
-      "Microsoft.EntityFrameworkCore.Tools >= 9.0.1"
+      "Microsoft.EntityFrameworkCore.Tools >= 9.0.1",
+      "Models >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -2754,11 +2773,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
-      "projectName": "Models",
-      "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
+      "projectUniqueName": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
+      "projectName": "DBContexts",
+      "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
       "packagesPath": "C:\\Users\\Andy\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\obj\\",
+      "outputPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2778,7 +2797,11 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj": {
+              "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
