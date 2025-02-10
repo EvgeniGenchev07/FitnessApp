@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Models;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -20,6 +21,13 @@ var sampleTodos = new Todo[] {
 var todosApi = app.MapGroup("/todos");
 todosApi.MapGet("/", () => sampleTodos);
 todosApi.MapGet("/{id}", (int id) =>
+    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
+        ? Results.Ok(todo)
+        : Results.NotFound());
+
+var todo = app.MapGroup("/tods");
+todo.MapGet("/", () => sampleTodos);
+todo.MapGet("/{id}", (int id) =>
     sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
         ? Results.Ok(todo)
         : Results.NotFound());
