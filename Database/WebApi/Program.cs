@@ -11,12 +11,11 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 ///            builder.Configuration.GetConnectionString("server=localhost;database=athloboostx;user=root;password=athloboostx"),
 
-builder.Services.AddDbContext<UserDBContext>(options => options.UseMySql(
-    "server=localhost;database=athloboostx;user=root;password=evgeni",
-            ServerVersion.AutoDetect("server=localhost;database=athlobostx;user=evgeni;password=evgeni")));
+//builder.Services.AddDbContext<UserDBContext>(options => options.UseMySQL( "server=localhost;database=athloboostx;user=root;password=evgeni"));
 
 var app = builder.Build();
-
+var db = new UserDBContext();
+//db.Database.Migrate();
 var sampleTodos = new Todo[] {
     new(1, "Walk the dog"),
     new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),

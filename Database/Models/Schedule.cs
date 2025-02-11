@@ -16,5 +16,6 @@ namespace Models
         public int Id { get; set; }
         List<Workout> Workouts { get; set; }
         List<byte> RestDays { get; set; }
+        public User User { get; set; }
     }
 }
