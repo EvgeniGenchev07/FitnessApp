@@ -22,7 +22,7 @@ namespace Models
         [EmailAddress]
         public string Email { get; set; }
         public int Age { get; set; }
-        public Dictionary<DateTime, Measurement>  Measurements{get ; set;}
+        public List<Measurement> Measurements{get ; set;}
         public List<Workout> Workouts { get; set;}
         public List<Meal> Meals { get; set;}
         public Schedule Schedule { get; set; }

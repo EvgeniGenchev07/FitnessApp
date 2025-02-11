@@ -9,17 +9,15 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    [Table("Sets")]
+    [Table("WorkoutExercises")]
     [PrimaryKey("Id")]
-    public class Set
+    public class WorkoutExercise
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
-        [Precision(2,5)]
-        public double Weight { get; set; }
+        public Exercise Exercise { get; set; }
         [Required]
-        public byte Reps { get; set; }
-
+        public List<Set> Sets { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace Models
         public int Id { get; set; }
         public DateTime Date { get; set; }
         [Required]
-        public List<Exercise> Exercise { get; set; }
+        public List<WorkoutExercise> WorkoutExercises { get; set; }
     }
 }

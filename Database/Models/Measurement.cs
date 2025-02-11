@@ -16,6 +16,8 @@ namespace Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //[Key]
         public int Id { get; set; }
+        [Required]
+        public DateTime Date { get; set; } 
         [Precision(2,5)]
         public double Waist { get; set; }
         [Precision(2,5)]
