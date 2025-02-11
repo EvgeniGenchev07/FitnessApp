@@ -30,5 +30,6 @@ namespace Models
         public double Chest { get; set; }
         [Precision(2,5)]
         public double Weight { get; set; }
+        public DateTime date { get; set; }
     }
 }

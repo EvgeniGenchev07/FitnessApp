@@ -7,8 +7,12 @@ namespace DBContexts
     {
         public DbSet<User> User { get; set; }
 
-        public UserDBContext(DbContextOptions<UserDBContext> options) : base(options) { }
-
+        //public UserDBContext(DbContextOptions<UserDBContext> options) : base(options) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseMySQL("server=localhost;database=athloboostx;user=root;password=evgeni");
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -18,7 +22,7 @@ namespace DBContexts
                 .HasMany(s => s.Workouts)
                 .WithOne();
             modelBuilder.Entity<User>()
-                .HasOne(s => s.Schedule)
+                .HasMany(s => s.Measurements)
                 .WithOne();
             base.OnModelCreating(modelBuilder);
         }
