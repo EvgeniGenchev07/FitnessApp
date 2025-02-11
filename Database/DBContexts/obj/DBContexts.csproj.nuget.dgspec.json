@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj": {}
+    "D:\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj": {
+    "D:\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
+        "projectUniqueName": "D:\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
         "projectName": "DBContexts",
-        "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
-        "packagesPath": "C:\\Users\\Andy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\obj\\",
+        "projectPath": "D:\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj",
+        "packagesPath": "C:\\Users\\zakg6\\.nuget\\packages\\",
+        "outputPath": "D:\\FitnessApp\\Database\\DBContexts\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio Cache\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Andy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\zakg6\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,14 +26,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
-              "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj": {
-                "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj"
+              "D:\\FitnessApp\\Database\\Models\\Models.csproj": {
+                "projectPath": "D:\\FitnessApp\\Database\\Models\\Models.csproj"
               }
             }
           }
@@ -56,23 +57,23 @@
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[9.0.1, )"
+              "version": "[9.0.2, )"
             },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.1, )"
+              "version": "[9.0.2, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.2, )"
             },
             "Microsoft.EntityFrameworkCore.Tools": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[9.0.1, )"
-            },
-            "MySql.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[9.0.0, )"
+              "version": "[9.0.2, )"
             }
           },
           "imports": [
@@ -95,20 +96,20 @@
         }
       }
     },
-    "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj": {
+    "D:\\FitnessApp\\Database\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
+        "projectUniqueName": "D:\\FitnessApp\\Database\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
-        "packagesPath": "C:\\Users\\Andy\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\obj\\",
+        "projectPath": "D:\\FitnessApp\\Database\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\zakg6\\.nuget\\packages\\",
+        "outputPath": "D:\\FitnessApp\\Database\\Models\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+          "D:\\Visual Studio Cache\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Andy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\zakg6\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -117,6 +118,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

@@ -11,38 +11,31 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContexts.Migrations
 {
     [DbContext(typeof(UserDBContext))]
-    [Migration("20250211184201_FixMigration")]
-    partial class FixMigration
+    [Migration("20250211203035_Initialization")]
+    partial class Initialization
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.1")
-                .HasAnnotation("Relational:MaxIdentifierLength", 64);
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
             modelBuilder.Entity("Models.Exercise", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.PrimitiveCollection<string>("MuscleGroups")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<int?>("WorkoutId")
-                        .HasColumnType("int");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("WorkoutId");
 
                     b.ToTable("Exercises");
                 });
@@ -51,24 +44,24 @@ namespace DBContexts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<ushort>("Calories")
-                        .HasColumnType("smallint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.Property<ushort>("Carbs")
-                        .HasColumnType("smallint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.Property<ushort>("Fats")
-                        .HasColumnType("smallint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
+                        .HasColumnType("TEXT");
 
                     b.Property<ushort>("Proteins")
-                        .HasColumnType("smallint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -79,19 +72,19 @@ namespace DBContexts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("FoodId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<ushort>("Weight")
-                        .HasColumnType("smallint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -106,37 +99,37 @@ namespace DBContexts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("Arm")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
+                        .HasColumnType("REAL");
 
                     b.Property<double>("Calf")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
+                        .HasColumnType("REAL");
 
                     b.Property<double>("Chest")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
+                        .HasColumnType("REAL");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
 
                     b.Property<double>("Forearm")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
+                        .HasColumnType("REAL");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<double>("Waist")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
+                        .HasColumnType("REAL");
 
                     b.Property<double>("Weight")
                         .HasPrecision(2, 5)
-                        .HasColumnType("double");
-
-                    b.Property<DateTime>("date")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -145,32 +138,72 @@ namespace DBContexts.Migrations
                     b.ToTable("Measurements");
                 });
 
+            modelBuilder.Entity("Models.Schedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("Schedules");
+                });
+
+            modelBuilder.Entity("Models.Set", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte>("Reps")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<double>("Weight")
+                        .HasPrecision(2, 5)
+                        .HasColumnType("REAL");
+
+                    b.Property<int?>("WorkoutExerciseId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkoutExerciseId");
+
+                    b.ToTable("Sets");
+                });
+
             modelBuilder.Entity("Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Age")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<byte>("Height")
-                        .HasColumnType("tinyint unsigned");
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -181,13 +214,13 @@ namespace DBContexts.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -196,11 +229,25 @@ namespace DBContexts.Migrations
                     b.ToTable("Workouts");
                 });
 
-            modelBuilder.Entity("Models.Exercise", b =>
+            modelBuilder.Entity("Models.WorkoutExercise", b =>
                 {
-                    b.HasOne("Models.Workout", null)
-                        .WithMany("Exercise")
-                        .HasForeignKey("WorkoutId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ExerciseId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WorkoutId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.HasIndex("WorkoutId");
+
+                    b.ToTable("WorkoutExercises");
                 });
 
             modelBuilder.Entity("Models.Meal", b =>
@@ -225,11 +272,44 @@ namespace DBContexts.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("Models.Schedule", b =>
+                {
+                    b.HasOne("Models.User", "User")
+                        .WithOne("Schedule")
+                        .HasForeignKey("Models.Schedule", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Models.Set", b =>
+                {
+                    b.HasOne("Models.WorkoutExercise", null)
+                        .WithMany("Sets")
+                        .HasForeignKey("WorkoutExerciseId");
+                });
+
             modelBuilder.Entity("Models.Workout", b =>
                 {
                     b.HasOne("Models.User", null)
                         .WithMany("Workouts")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Models.WorkoutExercise", b =>
+                {
+                    b.HasOne("Models.Exercise", "Exercise")
+                        .WithMany()
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.Workout", null)
+                        .WithMany("WorkoutExercises")
+                        .HasForeignKey("WorkoutId");
+
+                    b.Navigation("Exercise");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -238,12 +318,19 @@ namespace DBContexts.Migrations
 
                     b.Navigation("Measurements");
 
+                    b.Navigation("Schedule");
+
                     b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("Models.Workout", b =>
                 {
-                    b.Navigation("Exercise");
+                    b.Navigation("WorkoutExercises");
+                });
+
+            modelBuilder.Entity("Models.WorkoutExercise", b =>
+                {
+                    b.Navigation("Sets");
                 });
 #pragma warning restore 612, 618
         }

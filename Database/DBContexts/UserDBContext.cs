@@ -7,24 +7,20 @@ namespace DBContexts
     {
         public DbSet<User> User { get; set; }
 
-        //public UserDBContext(DbContextOptions<UserDBContext> options) : base(options) { }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // base.OnConfiguring(optionsBuilder);
-            optionsBuilder.UseMySQL("server=localhost;database=athloboostx;user=root;password=evgeni");
+            optionsBuilder.UseSqlite("Data Source=athloboostx.db3");
+            base.OnConfiguring(optionsBuilder);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(s => s.Meals)
-                .WithOne();
-            modelBuilder.Entity<User>()
-                .HasMany(s => s.Workouts)
-                .WithOne();
-            modelBuilder.Entity<User>()
-                .HasMany(s => s.Measurements)
-                .WithOne();
+            modelBuilder.Entity<User>().HasOne(u => u.Schedule).WithOne(s=>s.User).HasForeignKey<Schedule>(s=>s.UserId);
             base.OnModelCreating(modelBuilder);
+        }
+        public void Add(User user)
+        {
+            User.Add(user);
+            SaveChanges();
         }
     }
 }

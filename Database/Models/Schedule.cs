@@ -17,5 +17,7 @@ namespace Models
         List<Workout> Workouts { get; set; }
         List<byte> RestDays { get; set; }
         public User User { get; set; }
+        [ForeignKey("UserId")]
+        public int UserId { get; set; }
     }
 }

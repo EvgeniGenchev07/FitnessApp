@@ -1,11 +1,11 @@
 @WebApi_HostAddress = http://localhost:5136
 
-GET {{WebApi_HostAddress}}/todos/
+GET {{WebApi_HostAddress}}/user/
 Accept: application/json
 
 ###
 
-GET {{WebApi_HostAddress}}/todos/1
+GET {{WebApi_HostAddress}}/user/1
 Accept: application/json
 
 ###
