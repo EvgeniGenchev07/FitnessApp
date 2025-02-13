@@ -20,6 +20,8 @@ namespace Models
         public double Weight { get; set; }
         [Required]
         public byte Reps { get; set; }
+        [Required]
+        public WorkoutExercise WorkoutExercise { get; set; }
 
     }
 }

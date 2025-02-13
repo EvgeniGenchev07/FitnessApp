@@ -30,5 +30,7 @@ namespace Models
         public double Chest { get; set; }
         [Precision(2,5)]
         public double Weight { get; set; }
+        [Required]
+        public User User { get; set; }
     }
 }

@@ -3,19 +3,16 @@ using System;
 using DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace DBContexts.Migrations
 {
-    [DbContext(typeof(UserDBContext))]
-    [Migration("20250211203035_Initialization")]
-    partial class Initialization
+    [DbContext(typeof(ApiDbContext))]
+    partial class ApiDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -35,7 +32,13 @@ namespace DBContexts.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("WorkoutExerciseId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WorkoutExerciseId")
+                        .IsUnique();
 
                     b.ToTable("Exercises");
                 });
@@ -55,6 +58,9 @@ namespace DBContexts.Migrations
                     b.Property<ushort>("Fats")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("MealId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -64,6 +70,9 @@ namespace DBContexts.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MealId")
+                        .IsUnique();
 
                     b.ToTable("Foods");
                 });
@@ -77,18 +86,13 @@ namespace DBContexts.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FoodId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<ushort>("Weight")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FoodId");
 
                     b.HasIndex("UserId");
 
@@ -120,7 +124,7 @@ namespace DBContexts.Migrations
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.Property<double>("Waist")
@@ -143,6 +147,10 @@ namespace DBContexts.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.PrimitiveCollection<string>("RestDays")
+                        .HasColumnType("varbinary(7)")
+                        .HasColumnName("Restdays");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
@@ -168,7 +176,7 @@ namespace DBContexts.Migrations
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<int?>("WorkoutExerciseId")
+                    b.Property<int>("WorkoutExerciseId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -219,10 +227,15 @@ namespace DBContexts.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int?>("ScheduleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ScheduleId");
 
                     b.HasIndex("UserId");
 
@@ -235,41 +248,58 @@ namespace DBContexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("ExerciseId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("WorkoutId")
+                    b.Property<int>("WorkoutId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ExerciseId");
 
                     b.HasIndex("WorkoutId");
 
                     b.ToTable("WorkoutExercises");
                 });
 
-            modelBuilder.Entity("Models.Meal", b =>
+            modelBuilder.Entity("Models.Exercise", b =>
                 {
-                    b.HasOne("Models.Food", "Food")
-                        .WithMany()
-                        .HasForeignKey("FoodId")
+                    b.HasOne("Models.WorkoutExercise", "WorkoutExercise")
+                        .WithOne("Exercise")
+                        .HasForeignKey("Models.Exercise", "WorkoutExerciseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.User", null)
-                        .WithMany("Meals")
-                        .HasForeignKey("UserId");
+                    b.Navigation("WorkoutExercise");
+                });
 
-                    b.Navigation("Food");
+            modelBuilder.Entity("Models.Food", b =>
+                {
+                    b.HasOne("Models.Meal", "Meal")
+                        .WithOne("Food")
+                        .HasForeignKey("Models.Food", "MealId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Meal");
+                });
+
+            modelBuilder.Entity("Models.Meal", b =>
+                {
+                    b.HasOne("Models.User", "User")
+                        .WithMany("Meals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Measurement", b =>
                 {
-                    b.HasOne("Models.User", null)
+                    b.HasOne("Models.User", "User")
                         .WithMany("Measurements")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Schedule", b =>
@@ -285,31 +315,50 @@ namespace DBContexts.Migrations
 
             modelBuilder.Entity("Models.Set", b =>
                 {
-                    b.HasOne("Models.WorkoutExercise", null)
+                    b.HasOne("Models.WorkoutExercise", "WorkoutExercise")
                         .WithMany("Sets")
-                        .HasForeignKey("WorkoutExerciseId");
+                        .HasForeignKey("WorkoutExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("WorkoutExercise");
                 });
 
             modelBuilder.Entity("Models.Workout", b =>
                 {
-                    b.HasOne("Models.User", null)
+                    b.HasOne("Models.Schedule", null)
                         .WithMany("Workouts")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ScheduleId");
+
+                    b.HasOne("Models.User", "User")
+                        .WithMany("Workouts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.WorkoutExercise", b =>
                 {
-                    b.HasOne("Models.Exercise", "Exercise")
-                        .WithMany()
-                        .HasForeignKey("ExerciseId")
+                    b.HasOne("Models.Workout", "Workout")
+                        .WithMany("WorkoutExercises")
+                        .HasForeignKey("WorkoutId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Workout", null)
-                        .WithMany("WorkoutExercises")
-                        .HasForeignKey("WorkoutId");
+                    b.Navigation("Workout");
+                });
 
-                    b.Navigation("Exercise");
+            modelBuilder.Entity("Models.Meal", b =>
+                {
+                    b.Navigation("Food")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.Schedule", b =>
+                {
+                    b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -330,6 +379,9 @@ namespace DBContexts.Migrations
 
             modelBuilder.Entity("Models.WorkoutExercise", b =>
                 {
+                    b.Navigation("Exercise")
+                        .IsRequired();
+
                     b.Navigation("Sets");
                 });
 #pragma warning restore 612, 618

@@ -4,8 +4,11 @@
     "http": {
       "commandName": "Project",
       "dotnetRunMessages": true,
+      "useSSL": true,
+      "workingDirectory": "../DBContexts",
       "launchBrowser": true,
-      "launchUrl": "todos",
+      "launchUrl": "",
+      "use64Bit": true,
       "applicationUrl": "http://localhost:5136",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

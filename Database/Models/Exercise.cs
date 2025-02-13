@@ -15,6 +15,10 @@ namespace Models
         public string Name { get; set; }
         [Required]
         public List<MuscleGroups> MuscleGroups { get; set; }
+        [Required]
+        public WorkoutExercise WorkoutExercise { get; set; }
+        [ForeignKey("WorkoutExerciseId")]
+        public int WorkoutExerciseId {  get; set; }
     }
 
 }

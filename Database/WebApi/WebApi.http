@@ -3,9 +3,3 @@
 GET {{WebApi_HostAddress}}/user/
 Accept: application/json
 
-###
-
-GET {{WebApi_HostAddress}}/user/1
-Accept: application/json
-
-###

@@ -8,7 +8,7 @@ var builder = WebApplication.CreateSlimBuilder(args);
 
 var app = builder.Build();
 
-var db = new UserDBContext();
+var db = new ApiDbContext();
 db.Database.EnsureCreated();
 db.Database.OpenConnection();
 db.Add(new User()
@@ -21,9 +21,9 @@ db.Add(new User()
 });
 
 var todo = app.MapGroup("/user");
-todo.MapGet("/", () => db.User.First());
+todo.MapGet("/", () => db.Users.First());
 todo.MapGet("/{id}", (int id) =>
-    db.User.FirstOrDefault(a => a.Id == id) is { } user
+    db.Users.FirstOrDefault(a => a.Id == id) is { } user
         ? Results.Ok(user)
         : Results.NotFound());
 db.Database.CloseConnection();

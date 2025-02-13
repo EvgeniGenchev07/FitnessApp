@@ -19,5 +19,7 @@ namespace Models
         public Exercise Exercise { get; set; }
         [Required]
         public List<Set> Sets { get; set; }
+        [Required]
+        public Workout Workout { get; set; }
     }
 }

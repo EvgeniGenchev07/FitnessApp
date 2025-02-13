@@ -21,5 +21,7 @@ namespace Models
         public ushort Weight { get; set; }  
         [Required]
         public Food Food { get; set; }
+        [Required]
+        public User User { get; set; }
     }
 }

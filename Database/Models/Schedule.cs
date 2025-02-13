@@ -14,8 +14,9 @@ namespace Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        List<Workout> Workouts { get; set; }
-        List<byte> RestDays { get; set; }
+        public List<Workout> Workouts { get; set; }
+        [Column("Restdays", TypeName = "varbinary(7)")]
+        public List<byte> RestDays { get; set; }
         public User User { get; set; }
         [ForeignKey("UserId")]
         public int UserId { get; set; }
