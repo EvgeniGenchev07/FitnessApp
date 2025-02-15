@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthloBoostX</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #000000;
+            color: #fff;
+        }
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .auth-box {
+            background: #1d1d1d;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 400px;
+        }
+        .btn-social {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .btn-social i {
+            margin-right: 10px;
+        }
+        .btn-google {
+            background-color: #db4437;
+            color: white;
+        }
+        .btn-facebook {
+            background-color: #3b5998;
+            color: white;
+        }
+        .btn-primary {
+            background-color: #e60000; /* Fitness Red */
+            border: none;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .btn-primary:hover {
+            background-color: #cc0000; /* Darker Red for hover */
+        }
+        .form-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .form-control {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #444;
+        }
+        .form-control:focus {
+            background-color: #444;
+            border-color: #e60000;
+        }
+        .auth-box h3 {
+            text-align: center;
+            color: #e60000; /* Fitness Red */
+            font-weight: bold;
+        }
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #ccc;
+        }
+        .divider span {
+            background-color: #333;
+            padding: 0 10px;
+        }
+        .footer-links {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+        }
+        .footer-links a {
+            color: #e60000;
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        .form-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-box">
+        <!-- Sign Up Form -->
+        <div class="form-container" id="signup-form">
+            <h3>Създайте профил</h3>
+            
+            <form>
+                <!-- Name Input -->
+                <div class="mb-3">
+                    <label for="name" class="form-label">Име</label>
+                    <input type="text" class="form-control" id="name" required>
+                </div>
+                
+                <!-- Email Input -->
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+                
+                <!-- Password Input -->
+                <div class="mb-3">
+                    <label for="password" class="form-label">Парола</label>
+                    <input type="password" class="form-control" id="password" required>
+                </div>
+
+                <!-- Sign Up Button -->
+                <button type="submit" class="btn btn-primary w-100 mb-3">Регистрация</button>
+
+                <!-- Or divider -->
+                <div class="divider">
+                    <span>или</span>
+                </div>
+
+                <!-- Google and Facebook Login -->
+                <button class="btn btn-social btn-google w-100">
+                    <i class="fab fa-google"></i> Регистрирайте се с Google
+                </button>
+                <button class="btn btn-social btn-facebook w-100">
+                    <i class="fab fa-facebook-f"></i> Регистрирайте се с Facebook
+                </button>
+            </form>
+
+            <div class="footer-links">
+                <p>Вече имате съществуващ профил? <a href="#" onclick="showLogin()">Вход</a></p>
+            </div>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container" id="login-form">
+            <h3>Вход</h3>
+            
+            <form>
+                <!-- Email Input -->
+                <div class="mb-3">
+                    <label for="login-email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="login-email" required>
+                </div>
+                
+                <!-- Password Input -->
+                <div class="mb-3">
+                    <label for="login-password" class="form-label">Парола</label>
+                    <input type="password" class="form-control" id="login-password" required>
+                </div>
+
+                <!-- Log In Button -->
+                <button type="submit" class="btn btn-primary w-100 mb-3">Вход</button>
+
+                <!-- Or divider -->
+                <div class="divider">
+                    <span>или</span>
+                </div>
+
+                <!-- Google and Facebook Login -->
+                <button class="btn btn-social btn-google w-100">
+                    <i class="fab fa-google"></i> Вход с Google
+                </button>
+                <button class="btn btn-social btn-facebook w-100">
+                    <i class="fab fa-facebook-f"></i> Вход с Facebook
+                </button>
+            </form>
+
+            <div class="footer-links">
+                <p>Нямате профил? <a href="#" onclick="showSignUp()">Регистрация</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS and Icons (for Google and Facebook icons) -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+
+<script>
+    // JavaScript functions to show/hide the forms
+    function showLogin() {
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    }
+
+    function showSignUp() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+    }
+
+    // Default to show Sign Up form initially
+    document.getElementById('signup-form').style.display = 'block';
+    document.getElementById('login-form').style.display = 'none';
+</script>
+
+</body>
+</html>
