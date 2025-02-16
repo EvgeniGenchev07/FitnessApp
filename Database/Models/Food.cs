@@ -26,9 +26,5 @@ namespace Models
         public ushort Fats { get; set; }
         [Required]
         public ushort Proteins { get; set; }
-        [Required]
-        public Meal Meal { get; set; }
-        [ForeignKey("MealId")]
-        public int MealId { get; set; }
     }
 }

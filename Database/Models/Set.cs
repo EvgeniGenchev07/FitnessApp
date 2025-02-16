@@ -22,6 +22,7 @@ namespace Models
         public byte Reps { get; set; }
         [Required]
         public WorkoutExercise WorkoutExercise { get; set; }
+        public int WorkoutExerciseId { get; set; }
 
     }
 }

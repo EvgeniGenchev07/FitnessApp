@@ -21,7 +21,10 @@ namespace Models
         public ushort Weight { get; set; }  
         [Required]
         public Food Food { get; set; }
+        [ForeignKey("FoodId")]
+        public int FoodId { get; set; }
         [Required]
         public User User { get; set; }
+        public int UserId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ var app = builder.Build();
 var db = new ApiDbContext();
 db.Database.EnsureCreated();
 db.Database.OpenConnection();
-db.Add(new User()
+db.AddUser(new User()
 {
     UserName = "newUser",
     Password = "password123",

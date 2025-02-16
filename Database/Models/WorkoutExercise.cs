@@ -17,9 +17,13 @@ namespace Models
         public int Id { get; set; }
         [Required]
         public Exercise Exercise { get; set; }
+        [ForeignKey("ExerciseId")]
+        public int ExerciseId { get; set; }
         [Required]
         public List<Set> Sets { get; set; }
         [Required]
         public Workout Workout { get; set; }
+        [ForeignKey("WorkoutId")]
+        public int WorkoutId { get; set; }
     }
 }

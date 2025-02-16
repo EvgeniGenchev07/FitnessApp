@@ -14,7 +14,6 @@ namespace Models
     public class Measurement
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //[Key]
         public int Id { get; set; }
         [Required]
         public DateTime Date { get; set; } 
@@ -32,5 +31,6 @@ namespace Models
         public double Weight { get; set; }
         [Required]
         public User User { get; set; }
+        public int UserId { get; set; }
     }
 }
