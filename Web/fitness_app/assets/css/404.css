@@ -43,7 +43,7 @@ a{
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-top: 10%;
+    padding-top:7cm;
     font-size: 27px;
     white-space: nowrap;
     text-transform: uppercase;
@@ -55,12 +55,6 @@ a{
     text-shadow: 0px 0px 4px #12000a;
     animation: fadeInText 4s ease-in 4.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
   }
-  @media (max-width: 600px) {
-    a {
-        margin-top: 27%; /* Increased margin for smaller screens */
-        font-size: 4vw; /* Adjust font size */
-        white-space: nowrap;
-    }}
 #svgWrap_1,
 #svgWrap_2{
   position: absolute;
