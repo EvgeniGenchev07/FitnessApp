@@ -40,21 +40,38 @@ div{
   animation: fadeInText 3s ease-in 3.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
 }*/
 a{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-top: 150px;
-  font-size: 25px;
-  white-space: nowrap;
-  text-transform: uppercase;
-  transform: translate(-50%, -50%);
-  display: block;
-  color: #12000a;
-  font-weight: 300;
-  font-family: Audiowide;
-  text-shadow: 0px 0px 4px #12000a;
-  animation: fadeInText 4s ease-in 4.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
-}
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: 150px;
+    font-size: 27px;
+    white-space: nowrap;
+    text-transform: uppercase;
+    transform: translate(-50%, -50%);
+    display: block;
+    color: #12000a;
+    font-weight: 300;
+    font-family: Audiowide;
+    text-shadow: 0px 0px 4px #12000a;
+    animation: fadeInText 4s ease-in 4.5s forwards, flicker4 5s linear 7.5s infinite, hueRotate 6s ease-in-out 3s infinite;
+  }
+  
+  /* Adjustments for tablets */
+  @media (max-width: 768px) {
+    a {
+      font-size: 5.5vw;
+      margin-top: 100px;
+    }
+  }
+  
+  /* Adjustments for mobile devices */
+  @media (max-width: 480px) {
+    a {
+      font-size: 5vw;
+      margin-top: 50px;
+    }
+  }
+  
 #svgWrap_1,
 #svgWrap_2{
   position: absolute;
