@@ -350,3 +350,4 @@ C:\Users\Andy\Documents\GitHub\FitnessApp\Database\WebApi\obj\Debug\net9.0\refin
 C:\Users\Andy\Documents\GitHub\FitnessApp\Database\WebApi\obj\Debug\net9.0\WebApi.pdb
 C:\Users\Andy\Documents\GitHub\FitnessApp\Database\WebApi\obj\Debug\net9.0\WebApi.genruntimeconfig.cache
 C:\Users\Andy\Documents\GitHub\FitnessApp\Database\WebApi\obj\Debug\net9.0\ref\WebApi.dll
+C:\Users\Andy\Documents\GitHub\FitnessApp\Database\WebApi\bin\Debug\net9.0\Newtonsoft.Json.dll

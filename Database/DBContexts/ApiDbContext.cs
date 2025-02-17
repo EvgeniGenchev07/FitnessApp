@@ -38,6 +38,9 @@ namespace DBContexts
                 .HasMany(u => u.Measurements)
                 .WithOne(m => m.User)
                 .HasForeignKey(m => m.UserId);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
 
             modelBuilder.Entity<Schedule>()
                 .HasMany(s => s.Workouts)
@@ -67,10 +70,15 @@ namespace DBContexts
         }
 
         #region Create
-        public void AddUser(User user)
+        public Task AddUser(User user)
         {
-            Users.Add(user);
-            SaveChanges();
+            try
+            {
+                Users.Add(user);
+                SaveChanges();
+                return Task.CompletedTask;
+            }
+            catch (Exception ex) { return Task.FromException(ex); }
         }
 
         public void AddWorkout(Workout workout)
