@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using Newtonsoft.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WebApi
 {
@@ -31,9 +30,15 @@ namespace WebApi
         }
 
         [HttpPost("user/post/{data}")]
-        public IActionResult PostUser(string data)
+        public IActionResult PostUser([FromBody] User data)
         {
-            return _dbContext.AddUser(JsonConvert.DeserializeObject<User>(data)).Exception == null? BadRequest() : Ok();
+            
+                return BadRequest("Invalid user data.");
+
+            /*_dbContext.Users.Add(data);
+            _dbContext.SaveChanges(); // Ensure changes are saved to the database
+
+            return Ok(new { message = "User added successfully", user = data });*/
 
         }
 
