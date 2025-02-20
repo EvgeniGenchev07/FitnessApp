@@ -11,12 +11,11 @@ namespace WebApi
     [Route("user/")]
     public class UserController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<User,string> _userContext;
 
-        public UserController(ApiDbContext context)
+        public UserController(IDatabase<User,string> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _userContext = context;
         }
 
         [HttpGet("{email}")]
@@ -24,7 +23,7 @@ namespace WebApi
         {
             try
             {
-                User user = await _dbContext.GetUser(email);
+                User user = await _userContext.ReadAsync(email);
                 if (user == null) return NotFound("User not found");
                 return Ok(user);
             }
@@ -41,7 +40,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddUser(data);
+                await _userContext.CreateAsync(data);
 
                 return Ok("User added successfully");
             }
@@ -61,7 +60,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateUser(data);
+                await _userContext.UpdateAsync(data);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -75,7 +74,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteUser(email);
+                await _userContext.DeleteAsync(email);
                 return Ok();
             }
             catch (Exception ex)

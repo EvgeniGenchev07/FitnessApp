@@ -9,12 +9,11 @@ namespace WebApi
     [Route("measurement/")]
     public class MeasurementController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Measurement,int> _measurementContext;
 
-        public MeasurementController(ApiDbContext context)
+        public MeasurementController(IDatabase<Measurement,int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _measurementContext = context;
         }
 
         [HttpGet("{id}")]
@@ -22,7 +21,7 @@ namespace WebApi
         {
             try
             {
-                Measurement meal = await _dbContext.GetMeasurement(id);
+                Measurement meal = await _measurementContext.ReadAsync(id);
                 if (meal == null) return NotFound("User not found");
                 return Ok(meal);
             }
@@ -39,7 +38,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddMeasurement(data);
+                await _measurementContext.CreateAsync(data);
 
                 return Ok("Food added successfully");
             }
@@ -59,7 +58,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateMeasurement(measurement);
+                await _measurementContext.UpdateAsync(measurement);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,7 +72,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteMeasurement(id);
+                await _measurementContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

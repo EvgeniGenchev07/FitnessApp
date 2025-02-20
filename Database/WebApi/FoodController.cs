@@ -9,12 +9,11 @@ namespace WebApi
     [Route("food/")]
     public class FoodController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Food,int> _foodContext;
 
-        public FoodController(ApiDbContext context)
+        public FoodController(IDatabase<Food,int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _foodContext = context;
         }
 
         [HttpGet("{id}")]
@@ -22,7 +21,7 @@ namespace WebApi
         {
             try
             {
-                Food food = await _dbContext.GetFood(id);
+                Food food = await _foodContext.ReadAsync(id);
                 if (food == null) return NotFound("User not found");
                 return Ok(food);
             }
@@ -39,7 +38,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddFood(data);
+                await _foodContext.CreateAsync(data);
 
                 return Ok("Food added successfully");
             }
@@ -59,7 +58,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateFood(food);
+                await _foodContext.UpdateAsync(food);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,7 +72,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteFood(id);
+                await _foodContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

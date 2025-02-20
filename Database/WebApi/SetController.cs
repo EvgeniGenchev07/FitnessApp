@@ -9,12 +9,11 @@ namespace WebApi
     [Route("set/")]
     public class SetController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Set,int> _setContext;
 
-        public SetController(ApiDbContext context)
+        public SetController(IDatabase<Set,int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _setContext = context;
         }
 
         [HttpGet("{id}")]
@@ -22,7 +21,7 @@ namespace WebApi
         {
             try
             {
-                Set set = await _dbContext.GetSet(id);
+                Set set = await _setContext.ReadAsync(id);
                 if (set == null) return NotFound("User not found");
                 return Ok(set);
             }
@@ -39,7 +38,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddSet(data);
+                await _setContext.CreateAsync(data);
 
                 return Ok("Food added successfully");
             }
@@ -59,7 +58,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateSet(set);
+                await _setContext.UpdateAsync(set);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,7 +72,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteSet(id);
+                await _setContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

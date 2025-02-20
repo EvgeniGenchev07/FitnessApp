@@ -11,12 +11,11 @@ namespace WebApi
     [Route("schedule/")]
     public class ScheduleController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Schedule,int> _scheduleContext;
 
-        public ScheduleController(ApiDbContext context)
+        public ScheduleController(IDatabase<Schedule,int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _scheduleContext = context;
         }
 
         [HttpGet("{id}")]
@@ -24,7 +23,7 @@ namespace WebApi
         {
             try
             {
-                Schedule schedule = await _dbContext.GetSchedule(id);
+                Schedule schedule = await _scheduleContext.ReadAsync(id);
                 if (schedule == null) return NotFound("User not found");
                 return Ok(schedule);
             }
@@ -41,7 +40,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddSchedule(data);
+                await _scheduleContext.CreateAsync(data);
 
                 return Ok("Food added successfully");
             }
@@ -61,7 +60,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateSchedule(schedule);
+                await _scheduleContext.UpdateAsync(schedule);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -75,7 +74,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteSchedule(id);
+                await _scheduleContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

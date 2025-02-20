@@ -9,12 +9,11 @@ namespace WebApi
     [Route("exercise/")]
     public class ExerciseController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Exercise,int> _exerciseContext;
 
-        public ExerciseController(ApiDbContext context)
+        public ExerciseController(IDatabase<Exercise,int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _exerciseContext = context;
         }
 
         [HttpGet("{id}")]
@@ -22,7 +21,7 @@ namespace WebApi
         {
             try
             {
-                Exercise exercise = await _dbContext.GetExercise(id);
+                Exercise exercise = await _exerciseContext.ReadAsync(id);
                 if (exercise == null) return NotFound("User not found");
                 return Ok(exercise);
             }
@@ -39,7 +38,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.AddExercise(data);
+                await _exerciseContext.CreateAsync(data);
 
                 return Ok("User added successfully");
             }
@@ -59,7 +58,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.UpdateExercise(exercise);
+                await _exerciseContext.UpdateAsync(exercise);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,7 +72,7 @@ namespace WebApi
         {
             try
             {
-                await _dbContext.DeleteExercise(id);
+                await _exerciseContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)
