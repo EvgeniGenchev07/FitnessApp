@@ -46,13 +46,13 @@ namespace WebApi
 
                 return Ok("User added successfully");
             }
-            catch (DbUpdateException e)
+            catch (DbUpdateException ex)
             {
                 return BadRequest("Invalid user data.");
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return StatusCode(500, e.Message);
+                return StatusCode(500, ex.Message);
             }
 
         }

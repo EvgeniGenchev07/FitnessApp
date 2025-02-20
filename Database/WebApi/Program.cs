@@ -1,9 +1,4 @@
-using System.Text.Json.Serialization;
 using DBContexts;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using Models;
-using Newtonsoft.Json;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
