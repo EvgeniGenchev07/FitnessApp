@@ -3,8 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\WebApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\dbcontexts\\apidbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\webapi\\controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:controller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{09863985-C9C3-4E62-A270-20E09AD65E1C}|..\\Models\\Models.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\models\\workout.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,13 +21,7 @@
       "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:webapi.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\dbcontexts\\apidbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{09863985-C9C3-4E62-A270-20E09AD65E1C}|..\\Models\\Models.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{09863985-C9C3-4E62-A270-20E09AD65E1C}|..\\Models\\Models.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\models\\workout.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{09863985-C9C3-4E62-A270-20E09AD65E1C}|..\\Models\\Models.csproj|c:\\users\\andy\\documents\\github\\fitnessapp\\database\\models\\workoutexercise.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -95,24 +95,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Controller.cs",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\WebApi\\Controller.cs",
               "RelativeDocumentMoniker": "Controller.cs",
               "ToolTip": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\WebApi\\Controller.cs",
               "RelativeToolTip": "Controller.cs",
-              "ViewState": "AgIAAAgAAAAAAAAAAAAqwCEAAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB4AAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-17T20:09:03.924Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\User.cs",
               "RelativeDocumentMoniker": "..\\Models\\User.cs",
@@ -120,8 +120,7 @@
               "RelativeToolTip": "..\\Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-17T18:56:09.351Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-17T18:56:09.351Z"
             },
             {
               "$type": "Document",
@@ -133,8 +132,7 @@
               "RelativeToolTip": "..\\Models\\Food.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAIBJwBkAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:51:19.18Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:51:19.18Z"
             },
             {
               "$type": "Document",
@@ -146,12 +144,11 @@
               "RelativeToolTip": "..\\Models\\WorkoutExercise.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:42:09.247Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:42:09.247Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
               "Title": "Workout.cs",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Workout.cs",
               "RelativeDocumentMoniker": "..\\Models\\Workout.cs",
@@ -172,8 +169,7 @@
               "RelativeToolTip": "..\\Models\\Meal.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:38:37.26Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:38:37.26Z"
             },
             {
               "$type": "Document",
@@ -185,8 +181,7 @@
               "RelativeToolTip": "..\\Models\\Schedule.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:24:27.259Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:24:27.259Z"
             },
             {
               "$type": "Document",
@@ -198,25 +193,24 @@
               "RelativeToolTip": "..\\Models\\Set.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:22:21.425Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:22:21.425Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "ApiDbContext.cs",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\ApiDbContext.cs",
               "RelativeDocumentMoniker": "..\\DBContexts\\ApiDbContext.cs",
               "ToolTip": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\DBContexts\\ApiDbContext.cs",
               "RelativeToolTip": "..\\DBContexts\\ApiDbContext.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAAswFgAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAIMAAAAAAAAAAAAAwHQAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-16T21:12:27.638Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\WebApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
@@ -224,8 +218,7 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAABzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-10T20:44:58.506Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-10T20:44:58.506Z"
             },
             {
               "$type": "Document",
@@ -237,12 +230,11 @@
               "RelativeToolTip": "..\\Models\\Measurement.cs",
               "ViewState": "AgIAAA4AAAAAAAAAAAAQwAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:10:37.01Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:10:37.01Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "WebApi.http",
               "DocumentMoniker": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\WebApi\\WebApi.http",
               "RelativeDocumentMoniker": "WebApi.http",
@@ -250,8 +242,7 @@
               "RelativeToolTip": "WebApi.http",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
-              "WhenOpened": "2025-02-13T07:57:30.054Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-13T07:57:30.054Z"
             },
             {
               "$type": "Document",
@@ -263,8 +254,7 @@
               "RelativeToolTip": "..\\Models\\Exercise.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-16T21:52:13.478Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-16T21:52:13.478Z"
             },
             {
               "$type": "Document",
@@ -276,8 +266,7 @@
               "RelativeToolTip": "Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-13T07:51:13.102Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-13T07:51:13.102Z"
             },
             {
               "$type": "Document",
@@ -318,8 +307,7 @@
               "RelativeToolTip": "appsettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-02-10T21:15:52.591Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-10T21:15:52.591Z"
             },
             {
               "$type": "Document",
@@ -340,8 +328,7 @@
               "RelativeToolTip": "WebApi.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-02-10T22:32:53.145Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-10T22:32:53.145Z"
             },
             {
               "$type": "Document",
@@ -380,8 +367,7 @@
               "RelativeToolTip": "WebApi.csproj.Backup.tmp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-02-11T09:28:53.477Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-11T09:28:53.477Z"
             },
             {
               "$type": "Document",

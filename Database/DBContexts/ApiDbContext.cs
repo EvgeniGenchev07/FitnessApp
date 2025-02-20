@@ -114,13 +114,13 @@ namespace DBContexts
 
         #region Read
 
-        public User GetUserById(int id)
+        public User GetUser(string email)
         {
             return Users.Include(u => u.Workouts)
                         .Include(u => u.Meals)
                         .Include(u => u.Measurements)
                         .Include(u => u.Schedule)
-                        .FirstOrDefault(u => u.Id == id);
+                        .FirstOrDefault(u => u.Email == email);
         }
 
         public Workout GetWorkoutById(int id)
@@ -193,9 +193,9 @@ namespace DBContexts
 
         #region Delete
 
-        public void DeleteUser(int id)
+        public void DeleteUser(string email)
         {
-            var user = GetUserById(id);
+            var user = GetUser(email);
 
             if (user != null)
             {
