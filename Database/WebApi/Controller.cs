@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace WebApi
 {
     [ApiController]
-    [Route("server/")]
+    [Route("user/")]
     public class Controller : ControllerBase
     {
         private readonly ApiDbContext _dbContext;
@@ -19,17 +19,12 @@ namespace WebApi
             _dbContext.Database.EnsureCreated();
         }
 
-        [HttpGet("user")]
-        public IActionResult GetUser()
+        [HttpGet("{email}")]
+        public ActionResult GetUser(string email)
         {
-            return Ok(new User()
-            {
-                UserName = "newUser",
-                Password = "password123",
-                Email = "newuser@example.com",
-                Age = 25,
-                Height = 180
-            });
+            User user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null) return NotFound("User not found");
+            return Ok(user);
         }
 
         [HttpPost("{data}")]
@@ -48,10 +43,9 @@ namespace WebApi
             }
             catch (Exception e)
             {
-                return BadRequest("An unexpected error occured.");
+                return BadRequest();
             }
 
         }
-
     }
 }
