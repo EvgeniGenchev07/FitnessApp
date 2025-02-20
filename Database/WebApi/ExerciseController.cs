@@ -11,7 +11,7 @@ namespace WebApi
     {
         private readonly IDatabase<Exercise,int> _exerciseContext;
 
-        public ExerciseController(IDatabase<Exercise,int> context)
+        public ExerciseController(ExerciseContext context)
         {
             _exerciseContext = context;
         }

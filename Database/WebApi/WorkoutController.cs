@@ -11,7 +11,7 @@ namespace WebApi
     {
         private readonly IDatabase<Workout, int> _workoutContext;
 
-        public WorkoutController(IDatabase<Workout, int> context)
+        public WorkoutController(WorkoutContext context)
         {
             _workoutContext = context;
         }

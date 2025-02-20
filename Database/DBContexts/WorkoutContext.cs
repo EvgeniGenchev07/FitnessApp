@@ -13,7 +13,15 @@ public class WorkoutContext: IDatabase<Workout, int>
 
     public async Task CreateAsync(Workout entity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            _dbContext.Workouts.Add(entity);
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<Workout> ReadAsync(int key)

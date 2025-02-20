@@ -9,9 +9,9 @@ namespace WebApi
     [Route("workoutexercise/")]
     public class WorkoutExerciseController : ControllerBase
     {
-        private readonly IDatabase<Workout, int> _workoutExerciseContext;
+        private readonly IDatabase<WorkoutExercise, int> _workoutExerciseContext;
 
-        public WorkoutExerciseController(IDatabase<Workout, int> context)
+        public WorkoutExerciseController(WorkoutExerciseContext context)
         {
             _workoutExerciseContext = context;
         }
@@ -21,7 +21,7 @@ namespace WebApi
         {
             try
             {
-                Workout workoutExercise = await _workoutExerciseContext.ReadAsync(id);
+                WorkoutExercise workoutExercise = await _workoutExerciseContext.ReadAsync(id);
                 if (workoutExercise == null) return NotFound("Workout exercise not found");
                 return Ok(workoutExercise);
             }
@@ -34,7 +34,7 @@ namespace WebApi
 
 
         [HttpPost("{data}")]
-        public async Task<IActionResult> PostWorkoutExercise([FromBody] Workout data)
+        public async Task<IActionResult> PostWorkoutExercise([FromBody] WorkoutExercise data)
         {
             try
             {
@@ -54,7 +54,7 @@ namespace WebApi
         }
 
         [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateWorkoutExercise(Workout workoutExercise)
+        public async Task<IActionResult> UpdateWorkoutExercise(WorkoutExercise workoutExercise)
         {
             try
             {

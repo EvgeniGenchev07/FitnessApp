@@ -11,7 +11,7 @@ namespace WebApi
     {
         private readonly IDatabase<Measurement,int> _measurementContext;
 
-        public MeasurementController(IDatabase<Measurement,int> context)
+        public MeasurementController(MeasurementContext context)
         {
             _measurementContext = context;
         }
@@ -29,7 +29,6 @@ namespace WebApi
             {
                 return StatusCode(500, ex.Message);
             }
-
         }
 
 

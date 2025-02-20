@@ -13,7 +13,7 @@ namespace WebApi
     {
         private readonly IDatabase<User,string> _userContext;
 
-        public UserController(IDatabase<User,string> context)
+        public UserController(UserContext context)
         {
             _userContext = context;
         }

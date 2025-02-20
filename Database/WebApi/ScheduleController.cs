@@ -13,7 +13,7 @@ namespace WebApi
     {
         private readonly IDatabase<Schedule,int> _scheduleContext;
 
-        public ScheduleController(IDatabase<Schedule,int> context)
+        public ScheduleController(ScheduleContext context)
         {
             _scheduleContext = context;
         }

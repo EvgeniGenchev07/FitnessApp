@@ -11,7 +11,7 @@ namespace WebApi
     {
         private readonly IDatabase<Set,int> _setContext;
 
-        public SetController(IDatabase<Set,int> context)
+        public SetController(SetContext context)
         {
             _setContext = context;
         }

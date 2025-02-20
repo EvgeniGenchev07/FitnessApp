@@ -11,7 +11,7 @@ namespace WebApi
     {
         private readonly IDatabase<Food,int> _foodContext;
 
-        public FoodController(IDatabase<Food,int> context)
+        public FoodController(FoodContext context)
         {
             _foodContext = context;
         }

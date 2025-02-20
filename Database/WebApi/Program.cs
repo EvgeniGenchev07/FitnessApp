@@ -4,6 +4,7 @@ using Models;
 var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<AthloboostDbContext>();
 builder.Services.AddScoped<UserContext>();
 builder.Services.AddScoped<ExerciseContext>();
 builder.Services.AddScoped<WorkoutContext>();
