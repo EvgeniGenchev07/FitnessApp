@@ -22,10 +22,19 @@ namespace WebApi
         [HttpGet("{email}")]
         public ActionResult GetUser(string email)
         {
-            User user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null) return NotFound("User not found");
-            return Ok(user);
+            try
+            {
+                User user = _dbContext.GetUser(email);
+                if (user == null) return NotFound("User not found");
+                return Ok(user);
+            }
+            catch (Exception ex) 
+            {
+                return StatusCode(500, ex.Message);
+            }
+            
         }
+       
 
         [HttpPost("{data}")]
         public IActionResult PostUser([FromBody] User data)
@@ -43,9 +52,11 @@ namespace WebApi
             }
             catch (Exception e)
             {
-                return BadRequest();
+                return StatusCode(500, e.Message);
             }
 
         }
+
+            
     }
 }
