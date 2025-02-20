@@ -22,7 +22,7 @@ namespace WebApi
             try
             {
                 Exercise exercise = await _exerciseContext.ReadAsync(id);
-                if (exercise == null) return NotFound("User not found");
+                if (exercise == null) return NotFound("Exercise not found");
                 return Ok(exercise);
             }
             catch (Exception ex)
@@ -40,11 +40,11 @@ namespace WebApi
             {
                 await _exerciseContext.CreateAsync(data);
 
-                return Ok("User added successfully");
+                return Ok("Exercise added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid user data.");
+                return BadRequest("Invalid exercise data.");
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace WebApi
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update exercise data");
             }
         }
 

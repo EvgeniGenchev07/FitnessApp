@@ -24,7 +24,7 @@ namespace WebApi
             try
             {
                 Schedule schedule = await _scheduleContext.ReadAsync(id);
-                if (schedule == null) return NotFound("User not found");
+                if (schedule == null) return NotFound("Schedule not found");
                 return Ok(schedule);
             }
             catch (Exception ex)
@@ -42,11 +42,11 @@ namespace WebApi
             {
                 await _scheduleContext.CreateAsync(data);
 
-                return Ok("Food added successfully");
+                return Ok("Schedule added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid food data.");
+                return BadRequest("Invalid schedule data.");
             }
             catch (Exception ex)
             {
@@ -65,7 +65,7 @@ namespace WebApi
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update schedule data");
             }
         }
 

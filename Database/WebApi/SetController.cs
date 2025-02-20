@@ -22,7 +22,7 @@ namespace WebApi
             try
             {
                 Set set = await _setContext.ReadAsync(id);
-                if (set == null) return NotFound("User not found");
+                if (set == null) return NotFound("Set not found");
                 return Ok(set);
             }
             catch (Exception ex)
@@ -40,11 +40,11 @@ namespace WebApi
             {
                 await _setContext.CreateAsync(data);
 
-                return Ok("Food added successfully");
+                return Ok("Set added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid food data.");
+                return BadRequest("Invalid set data.");
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace WebApi
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update set data");
             }
         }
 

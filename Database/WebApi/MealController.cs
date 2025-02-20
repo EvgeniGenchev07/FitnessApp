@@ -22,7 +22,7 @@ namespace WebApi
             try
             {
                 Meal meal = await _mealContext.ReadAsync(id);
-                if (meal == null) return NotFound("User not found");
+                if (meal == null) return NotFound("Meal not found");
                 return Ok(meal);
             }
             catch (Exception ex)
@@ -40,11 +40,11 @@ namespace WebApi
             {
                 await _mealContext.CreateAsync(data);
 
-                return Ok("Food added successfully");
+                return Ok("Meal added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid food data.");
+                return BadRequest("Invalid meal data.");
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace WebApi
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update meal data");
             }
         }
 

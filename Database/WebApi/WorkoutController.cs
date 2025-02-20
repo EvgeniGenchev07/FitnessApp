@@ -9,22 +9,21 @@ namespace WebApi
     [Route("workout/")]
     public class WorkoutController : ControllerBase
     {
-        private readonly ApiDbContext _dbContext;
+        private readonly IDatabase<Workout, int> _workoutContext;
 
-        public WorkoutController(ApiDbContext context)
+        public WorkoutController(IDatabase<Workout, int> context)
         {
-            _dbContext = context;
-            _dbContext.Database.EnsureCreated();
+            _workoutContext = context;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSet(int id)
+        public async Task<IActionResult> GetWorkout(int id)
         {
             try
             {
-                Set set = await _dbContext.GetSet(id);
-                if (set == null) return NotFound("User not found");
-                return Ok(set);
+                Workout workoutExercise = await _workoutContext.ReadAsync(id);
+                if (workoutExercise == null) return NotFound("Workout not found");
+                return Ok(workoutExercise);
             }
             catch (Exception ex)
             {
@@ -35,17 +34,17 @@ namespace WebApi
 
 
         [HttpPost("{data}")]
-        public async Task<IActionResult> PostSet([FromBody] Set data)
+        public async Task<IActionResult> PostWorkout([FromBody] Workout data)
         {
             try
             {
-                await _dbContext.AddSet(data);
+                await _workoutContext.CreateAsync(data);
 
-                return Ok("Food added successfully");
+                return Ok("Workout added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid food data.");
+                return BadRequest("Invalid workout data.");
             }
             catch (Exception ex)
             {
@@ -55,25 +54,25 @@ namespace WebApi
         }
 
         [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateSet(Set set)
+        public async Task<IActionResult> UpdateWorkout(Workout workoutExercise)
         {
             try
             {
-                await _dbContext.UpdateSet(set);
+                await _workoutContext.UpdateAsync(workoutExercise);
                 return Ok();
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update workout data");
             }
         }
 
         [HttpDelete("{email}")]
-        public async Task<IActionResult> DeleteSet(int id)
+        public async Task<IActionResult> DeleteWorkout(int id)
         {
             try
             {
-                await _dbContext.DeleteSet(id);
+                await _workoutContext.DeleteAsync(id);
                 return Ok();
             }
             catch (Exception ex)

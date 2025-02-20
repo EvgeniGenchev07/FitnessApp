@@ -22,7 +22,7 @@ namespace WebApi
             try
             {
                 Measurement meal = await _measurementContext.ReadAsync(id);
-                if (meal == null) return NotFound("User not found");
+                if (meal == null) return NotFound("Measurement not found");
                 return Ok(meal);
             }
             catch (Exception ex)
@@ -40,11 +40,11 @@ namespace WebApi
             {
                 await _measurementContext.CreateAsync(data);
 
-                return Ok("Food added successfully");
+                return Ok("Measurement added successfully");
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Invalid food data.");
+                return BadRequest("Invalid measurement data.");
             }
             catch (Exception ex)
             {
@@ -63,7 +63,7 @@ namespace WebApi
             }
             catch (DbUpdateException ex)
             {
-                return BadRequest("Couldn't update user data");
+                return BadRequest("Couldn't update measurement data");
             }
         }
 
