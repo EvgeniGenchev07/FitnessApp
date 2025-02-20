@@ -3,7 +3,7 @@ using Models;
 
 namespace DBContexts
 {
-    public class ApiDbContext : DbContext
+    public class AthloboostDbContext : DbContext
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Workout> Workouts { get; set; }
