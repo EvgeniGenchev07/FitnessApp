@@ -33,7 +33,7 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<IActionResult> PostMeal([FromBody] Meal data)
         {
             try
@@ -53,8 +53,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateMeal(Meal meal)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateMeal([FromBody]Meal meal)
         {
             try
             {

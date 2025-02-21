@@ -32,7 +32,7 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<IActionResult> PostMeasurement([FromBody] Measurement data)
         {
             try
@@ -52,8 +52,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateMeasurement(Measurement measurement)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateMeasurement([FromBody]Measurement measurement)
         {
             try
             {

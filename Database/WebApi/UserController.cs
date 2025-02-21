@@ -35,13 +35,12 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<IActionResult> PostUser([FromBody] User data)
         {
             try
             {
                 await _userContext.CreateAsync(data);
-
                 return Ok("User added successfully");
             }
             catch (DbUpdateException ex)
@@ -55,8 +54,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateUser(User data)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUser([FromBody]User data)
         {
             try
             {

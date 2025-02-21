@@ -35,7 +35,7 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]        
         public async Task<IActionResult> PostSchedule([FromBody] Schedule data)
         {
             try
@@ -55,8 +55,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateSchedule(Schedule schedule)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateSchedule([FromBody]Schedule schedule)
         {
             try
             {

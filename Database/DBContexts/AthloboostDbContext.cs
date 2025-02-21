@@ -5,43 +5,41 @@ namespace DBContexts
 {
     public class AthloboostDbContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<Workout> Workouts { get; set; }
-        public DbSet<WorkoutExercise> WorkoutExercises { get; set; }
-        public DbSet<Set> Sets { get; set; }
-        public DbSet<Measurement> Measurements { get; set; }
-        public DbSet<Meal> Meals { get; set; }
-        public DbSet<Food> Foods { get; set; }
-        public DbSet<Exercise> Exercises { get; set; }
-        public DbSet<Schedule> Schedules { get; set; }
+        internal DbSet<User> Users { get; set; }
+        internal DbSet<Workout> Workouts { get; set; }
+        internal DbSet<WorkoutExercise> WorkoutExercises { get; set; }
+        internal DbSet<Set> Sets { get; set; }
+        internal DbSet<Measurement> Measurements { get; set; }
+        internal DbSet<Meal> Meals { get; set; }
+        internal DbSet<Food> Foods { get; set; }
+        internal DbSet<Exercise> Exercises { get; set; }
+        internal DbSet<Schedule> Schedules { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlite("Data Source=athloboostx.db3");
-            base.OnConfiguring(optionsBuilder);
-        }
+        public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options) { }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Schedule)
-                .WithOne(s=>s.User)
-                .HasForeignKey<Schedule>(s=>s.UserId);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Workouts)
-                .WithOne(w => w.User)
-                .HasForeignKey(w => w.UserId);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Meals)
-                .WithOne(m => m.User)
-                .HasForeignKey(m => m.UserId);
-            modelBuilder.Entity<User>()
-                .HasMany(u => u.Measurements)
-                .WithOne(m => m.User)
-                .HasForeignKey(m => m.UserId);
-            modelBuilder.Entity<User>()
-                .HasIndex(u => u.Email)
-                .IsUnique();
+            modelBuilder.Entity<User>(u =>
+            {
+                u.HasOne(u => u.Schedule)
+                    .WithOne(s => s.User)
+                    .HasForeignKey<Schedule>(s => s.UserId);
 
+                u.HasMany(u => u.Workouts)
+                    .WithOne(w => w.User)
+                    .HasForeignKey(w => w.UserId);
+
+                u.HasMany(u => u.Meals)
+                    .WithOne(m => m.User)
+                    .HasForeignKey(m => m.UserId);
+
+                u.HasMany(u => u.Measurements)
+                    .WithOne(m => m.User)
+                    .HasForeignKey(m => m.UserId);
+
+                u.HasIndex(u => u.Email)
+                    .IsUnique();
+            });
             modelBuilder.Entity<Schedule>()
                 .HasMany(s => s.Workouts)
                 .WithOne(w => w.Schedule)
@@ -57,15 +55,16 @@ namespace DBContexts
                 .WithOne(we => we.Workout)
                 .HasForeignKey(we => we.WorkoutId);
 
-            modelBuilder.Entity<WorkoutExercise>()
-                .HasOne(we => we.Exercise)
-                .WithOne()
-                .HasForeignKey<WorkoutExercise>(we => we.ExerciseId);
-            modelBuilder.Entity<WorkoutExercise>()
-               .HasMany(we => we.Sets)
-               .WithOne(s => s.WorkoutExercise)
-               .HasForeignKey(s => s.WorkoutExerciseId);
+            modelBuilder.Entity<WorkoutExercise>(we =>
+            {
+                we.HasOne(we => we.Exercise)
+                    .WithOne()
+                    .HasForeignKey<WorkoutExercise>(we => we.ExerciseId);
 
+                we.HasMany(we => we.Sets)
+                    .WithOne(s => s.WorkoutExercise)
+                    .HasForeignKey(s => s.WorkoutExerciseId);
+            });
             base.OnModelCreating(modelBuilder);
         }
     }

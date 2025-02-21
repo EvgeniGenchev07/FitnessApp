@@ -1090,7 +1090,7 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "Microsoft.EntityFrameworkCore": "9.0.1"
+          "Microsoft.EntityFrameworkCore": "9.0.2"
         },
         "compile": {
           "bin/placeholder/Models.dll": {}

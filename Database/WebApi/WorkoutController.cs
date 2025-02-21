@@ -33,7 +33,7 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<IActionResult> PostWorkout([FromBody] Workout data)
         {
             try
@@ -53,8 +53,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateWorkout(Workout workoutExercise)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateWorkout([FromBody]Workout workoutExercise)
         {
             try
             {

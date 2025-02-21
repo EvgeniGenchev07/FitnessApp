@@ -33,7 +33,7 @@ namespace WebApi
         }
 
 
-        [HttpPost("{data}")]
+        [HttpPost]
         public async Task<IActionResult> PostSet([FromBody] Set data)
         {
             try
@@ -53,8 +53,8 @@ namespace WebApi
 
         }
 
-        [HttpPatch("{data}")]
-        public async Task<IActionResult> UpdateSet(Set set)
+        [HttpPatch]
+        public async Task<IActionResult> UpdateSet([FromBody]Set set)
         {
             try
             {
