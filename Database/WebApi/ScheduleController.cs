@@ -4,6 +4,7 @@ using DBContexts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Newtonsoft.Json;
 
 namespace WebApi
 {
@@ -55,7 +56,7 @@ namespace WebApi
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> UpdateSchedule([FromBody]Schedule schedule)
         {
             try
@@ -66,6 +67,37 @@ namespace WebApi
             catch (DbUpdateException ex)
             {
                 return BadRequest("Couldn't update schedule data");
+            }
+        }
+        
+        [HttpPatch]
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                Schedule schedule = await _scheduleContext.ReadAsync(Convert.ToInt32(data["id"]));
+                
+                if (schedule == null) return NotFound("Schedule not found");
+                
+                foreach (var pair in data)
+                {
+                    switch (pair.Key)
+                    {
+                        case "restDays":
+                            schedule.RestDays = (List<byte>)pair.Value;
+                            break;
+                        case "workouts":
+                            schedule.Workouts = (List<Workout>)pair.Value;
+                            break;
+                    }
+                }
+                
+                await _scheduleContext.UpdateAsync(schedule);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 

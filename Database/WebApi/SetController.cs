@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Newtonsoft.Json;
 
 namespace WebApi
 {
@@ -53,7 +54,7 @@ namespace WebApi
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> UpdateSet([FromBody]Set set)
         {
             try
@@ -66,7 +67,38 @@ namespace WebApi
                 return BadRequest("Couldn't update set data");
             }
         }
-
+        
+        [HttpPatch]
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                Set set = await _setContext.ReadAsync(Convert.ToInt32(data["id"]));
+                
+                if (set == null) return NotFound("Set not found");
+                
+                foreach (var pair in data)
+                {
+                    switch (pair.Key)
+                    {
+                        case "reps":
+                            set.Reps = Convert.ToByte(pair.Value);
+                            break;
+                        case "weight":
+                            set.Weight = Convert.ToDouble(pair.Value);
+                            break;
+                    }
+                }
+                
+                await _setContext.UpdateAsync(set);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteSet(int id)
         {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Newtonsoft.Json;
 
 namespace WebApi
 {
@@ -52,7 +53,7 @@ namespace WebApi
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> UpdateMeasurement([FromBody]Measurement measurement)
         {
             try
@@ -65,7 +66,53 @@ namespace WebApi
                 return BadRequest("Couldn't update measurement data");
             }
         }
-
+        
+        [HttpPatch]
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                Measurement measurement = await _measurementContext.ReadAsync(Convert.ToInt32(data["id"]));
+                
+                if (measurement == null) return NotFound("Measurement not found");
+                
+                foreach (var pair in data)
+                {
+                    switch (pair.Key)
+                    {
+                        case "arm":
+                            measurement.Arm = Convert.ToDouble(pair.Value);
+                            break;
+                        case "calf":
+                            measurement.Calf = Convert.ToDouble(pair.Value);
+                            break;
+                        case "chest":
+                            measurement.Chest = Convert.ToDouble(pair.Value);
+                            break;
+                        case "waist":
+                            measurement.Waist = Convert.ToDouble(pair.Value);
+                            break;
+                        case "forearm":
+                            measurement.Forearm = Convert.ToDouble(pair.Value);
+                            break;
+                        case "date":
+                            measurement.Date = Convert.ToDateTime(pair.Value);
+                            break;
+                        case "weight":
+                            measurement.Weight = Convert.ToDouble(pair.Value);
+                            break;
+                    }
+                }
+                
+                await _measurementContext.UpdateAsync(measurement);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteMeasurement(int id)
         {

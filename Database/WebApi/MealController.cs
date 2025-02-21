@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Newtonsoft.Json;
 
 namespace WebApi
 {
@@ -53,7 +54,7 @@ namespace WebApi
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> UpdateMeal([FromBody]Meal meal)
         {
             try
@@ -66,7 +67,41 @@ namespace WebApi
                 return BadRequest("Couldn't update meal data");
             }
         }
-
+        
+        [HttpPatch]
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                Meal meal = await _mealContext.ReadAsync(Convert.ToInt32(data["id"]));
+                
+                if (meal == null) return NotFound("Meal not found");
+                
+                foreach (var pair in data)
+                {
+                    switch (pair.Key)
+                    {
+                        case "arm":
+                            meal.Food = (Food)pair.Value;
+                            break;
+                        case "date":
+                            meal.Date = Convert.ToDateTime(pair.Value);
+                            break;
+                        case "weight":
+                            meal.Weight = Convert.ToUInt16(pair.Value);
+                            break;
+                    }
+                }
+                
+                await _mealContext.UpdateAsync(meal);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteMeal(int id)
         {

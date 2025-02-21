@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Newtonsoft.Json;
 
 namespace WebApi
 {
@@ -53,7 +54,7 @@ namespace WebApi
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         public async Task<IActionResult> UpdateWorkout([FromBody]Workout workoutExercise)
         {
             try
@@ -66,7 +67,38 @@ namespace WebApi
                 return BadRequest("Couldn't update workout data");
             }
         }
-
+        
+        [HttpPatch]
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                Workout workout = await _workoutContext.ReadAsync(Convert.ToInt32(data["id"]));
+                
+                if (workout == null) return NotFound("Workout not found");
+                
+                foreach (var pair in data)
+                {
+                    switch (pair.Key)
+                    {
+                        case "date":
+                            workout.Date = Convert.ToDateTime(pair.Value);
+                            break;
+                        case "workoutExercises":
+                            workout.WorkoutExercises = (List<WorkoutExercise>)pair.Value;
+                            break;
+                    }
+                }
+                
+                await _workoutContext.UpdateAsync(workout);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
         [HttpDelete("{email}")]
         public async Task<IActionResult> DeleteWorkout(int id)
         {
