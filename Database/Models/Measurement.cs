@@ -18,16 +18,22 @@ namespace Models
         [Required]
         public DateTime Date { get; set; }
         [Precision(2, 5)]
-        public double Waist { get; set; }
+        [Range(50,150)]
+        public double? Waist { get; set; }
         [Precision(2,5)]
-        public double Arm { get; set; }
+        [Range(20,80)]
+        public double? Arm { get; set; }
         [Precision(2, 5)]
-        public double Forearm { get; set; }
+        [Range(15,60)]
+        public double? Forearm { get; set; }
         [Precision(2,5)]
-        public double Calf { get; set; }
+        [Range(15, 70)]
+        public double? Calf { get; set; }
         [Precision(2, 5)]
-        public double Chest { get; set; }
+        [Range(50, 150)]
+        public double? Chest { get; set; }
         [Precision(2,5)]
-        public double Weight { get; set; }
+        [Range(40, 200)]
+        public double? Weight { get; set; }
     }
 }

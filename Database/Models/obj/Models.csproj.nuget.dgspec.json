@@ -1,26 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/home/evgeni/FitnessApp/Database/Models/Models.csproj": {}
+    "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj": {}
   },
   "projects": {
-    "/home/evgeni/FitnessApp/Database/Models/Models.csproj": {
+    "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/evgeni/FitnessApp/Database/Models/Models.csproj",
+        "projectUniqueName": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
         "projectName": "Models",
-        "projectPath": "/home/evgeni/FitnessApp/Database/Models/Models.csproj",
-        "packagesPath": "/home/evgeni/.nuget/packages/",
-        "outputPath": "/home/evgeni/FitnessApp/Database/Models/obj/",
+        "projectPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\Models.csproj",
+        "packagesPath": "C:\\Users\\Andy\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Andy\\Documents\\GitHub\\FitnessApp\\Database\\Models\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/evgeni/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Andy\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "/usr/lib64/dotnet/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -72,7 +77,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
