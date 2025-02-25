@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Set set = await _setContext.ReadAsync(id);
+                Set set = await _setContext.ReadAsync(id,true,true);
                 if (set == null) return NotFound("Set not found");
                 return Ok(set);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _setContext.UpdateAsync(set);
+                await _setContext.UpdateAsync(set,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,10 +73,10 @@ namespace WebApi
         {
             try
             {
-                Set set = await _setContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Set set = await _setContext.ReadAsync(Convert.ToInt32(data["id"]),false);
                 
                 if (set == null) return NotFound("Set not found");
-                
+                bool useNavigationProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -90,7 +90,7 @@ namespace WebApi
                     }
                 }
                 
-                await _setContext.UpdateAsync(set);
+                await _setContext.UpdateAsync(set,useNavigationProperties);
                 return Ok();
             }
             catch (Exception ex)

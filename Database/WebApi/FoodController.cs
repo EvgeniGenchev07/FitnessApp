@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Food food = await _foodContext.ReadAsync(id);
+                Food food = await _foodContext.ReadAsync(id,true,true);
                 if (food == null) return NotFound("Food not found");
                 return Ok(food);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _foodContext.UpdateAsync(food);
+                await _foodContext.UpdateAsync(food,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -69,14 +69,14 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchFood([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                Food food = await _foodContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Food food = await _foodContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (food == null) return NotFound("Food not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -99,7 +99,7 @@ namespace WebApi
                     }
                 }
                 
-                await _foodContext.UpdateAsync(food);
+                await _foodContext.UpdateAsync(food,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

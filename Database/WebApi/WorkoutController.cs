@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Workout workoutExercise = await _workoutContext.ReadAsync(id);
+                Workout workoutExercise = await _workoutContext.ReadAsync(id,true,true);
                 if (workoutExercise == null) return NotFound("Workout not found");
                 return Ok(workoutExercise);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _workoutContext.UpdateAsync(workoutExercise);
+                await _workoutContext.UpdateAsync(workoutExercise,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -69,14 +69,14 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchWorkout([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                Workout workout = await _workoutContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Workout workout = await _workoutContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (workout == null) return NotFound("Workout not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -86,11 +86,12 @@ namespace WebApi
                             break;
                         case "workoutExercises":
                             workout.WorkoutExercises = (List<WorkoutExercise>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                     }
                 }
                 
-                await _workoutContext.UpdateAsync(workout);
+                await _workoutContext.UpdateAsync(workout,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

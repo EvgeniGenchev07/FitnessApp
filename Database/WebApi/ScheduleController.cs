@@ -24,7 +24,7 @@ namespace WebApi
         {
             try
             {
-                Schedule schedule = await _scheduleContext.ReadAsync(id);
+                Schedule schedule = await _scheduleContext.ReadAsync(id,true,true);
                 if (schedule == null) return NotFound("Schedule not found");
                 return Ok(schedule);
             }
@@ -61,7 +61,7 @@ namespace WebApi
         {
             try
             {
-                await _scheduleContext.UpdateAsync(schedule);
+                await _scheduleContext.UpdateAsync(schedule,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -75,24 +75,26 @@ namespace WebApi
         {
             try
             {
-                Schedule schedule = await _scheduleContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Schedule schedule = await _scheduleContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (schedule == null) return NotFound("Schedule not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
                     {
                         case "restDays":
                             schedule.RestDays = (List<byte>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                         case "workouts":
                             schedule.Workouts = (List<Workout>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                     }
                 }
                 
-                await _scheduleContext.UpdateAsync(schedule);
+                await _scheduleContext.UpdateAsync(schedule,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

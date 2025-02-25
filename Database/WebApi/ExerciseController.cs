@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Exercise exercise = await _exerciseContext.ReadAsync(id);
+                Exercise exercise = await _exerciseContext.ReadAsync(id,true,true);
                 if (exercise == null) return NotFound("Exercise not found");
                 return Ok(exercise);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _exerciseContext.UpdateAsync(exercise);
+                await _exerciseContext.UpdateAsync(exercise,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -69,14 +69,14 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchExercise([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                Exercise exercise = await _exerciseContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Exercise exercise = await _exerciseContext.ReadAsync(Convert.ToInt32(data["id"]),true,false);
                 
                 if (exercise == null) return NotFound("Exercise not found");
-                
+                bool useNavigationProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -90,7 +90,7 @@ namespace WebApi
                     }
                 }
                 
-                await _exerciseContext.UpdateAsync(exercise);
+                await _exerciseContext.UpdateAsync(exercise,useNavigationProperties);
                 return Ok();
             }
             catch (Exception ex)

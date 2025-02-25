@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Measurement meal = await _measurementContext.ReadAsync(id);
+                Measurement meal = await _measurementContext.ReadAsync(id,true,true);
                 if (meal == null) return NotFound("Measurement not found");
                 return Ok(meal);
             }
@@ -58,7 +58,7 @@ namespace WebApi
         {
             try
             {
-                await _measurementContext.UpdateAsync(measurement);
+                await _measurementContext.UpdateAsync(measurement,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -68,14 +68,14 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchMeasurement([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                Measurement measurement = await _measurementContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Measurement measurement = await _measurementContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (measurement == null) return NotFound("Measurement not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -104,7 +104,7 @@ namespace WebApi
                     }
                 }
                 
-                await _measurementContext.UpdateAsync(measurement);
+                await _measurementContext.UpdateAsync(measurement,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

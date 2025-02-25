@@ -41,3 +41,5 @@ C:/Users/Andy/Documents/GitHub/FitnessApp/Database/Models/obj/Debug/net9.0/ref/M
 /home/evgeni/FitnessApp/Database/Models/obj/Debug/net9.0/refint/Models.dll
 /home/evgeni/FitnessApp/Database/Models/obj/Debug/net9.0/Models.pdb
 /home/evgeni/FitnessApp/Database/Models/obj/Debug/net9.0/ref/Models.dll
+/home/evgeni/FitnessApp/Database/Models/bin/Debug/net9.0/Models.runtimeconfig.json
+/home/evgeni/FitnessApp/Database/Models/obj/Debug/net9.0/Models.genruntimeconfig.cache

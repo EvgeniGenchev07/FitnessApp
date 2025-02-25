@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                Meal meal = await _mealContext.ReadAsync(id);
+                Meal meal = await _mealContext.ReadAsync(id,true,true);
                 if (meal == null) return NotFound("Meal not found");
                 return Ok(meal);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _mealContext.UpdateAsync(meal);
+                await _mealContext.UpdateAsync(meal,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -73,10 +73,10 @@ namespace WebApi
         {
             try
             {
-                Meal meal = await _mealContext.ReadAsync(Convert.ToInt32(data["id"]));
+                Meal meal = await _mealContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (meal == null) return NotFound("Meal not found");
-                
+                bool useNavigationalPropertes = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -90,10 +90,15 @@ namespace WebApi
                         case "weight":
                             meal.Weight = Convert.ToUInt16(pair.Value);
                             break;
+                        case "food":
+                            meal.Food = (Food)pair.Value;
+                            meal.FoodId = meal.Food.Id;
+                            useNavigationalPropertes = true;
+                            break;
                     }
                 }
                 
-                await _mealContext.UpdateAsync(meal);
+                await _mealContext.UpdateAsync(meal,useNavigationalPropertes);
                 return Ok();
             }
             catch (Exception ex)

@@ -22,7 +22,7 @@ namespace WebApi
         {
             try
             {
-                WorkoutExercise workoutExercise = await _workoutExerciseContext.ReadAsync(id);
+                WorkoutExercise workoutExercise = await _workoutExerciseContext.ReadAsync(id,true,true);
                 if (workoutExercise == null) return NotFound("Workout exercise not found");
                 return Ok(workoutExercise);
             }
@@ -59,7 +59,7 @@ namespace WebApi
         {
             try
             {
-                await _workoutExerciseContext.UpdateAsync(workoutExercise);
+                await _workoutExerciseContext.UpdateAsync(workoutExercise,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -69,31 +69,30 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PutWE([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                WorkoutExercise workoutExercise = await _workoutExerciseContext.ReadAsync(Convert.ToInt32(data["id"]));
+                WorkoutExercise workoutExercise = await _workoutExerciseContext.ReadAsync(Convert.ToInt32(data["id"]),true);
                 
                 if (workoutExercise == null) return NotFound("WorkoutExercise not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
                     {
                         case "exercise":
                             workoutExercise.Exercise = (Exercise)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                         case "sets":
                             workoutExercise.Sets = (List<Set>)pair.Value;
-                            break;
-                        case "workout":
-                            workoutExercise.Workout = (Workout)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                     }
                 }
                 
-                await _workoutExerciseContext.UpdateAsync(workoutExercise);
+                await _workoutExerciseContext.UpdateAsync(workoutExercise,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

@@ -44,7 +44,7 @@ namespace WebApi
                         }
                     }, Height = 180
                 });*/
-                User user = await _userContext.ReadAsync(email);
+                User user = await _userContext.ReadAsync(email,true,true);
                 if (user == null) return NotFound("User not found");
                 return Ok(user);
             }
@@ -80,7 +80,7 @@ namespace WebApi
         {
             try
             {
-                await _userContext.UpdateAsync(data);
+                await _userContext.UpdateAsync(data,true);
                 return Ok();
             }
             catch (DbUpdateException ex)
@@ -94,10 +94,10 @@ namespace WebApi
         {
             try
             {
-                User user = await _userContext.ReadAsync(data["email"].ToString());
+                User user = await _userContext.ReadAsync(data["email"].ToString(),true);
                 
                 if (user == null) return NotFound("User not found");
-                
+                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -119,20 +119,24 @@ namespace WebApi
                             break;
                         case "meals":
                             user.Meals = (List<Meal>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                         case "schedule":
                             user.Schedule = (Schedule)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                         case "workouts":
                             user.Workouts = (List<Workout>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                         case "measurements":
                             user.Measurements = (List<Measurement>)pair.Value;
+                            useNavigationalProperties = true;
                             break;
                     }
                 }
                 
-                await _userContext.UpdateAsync(user);
+                await _userContext.UpdateAsync(user,useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

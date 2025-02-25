@@ -30,11 +30,13 @@ public class UserContext : IDatabase<User,string>
         try
         {
             IQueryable<User> query = _dbContext.Users;
-            if (useNavigationalProperties) query = query
+            if (useNavigationalProperties)
+                query = query
                     .Include(u => u.Workouts)
                     .Include(u => u.Meals)
                     .Include(u => u.Measurements)
-                    .Include(u => u.Schedule);
+                    .Include(u => u.Schedule)
+                    .Include(u => u.e);
             if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
             User user = await query.FirstOrDefaultAsync(u => u.Email == key);
             return user;
