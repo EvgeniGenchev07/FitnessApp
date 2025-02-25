@@ -13,7 +13,6 @@ namespace Models
     [PrimaryKey("Id")]
     public class Measurement
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public DateTime Date { get; set; }

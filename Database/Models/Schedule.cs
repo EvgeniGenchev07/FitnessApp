@@ -17,6 +17,5 @@ namespace Models
         public List<Workout> Workouts { get; set; }
         [Column("Restdays", TypeName = "varbinary(31)")]
         public List<byte> RestDays { get; set; }
-        public User User { get; set; }
     }
 }
