@@ -23,11 +23,13 @@ public class ScheduleContext:IDatabase<Schedule,int>
         }
     }
 
-    public async Task<Schedule> ReadAsync(int key)
+    public async Task<Schedule> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Schedule schedule = await _dbContext.Schedules.FirstOrDefaultAsync(e => e.Id == key);
+            IQueryable<Schedule> query = _dbContext.Schedules;
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Schedule schedule = await query.FirstOrDefaultAsync(e => e.Id == key);
             return schedule;
         }
         catch (Exception ex)

@@ -26,11 +26,13 @@ public class SetContext : IDatabase<Set,int>
         }
     }
 
-    public async Task<Set> ReadAsync(int key)
+    public async Task<Set> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Set set = await _dbContext.Sets.FirstOrDefaultAsync(s => s.Id == key);
+            IQueryable<Set> query = _dbContext.Sets;
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Set set = await query.FirstOrDefaultAsync(s => s.Id == key);
             return set;
         }
         catch (Exception ex)
@@ -39,11 +41,13 @@ public class SetContext : IDatabase<Set,int>
         }
     }
 
-    public async Task UpdateAsync(Set entity)
+    public async Task UpdateAsync(Set entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Sets.Update(entity);
+            Set setFromDb = await ReadAsync(entity.Id, useNavigationalProperties,false);
+            setFromDb.Reps = entity.Reps;
+            setFromDb.Weight = entity.Weight;
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -56,7 +60,7 @@ public class SetContext : IDatabase<Set,int>
     {
         try
         {
-            Set set = await ReadAsync(key);
+            Set set = await ReadAsync(key,false,false);
             if (set != null)
             {
                 _dbContext.Sets.Remove(set);

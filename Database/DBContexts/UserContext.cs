@@ -25,15 +25,18 @@ public class UserContext : IDatabase<User,string>
         }
     }
 
-    public async Task<User> ReadAsync(string key)
+    public async Task<User> ReadAsync(string key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            User user = await _dbContext.Users.Include(u => u.Workouts)
-                .Include(u => u.Meals)
-                .Include(u => u.Measurements)
-                .Include(u => u.Schedule)
-                .FirstOrDefaultAsync(u => u.Email == key);
+            IQueryable<User> query = _dbContext.Users;
+            if (useNavigationalProperties) query = query
+                    .Include(u => u.Workouts)
+                    .Include(u => u.Meals)
+                    .Include(u => u.Measurements)
+                    .Include(u => u.Schedule);
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            User user = await query.FirstOrDefaultAsync(u => u.Email == key);
             return user;
         }
         catch (Exception ex)
@@ -42,11 +45,20 @@ public class UserContext : IDatabase<User,string>
         }
     }
 
-    public async Task UpdateAsync(User entity)
+    public async Task UpdateAsync(User entity,bool navigationalProperties = false)
     {
         try
         {
-            _dbContext.Users.Update(entity);
+            User userFromDb = await ReadAsync(entity.Email, navigationalProperties,false);
+            userFromDb.UserName = entity.UserName;
+            userFromDb.Email = entity.Email;
+            userFromDb.Age = entity.Age;
+            userFromDb.Height = entity.Height;
+            userFromDb.Password = entity.Password;
+            userFromDb.Meals = entity.Meals;
+            userFromDb.Measurements = entity.Measurements;
+            userFromDb.Schedule = entity.Schedule;
+            userFromDb.Workouts = entity.Workouts;
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -59,7 +71,7 @@ public class UserContext : IDatabase<User,string>
     {
         try
         {
-            User user = await ReadAsync(key);
+            User user = await ReadAsync(key,false,false);
 
             if (user != null)
             {
