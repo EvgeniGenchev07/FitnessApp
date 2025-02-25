@@ -26,6 +26,6 @@ namespace Models
         public List<Food> Foods { get; set; }
         public Schedule Schedule { get; set; }
         [Range(50, 255)]
-        public byte Height { get; set; }
+        public byte? Height { get; set; }
     }
 }
