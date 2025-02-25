@@ -13,16 +13,14 @@ namespace Models
     [PrimaryKey("Id")]
     public class Set
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         [Precision(2,5)]
+        [Range(0.5, 1000)]
         public double Weight { get; set; }
         [Required]
+        [Range(1, 255)]
         public byte Reps { get; set; }
-        [Required]
-        public WorkoutExercise WorkoutExercise { get; set; }
-        public int WorkoutExerciseId { get; set; }
 
     }
 }

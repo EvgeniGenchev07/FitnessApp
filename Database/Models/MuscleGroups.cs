@@ -3,8 +3,19 @@
     public enum MuscleGroups
     {
         Chest,
-        Bicep,
-        Tricep,
+        FrontDeltoid,
+        LateralDeltoid,
+        RearDeltoid,
+        Biceps,
+        Forearm,
+        Triceps,
         LatissimusDorsi,
+        Trapezius,
+        ErectorSpinae,
+        Quadriceps,
+        Hamstrings,
+        Gluteus,
+        Calf,
+        Adductor
     }
 }

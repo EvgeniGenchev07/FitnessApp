@@ -13,18 +13,21 @@ namespace Models
     [PrimaryKey("Id")]
     public class Food
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
         [Required]
+        [Range(0, 800)]
         public ushort Calories { get; set; }
         [Required]
+        [Range(0,100)]
         public ushort Carbs { get; set; }
         [Required]
+        [Range(0,100)]
         public ushort Fats { get; set; }
         [Required]
+        [Range(0,100)]
         public ushort Proteins { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace Models
         [ForeignKey("UserId")]      
         public int UserId { get; set; }
         public List<Workout> Workouts { get; set; }
-        [Column("Restdays", TypeName = "varbinary(7)")]
+        [Column("Restdays", TypeName = "varbinary(31)")]
         public List<byte> RestDays { get; set; }
         public User User { get; set; }
     }

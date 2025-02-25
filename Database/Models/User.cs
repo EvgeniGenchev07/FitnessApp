@@ -8,8 +8,6 @@ namespace Models
     [PrimaryKey("Id")]
     public class User
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //[Key]
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
@@ -25,8 +23,9 @@ namespace Models
         public List<Measurement> Measurements { get; set; }
         public List<Workout> Workouts { get; set;}
         public List<Meal> Meals { get; set;}
+        public List<Food> Foods { get; set; }
         public Schedule Schedule { get; set; }
+        [Range(50, 255)]
         public byte Height { get; set; }
-
     }
 }

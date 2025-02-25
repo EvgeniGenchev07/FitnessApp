@@ -13,15 +13,9 @@ namespace Models
     [PrimaryKey("Id")]
     public class Workout
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime Date { get; set; }
         [Required]
         public List<WorkoutExercise> WorkoutExercises { get; set; }
-        [Required]
-        public User User { get; set; }
-        public int UserId { get; set; }
-        public Schedule Schedule { get; set; }
-        public int ScheduleId { get; set; }
     }
 }

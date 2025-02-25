@@ -13,18 +13,15 @@ namespace Models
     [PrimaryKey("Id")]
     public class Meal
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public DateTime Date { get; set; }
         [Required]
+        [Range(1, 2000)]
         public ushort Weight { get; set; }  
         [Required]
         public Food Food { get; set; }
         [ForeignKey("FoodId")]
         public int FoodId { get; set; }
-        [Required]
-        public User User { get; set; }
-        public int UserId { get; set; }
     }
 }

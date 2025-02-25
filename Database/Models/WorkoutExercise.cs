@@ -13,7 +13,6 @@ namespace Models
     [PrimaryKey("Id")]
     public class WorkoutExercise
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         public Exercise Exercise { get; set; }
@@ -21,9 +20,5 @@ namespace Models
         public int ExerciseId { get; set; }
         [Required]
         public List<Set> Sets { get; set; }
-        [Required]
-        public Workout Workout { get; set; }
-        [ForeignKey("WorkoutId")]
-        public int WorkoutId { get; set; }
     }
 }
