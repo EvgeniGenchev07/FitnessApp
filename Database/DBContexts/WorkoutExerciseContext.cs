@@ -24,12 +24,14 @@ public class WorkoutExerciseContext : IDatabase<WorkoutExercise, int>
         }
     }
 
-    public async Task<WorkoutExercise> ReadAsync(int key)
+    public async Task<WorkoutExercise> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            WorkoutExercise workoutExercise = await _dbContext.WorkoutExercises.Include(w => w.Exercise)
-                .FirstOrDefaultAsync(w => w.Id == key);
+            IQueryable<WorkoutExercise> query = _dbContext.WorkoutExercises;
+            if (useNavigationalProperties) query = query.Include(w => w.Exercise);
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            WorkoutExercise workoutExercise = await query.FirstOrDefaultAsync(w => w.Id == key);
             return workoutExercise;
         }
         catch (Exception ex)
@@ -38,11 +40,17 @@ public class WorkoutExerciseContext : IDatabase<WorkoutExercise, int>
         }
     }
 
-    public async Task UpdateAsync(WorkoutExercise entity)
+    public async Task UpdateAsync(WorkoutExercise entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.WorkoutExercises.Update(entity);
+            WorkoutExercise workoutExerciseFromDb = await ReadAsync(entity.Id,useNavigationalProperties);
+            if (useNavigationalProperties)
+            {
+                workoutExerciseFromDb.Sets = entity.Sets;
+                workoutExerciseFromDb.Exercise = entity.Exercise;
+                workoutExerciseFromDb.ExerciseId = workoutExerciseFromDb.Exercise.Id;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -55,8 +63,7 @@ public class WorkoutExerciseContext : IDatabase<WorkoutExercise, int>
     {
         try
         {
-            WorkoutExercise workoutExercise = await _dbContext.WorkoutExercises.Include(we => we.Sets)
-                .FirstOrDefaultAsync(we => we.Id == key);
+            WorkoutExercise workoutExercise = await ReadAsync(key, true);
             if (workoutExercise != null)
             {
                 _dbContext.Sets.RemoveRange(workoutExercise.Sets);

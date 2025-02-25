@@ -25,11 +25,13 @@ public class MeasurementContext : IDatabase<Measurement,int>
         }
     }
 
-    public async Task<Measurement> ReadAsync(int key)
+    public async Task<Measurement> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Measurement measurement = await _dbContext.Measurements.FirstOrDefaultAsync(m => m.Id == key);
+            IQueryable<Measurement> query = _dbContext.Measurements;
+            if(isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Measurement measurement = await query.FirstOrDefaultAsync(m => m.Id == key);
             return measurement;
         }
         catch (Exception ex)
@@ -38,11 +40,20 @@ public class MeasurementContext : IDatabase<Measurement,int>
         }
     }
 
-    public async Task UpdateAsync(Measurement entity)
+    public async Task UpdateAsync(Measurement entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Measurements.Update(entity);
+            Measurement measurementFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
+            
+            measurementFromDb.Arm = entity.Arm;
+            measurementFromDb.Weight = entity.Weight;
+            measurementFromDb.Calf = entity.Calf;
+            measurementFromDb.Chest = entity.Chest;
+            measurementFromDb.Date = entity.Date;
+            measurementFromDb.Waist = entity.Waist;
+            measurementFromDb.Forearm = entity.Forearm;
+            
             await _dbContext.SaveChangesAsync();
         }
         catch(Exception ex)
@@ -55,7 +66,7 @@ public class MeasurementContext : IDatabase<Measurement,int>
     {
         try
         {
-            Measurement measurement = await ReadAsync(key);
+            Measurement measurement = await ReadAsync(key,false,false);
             if (measurement != null)
             {
                 _dbContext.Measurements.Remove(measurement);

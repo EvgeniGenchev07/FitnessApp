@@ -69,7 +69,7 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutWE([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchWorkoutExercise([FromBody] Dictionary<string, object> data)
         {
             try
             {
@@ -82,11 +82,11 @@ namespace WebApi
                     switch (pair.Key)
                     {
                         case "exercise":
-                            workoutExercise.Exercise = (Exercise)pair.Value;
+                            workoutExercise.Exercise = JsonConvert.DeserializeObject<Exercise>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "sets":
-                            workoutExercise.Sets = (List<Set>)pair.Value;
+                            workoutExercise.Sets = JsonConvert.DeserializeObject<List<Set>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                     }

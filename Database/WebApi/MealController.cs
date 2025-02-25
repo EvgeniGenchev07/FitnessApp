@@ -81,9 +81,6 @@ namespace WebApi
                 {
                     switch (pair.Key)
                     {
-                        case "arm":
-                            meal.Food = (Food)pair.Value;
-                            break;
                         case "date":
                             meal.Date = Convert.ToDateTime(pair.Value);
                             break;
@@ -91,7 +88,7 @@ namespace WebApi
                             meal.Weight = Convert.ToUInt16(pair.Value);
                             break;
                         case "food":
-                            meal.Food = (Food)pair.Value;
+                            meal.Food = JsonConvert.DeserializeObject<Food>(pair.Value.ToString());
                             meal.FoodId = meal.Food.Id;
                             useNavigationalPropertes = true;
                             break;

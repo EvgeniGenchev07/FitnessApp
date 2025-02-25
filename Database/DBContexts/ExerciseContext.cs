@@ -24,11 +24,13 @@ public class ExerciseContext : IDatabase<Exercise,int>
         }
     }
 
-    public async Task<Exercise> ReadAsync(int key)
+    public async Task<Exercise> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Exercise exercise = await _dbContext.Exercises.FirstOrDefaultAsync(e => e.Id == key);
+            IQueryable<Exercise> query = _dbContext.Exercises;
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Exercise exercise = await query.FirstOrDefaultAsync(e => e.Id == key);
             return exercise;
         }
         catch(Exception ex)
@@ -37,11 +39,16 @@ public class ExerciseContext : IDatabase<Exercise,int>
         }
     }
 
-    public async Task UpdateAsync(Exercise entity)
+    public async Task UpdateAsync(Exercise entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Exercises.Update(entity);
+            Exercise exercise = await ReadAsync(entity.Id,useNavigationalProperties);
+            exercise.Name = entity.Name;
+            if (useNavigationalProperties)
+            {
+                exercise.MuscleGroups = entity.MuscleGroups;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -54,7 +61,7 @@ public class ExerciseContext : IDatabase<Exercise,int>
     {
         try
         {
-            Exercise exercise = await ReadAsync(key);
+            Exercise exercise = await ReadAsync(key,false);
             if (exercise != null)
             {
                 _dbContext.Exercises.Remove(exercise);

@@ -24,12 +24,14 @@ public class MealContext: IDatabase<Meal,int>
         }
     }
 
-    public async Task<Meal> ReadAsync(int key)
+    public async Task<Meal> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Meal meal = await _dbContext.Meals.Include(m => m.Food)
-                .FirstOrDefaultAsync(m => m.Id == key);
+            IQueryable<Meal> query = _dbContext.Meals;
+            if (useNavigationalProperties) query.Include(m => m.Food);
+            if(isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Meal meal = await query.FirstOrDefaultAsync(m => m.Id == key);
             return meal;
         }
         catch (Exception ex)
@@ -38,11 +40,20 @@ public class MealContext: IDatabase<Meal,int>
         }
     }
 
-    public async Task UpdateAsync(Meal entity)
+    public async Task UpdateAsync(Meal entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Meals.Update(entity);
+            Meal mealFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
+            mealFromDb.Date = entity.Date;
+            mealFromDb.Weight = entity.Weight;
+            if (useNavigationalProperties)
+            {
+                Food foodFromDb = await _dbContext.Foods.FirstOrDefaultAsync(f => f.Id == entity.FoodId);
+                if (foodFromDb != null) mealFromDb.Food = foodFromDb;
+                else mealFromDb.Food = entity.Food;
+                mealFromDb.FoodId = mealFromDb.Food.Id;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -55,7 +66,7 @@ public class MealContext: IDatabase<Meal,int>
     {
         try
         {
-            Meal meal = await ReadAsync(key);
+            Meal meal = await ReadAsync(key,false,false);
             if (meal != null)
             {
                 _dbContext.Meals.Remove(meal);

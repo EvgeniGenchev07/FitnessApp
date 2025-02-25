@@ -24,13 +24,16 @@ public class WorkoutContext: IDatabase<Workout, int>
         }
     }
 
-    public async Task<Workout> ReadAsync(int key)
+    public async Task<Workout> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Workout workout = await _dbContext.Workouts.Include(w => w.WorkoutExercises)
-                .ThenInclude(we => we.Exercise)
-                .FirstOrDefaultAsync(w => w.Id == key);
+            IQueryable<Workout> query = _dbContext.Workouts;
+            if (useNavigationalProperties) query = query
+                    .Include(w => w.WorkoutExercises)
+                    .ThenInclude(we => we.Exercise);
+            if(isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Workout workout = await query.FirstOrDefaultAsync(w => w.Id == key);
             return workout;
         }
         catch (Exception ex)
@@ -39,11 +42,16 @@ public class WorkoutContext: IDatabase<Workout, int>
         }
     }
 
-    public async Task UpdateAsync(Workout entity)
+    public async Task UpdateAsync(Workout entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Workouts.Update(entity);
+            Workout workoutFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
+            workoutFromDb.Date = workoutFromDb.Date;
+            if (useNavigationalProperties)
+            {
+                workoutFromDb.WorkoutExercises = workoutFromDb.WorkoutExercises;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -56,9 +64,7 @@ public class WorkoutContext: IDatabase<Workout, int>
     {
         try
         {
-            Workout workout = await _dbContext.Workouts.Include(w => w.WorkoutExercises)
-                .ThenInclude(we => we.Sets)
-                .FirstOrDefaultAsync(w => w.Id == key);
+            Workout workout = await ReadAsync(key, true);
             if (workout != null)
             {
                 _dbContext.Sets.RemoveRange(workout.WorkoutExercises.SelectMany(we => we.Sets));

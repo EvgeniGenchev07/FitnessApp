@@ -71,7 +71,7 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchSchedule([FromBody] Dictionary<string, object> data)
         {
             try
             {
@@ -84,11 +84,11 @@ namespace WebApi
                     switch (pair.Key)
                     {
                         case "restDays":
-                            schedule.RestDays = (List<byte>)pair.Value;
+                            schedule.RestDays = JsonConvert.DeserializeObject<List<byte>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "workouts":
-                            schedule.Workouts = (List<Workout>)pair.Value;
+                            schedule.Workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                     }

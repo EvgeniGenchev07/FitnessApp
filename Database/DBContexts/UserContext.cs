@@ -36,7 +36,8 @@ public class UserContext : IDatabase<User,string>
                     .Include(u => u.Meals)
                     .Include(u => u.Measurements)
                     .Include(u => u.Schedule)
-                    .Include(u => u.e);
+                    .Include(u => u.Foods)
+                    .Include(u => u.Exercises);
             if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
             User user = await query.FirstOrDefaultAsync(u => u.Email == key);
             return user;
@@ -47,20 +48,25 @@ public class UserContext : IDatabase<User,string>
         }
     }
 
-    public async Task UpdateAsync(User entity,bool navigationalProperties = false)
+    public async Task UpdateAsync(User entity,bool navigationalProperties)
     {
         try
         {
             User userFromDb = await ReadAsync(entity.Email, navigationalProperties,false);
             userFromDb.UserName = entity.UserName;
             userFromDb.Email = entity.Email;
-            userFromDb.Age = entity.Age;
+            userFromDb.BirthDate = entity.BirthDate;
             userFromDb.Height = entity.Height;
             userFromDb.Password = entity.Password;
-            userFromDb.Meals = entity.Meals;
-            userFromDb.Measurements = entity.Measurements;
-            userFromDb.Schedule = entity.Schedule;
-            userFromDb.Workouts = entity.Workouts;
+            if (navigationalProperties)
+            {
+                userFromDb.Meals = entity.Meals;
+                userFromDb.Measurements = entity.Measurements;
+                userFromDb.Schedule = entity.Schedule;
+                userFromDb.Workouts = entity.Workouts;
+                userFromDb.Foods = entity.Foods;
+                userFromDb.Exercises = entity.Exercises;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -73,7 +79,7 @@ public class UserContext : IDatabase<User,string>
     {
         try
         {
-            User user = await ReadAsync(key,false,false);
+            User user = await ReadAsync(key,true,false);
 
             if (user != null)
             {

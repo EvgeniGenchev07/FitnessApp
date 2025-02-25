@@ -29,7 +29,10 @@ public class ScheduleContext:IDatabase<Schedule,int>
         {
             IQueryable<Schedule> query = _dbContext.Schedules;
             if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
-            Schedule schedule = await query.FirstOrDefaultAsync(e => e.Id == key);
+            if (useNavigationalProperties)
+                query = query
+                    .Include(s => s.Workouts);
+            Schedule schedule = await query.FirstOrDefaultAsync(e => e.UserId == key);
             return schedule;
         }
         catch (Exception ex)
@@ -38,11 +41,16 @@ public class ScheduleContext:IDatabase<Schedule,int>
         }
     }
 
-    public async Task UpdateAsync(Schedule entity)
+    public async Task UpdateAsync(Schedule entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Schedules.Update(entity);
+            Schedule scheduleFromDb = await ReadAsync(entity.UserId,useNavigationalProperties);
+            if (useNavigationalProperties)
+            {
+                scheduleFromDb.RestDays = entity.RestDays;
+                scheduleFromDb.Workouts = entity.Workouts;
+            }
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -55,7 +63,7 @@ public class ScheduleContext:IDatabase<Schedule,int>
     {
         try
         {
-            Schedule schedule = await ReadAsync(key);
+            Schedule schedule = await ReadAsync(key,false);
             if (schedule != null)
             {
                 _dbContext.Schedules.Remove(schedule);

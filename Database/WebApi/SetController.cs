@@ -69,7 +69,7 @@ namespace WebApi
         }
         
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
+        public async Task<IActionResult> PatchSet([FromBody] Dictionary<string, object> data)
         {
             try
             {

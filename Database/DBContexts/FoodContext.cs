@@ -24,11 +24,13 @@ public class FoodContext:IDatabase<Food, int>
         }
     }
 
-    public async Task<Food> ReadAsync(int key)
+    public async Task<Food> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
     {
         try
         {
-            Food food = await _dbContext.Foods.FirstOrDefaultAsync(f => f.Id == key);
+            IQueryable<Food> query = _dbContext.Foods;
+            if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+            Food food = await query.FirstOrDefaultAsync(f => f.Id == key);
             return food;
         }
         catch (Exception ex)
@@ -37,11 +39,16 @@ public class FoodContext:IDatabase<Food, int>
         }
     }
 
-    public async Task UpdateAsync(Food entity)
+    public async Task UpdateAsync(Food entity,bool useNavigationalProperties)
     {
         try
         {
-            _dbContext.Foods.Update(entity);
+            Food foodFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
+            foodFromDb.Name = entity.Name;
+            foodFromDb.Calories = entity.Calories;
+            foodFromDb.Carbs = entity.Carbs;
+            foodFromDb.Proteins = entity.Proteins;
+            foodFromDb.Fats = entity.Fats;
             await _dbContext.SaveChangesAsync();
         }
         catch (Exception ex)
@@ -54,7 +61,7 @@ public class FoodContext:IDatabase<Food, int>
     {
         try
         {
-            Food food = await ReadAsync(key);
+            Food food = await ReadAsync(key,false);
             if (food != null)
             {
                 _dbContext.Foods.Remove(food);

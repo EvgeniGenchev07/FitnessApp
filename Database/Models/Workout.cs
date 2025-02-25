@@ -13,6 +13,7 @@ namespace Models
     [PrimaryKey("Id")]
     public class Workout
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public DateTime Date { get; set; }
         [Required]

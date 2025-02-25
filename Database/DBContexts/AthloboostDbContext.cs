@@ -14,7 +14,8 @@ namespace DBContexts
         internal DbSet<Food> Foods { get; set; }
         internal DbSet<Exercise> Exercises { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
-
+        
+        //public AthloboostDbContext(): base(){}
         public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options) { }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,5 +43,11 @@ namespace DBContexts
             });
             base.OnModelCreating(modelBuilder);
         }
+
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite("Data Source=athloboostx.db3");
+            base.OnConfiguring(optionsBuilder);
+        }*/
     }
 }

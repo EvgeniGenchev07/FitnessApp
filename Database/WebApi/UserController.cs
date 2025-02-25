@@ -23,27 +23,6 @@ namespace WebApi
         {
             try
             {
-                /*return Ok(new User()
-                {
-                    Id = 1, UserName = "newUser", Password = "password123", Email = "newu@example.com", Age = 25,
-                    Measurements = null, Workouts = null, Meals = null, Schedule = new Schedule()
-                    {
-                        Workouts = new List<Workout>()
-                        {
-                            new Workout()
-                            {
-                                Id = 1,
-                                WorkoutExercises = new List<WorkoutExercise>()
-                                {
-                                    new WorkoutExercise()
-                                    {
-                                        Id = 1,
-                                    }
-                                }
-                            }
-                        }
-                    }, Height = 180
-                });*/
                 User user = await _userContext.ReadAsync(email,true,true);
                 if (user == null) return NotFound("User not found");
                 return Ok(user);
@@ -111,26 +90,26 @@ namespace WebApi
                         case "password":
                             user.Password = pair.Value.ToString();
                             break;
-                        case "age":
-                            user.Age = Convert.ToInt32(pair.Value.ToString());
+                        case "birthDate":
+                            user.BirthDate = Convert.ToDateTime(pair.Value);
                             break;
                         case "height":
-                            user.Height = Convert.ToByte(pair.Value.ToString());
+                            user.Height = Convert.ToByte(pair.Value);
                             break;
                         case "meals":
-                            user.Meals = (List<Meal>)pair.Value;
+                            user.Meals = JsonConvert.DeserializeObject<List<Meal>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "schedule":
-                            user.Schedule = (Schedule)pair.Value;
+                            user.Schedule = JsonConvert.DeserializeObject<Schedule>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "workouts":
-                            user.Workouts = (List<Workout>)pair.Value;
+                            user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "measurements":
-                            user.Measurements = (List<Measurement>)pair.Value;
+                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                     }

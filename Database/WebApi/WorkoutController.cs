@@ -85,7 +85,7 @@ namespace WebApi
                             workout.Date = Convert.ToDateTime(pair.Value);
                             break;
                         case "workoutExercises":
-                            workout.WorkoutExercises = (List<WorkoutExercise>)pair.Value;
+                            workout.WorkoutExercises = JsonConvert.DeserializeObject<List<WorkoutExercise>>(pair.Value.ToString());
                             useNavigationalProperties = true;
                             break;
                     }

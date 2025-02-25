@@ -8,9 +8,11 @@ namespace Models
     [PrimaryKey("Id")]
     public class Exercise
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
+        [RegularExpression(@"[A-Za-z ]{4,50}")]
         public string Name { get; set; }
         [Required]
         public List<MuscleGroups> MuscleGroups { get; set; }

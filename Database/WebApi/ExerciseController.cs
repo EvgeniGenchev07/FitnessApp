@@ -85,7 +85,7 @@ namespace WebApi
                             exercise.Name = pair.Value.ToString();
                             break;
                         case "carbs":
-                            exercise.MuscleGroups = (List<MuscleGroups>)pair.Value;
+                            exercise.MuscleGroups = JsonConvert.DeserializeObject<List<MuscleGroups>>(pair.Value.ToString());
                             break;
                     }
                 }
