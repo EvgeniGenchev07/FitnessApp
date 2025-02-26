@@ -18,13 +18,15 @@ namespace WebApi
             _userContext = context;
         }
 
-        [HttpGet("{email}")]
-        public async Task<IActionResult> GetUser(string email)
+        [HttpGet("{email}/{password}")]
+        public async Task<IActionResult> GetUser(string email,string password)
         {
             try
             {
                 User user = await _userContext.ReadAsync(email,true,true);
                 if (user == null) return NotFound("User not found");
+                if (user.Password != password) return Unauthorized();
+                user.Password = "";
                 return Ok(user);
             }
             catch (Exception ex)
@@ -40,8 +42,11 @@ namespace WebApi
         {
             try
             {
+                User user = await _userContext.ReadAsync(data.Email,false,true);
+                if (user != null) return NotFound("User already exists");
                 await _userContext.CreateAsync(data);
-                return Ok("User added successfully");
+                data.Password = "";
+                return Ok(data);
             }
             catch (DbUpdateException ex)
             {

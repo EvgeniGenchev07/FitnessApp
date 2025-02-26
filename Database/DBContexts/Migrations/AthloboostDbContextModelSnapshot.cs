@@ -109,33 +109,33 @@ namespace DBContexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Arm")
+                    b.Property<double?>("Arm")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Calf")
+                    b.Property<double?>("Calf")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Chest")
+                    b.Property<double?>("Chest")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Forearm")
+                    b.Property<double?>("Forearm")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double>("Waist")
+                    b.Property<double?>("Waist")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<double>("Weight")
+                    b.Property<double?>("Weight")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
@@ -154,6 +154,9 @@ namespace DBContexts.Migrations
                     b.PrimitiveCollection<string>("RestDays")
                         .HasColumnType("varbinary(31)")
                         .HasColumnName("Restdays");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("UserId");
 
@@ -197,7 +200,7 @@ namespace DBContexts.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<byte>("Height")
+                    b.Property<byte?>("Height")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Password")
@@ -283,7 +286,7 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.Food", "Food")
                         .WithOne()
                         .HasForeignKey("Models.Meal", "FoodId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("Models.User", null)
@@ -332,7 +335,7 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.Exercise", "Exercise")
                         .WithOne()
                         .HasForeignKey("Models.WorkoutExercise", "ExerciseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.HasOne("Models.Workout", null)

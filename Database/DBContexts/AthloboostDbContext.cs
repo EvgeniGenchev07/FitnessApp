@@ -14,40 +14,48 @@ namespace DBContexts
         internal DbSet<Food> Foods { get; set; }
         internal DbSet<Exercise> Exercises { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
-        
-        //public AthloboostDbContext(): base(){}
-        public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options) { }
-        
+
+        public AthloboostDbContext() : base()
+        {
+        }
+
+        public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options)
+        {
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>(u =>
+            modelBuilder.Entity<User>(user =>
             {
-                u.HasOne(u => u.Schedule)
+                user.HasOne(u => u.Schedule)
                     .WithOne()
-                    .HasForeignKey<Schedule>(s => s.UserId);
-
-                u.HasIndex(u => u.Email)
+                    .HasForeignKey<Schedule>(s => s.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                user.HasIndex(u => u.Email)
                     .IsUnique();
             });
 
             modelBuilder.Entity<Meal>()
                 .HasOne(m => m.Food)
-                .WithOne() 
-                .HasForeignKey<Meal>(m => m.FoodId);
+                .WithOne()
+                .HasForeignKey<Meal>(m => m.FoodId)
+                .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<WorkoutExercise>(we =>
-            {
-                we.HasOne(we => we.Exercise)
-                    .WithOne()
-                    .HasForeignKey<WorkoutExercise>(we => we.ExerciseId);
-            });
+            modelBuilder.Entity<WorkoutExercise>()
+                .HasOne(we => we.Exercise)
+                .WithOne()
+                .HasForeignKey<WorkoutExercise>(we => we.ExerciseId)
+                .OnDelete(DeleteBehavior.SetNull);
             base.OnModelCreating(modelBuilder);
         }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=athloboostx.db3");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlite("Data Source=athloboostx.db3");
+            }
             base.OnConfiguring(optionsBuilder);
-        }*/
+        }
     }
 }

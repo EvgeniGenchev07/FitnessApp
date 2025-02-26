@@ -3,79 +3,55 @@ using Models;
 
 namespace DBContexts;
 
-public class MealContext: IDatabase<Meal,int>
+public class MealContext : IDatabase<Meal, int>
 {
     private readonly AthloboostDbContext _dbContext;
+
     public MealContext(AthloboostDbContext context)
     {
         _dbContext = context;
     }
-    
+
     public async Task CreateAsync(Meal entity)
     {
-        try
-        {
-            _dbContext.Meals.Add(entity);
-            await _dbContext.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        Food foodFromDb = await _dbContext.Foods.FindAsync(entity.FoodId);
+        if (foodFromDb is not null) entity.Food = foodFromDb;
+        await _dbContext.Meals.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<Meal> ReadAsync(int key,bool useNavigationalProperties, bool isReadOnly = false)
+    public async Task<Meal> ReadAsync(int key, bool useNavigationalProperties, bool isReadOnly = false)
     {
-        try
-        {
-            IQueryable<Meal> query = _dbContext.Meals;
-            if (useNavigationalProperties) query.Include(m => m.Food);
-            if(isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
-            Meal meal = await query.FirstOrDefaultAsync(m => m.Id == key);
-            return meal;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+        IQueryable<Meal> query = _dbContext.Meals;
+        if (useNavigationalProperties) query.Include(m => m.Food);
+        if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
+        Meal meal = await query.FirstOrDefaultAsync(m => m.Id == key);
+        return meal;
     }
 
-    public async Task UpdateAsync(Meal entity,bool useNavigationalProperties)
+    public async Task UpdateAsync(Meal entity, bool useNavigationalProperties)
     {
-        try
+        Meal mealFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
+        mealFromDb.Date = entity.Date;
+        mealFromDb.Weight = entity.Weight;
+        if (useNavigationalProperties)
         {
-            Meal mealFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
-            mealFromDb.Date = entity.Date;
-            mealFromDb.Weight = entity.Weight;
-            if (useNavigationalProperties)
-            {
-                Food foodFromDb = await _dbContext.Foods.FirstOrDefaultAsync(f => f.Id == entity.FoodId);
-                if (foodFromDb != null) mealFromDb.Food = foodFromDb;
-                else mealFromDb.Food = entity.Food;
-                mealFromDb.FoodId = mealFromDb.Food.Id;
-            }
-            await _dbContext.SaveChangesAsync();
+            Food foodFromDb = await _dbContext.Foods.FirstOrDefaultAsync(f => f.Id == entity.FoodId);
+            if (foodFromDb != null) mealFromDb.Food = foodFromDb;
+            else mealFromDb.Food = entity.Food;
+            mealFromDb.FoodId = mealFromDb.Food.Id;
         }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
+
+        await _dbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int key)
     {
-        try
+        Meal meal = await ReadAsync(key, false, false);
+        if (meal != null)
         {
-            Meal meal = await ReadAsync(key,false,false);
-            if (meal != null)
-            {
-                _dbContext.Meals.Remove(meal);
-                await _dbContext.SaveChangesAsync();
-            }
-        }
-        catch (Exception ex)
-        {
-            throw ex;
+            _dbContext.Meals.Remove(meal);
+            await _dbContext.SaveChangesAsync();
         }
     }
 }

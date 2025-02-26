@@ -21,7 +21,7 @@ namespace DBContexts.Migrations
                     Password = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     BirthDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Height = table.Column<byte>(type: "INTEGER", nullable: false)
+                    Height = table.Column<byte>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,12 +78,12 @@ namespace DBContexts.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Waist = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
-                    Arm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
-                    Forearm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
-                    Calf = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
-                    Chest = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
-                    Weight = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
+                    Waist = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    Arm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    Forearm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    Calf = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    Chest = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    Weight = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
@@ -101,6 +101,7 @@ namespace DBContexts.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Restdays = table.Column<string>(type: "varbinary(31)", nullable: true)
                 },
                 constraints: table =>
@@ -133,7 +134,7 @@ namespace DBContexts.Migrations
                         column: x => x.FoodId,
                         principalTable: "Foods",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Meals_Users_UserId",
                         column: x => x.UserId,
@@ -183,7 +184,7 @@ namespace DBContexts.Migrations
                         column: x => x.ExerciseId,
                         principalTable: "Exercises",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_WorkoutExercises_Workouts_WorkoutId",
                         column: x => x.WorkoutId,
