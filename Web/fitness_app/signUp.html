@@ -131,7 +131,7 @@
         <div class="form-container" id="signup-form">
             <h3>Create Account</h3>
             
-            <form>
+            <form id="signupForm" onsubmit="handleSignUp(event)">
                 <!-- Name Input -->
                 <div class="mb-3">
                     <label for="name" class="form-label">Full Name</label>
@@ -176,7 +176,7 @@
         <div class="form-container" id="login-form">
             <h3>Log In</h3>
             
-            <form>
+            <form id="loginForm" onsubmit="handleLogin(event)">
                 <!-- Email Input -->
                 <div class="mb-3">
                     <label for="login-email" class="form-label">Email address</label>
@@ -218,17 +218,13 @@
 
         <!-- Forgot Password Form -->
         <div class="form-container" id="forgot-password-form">
-            <h3>Reset password</h3>
+            <h3>Forgot Password</h3>
             
             <form>
                 <!-- Email Input -->
                 <div class="mb-3">
                     <label for="forgot-email" class="form-label">Email address</label>
                     <input type="email" class="form-control" id="forgot-email" required>
-                    <label for="new-password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="new-password">
-                    <label for="new-password-check" class="form-label">Re-enter the password</label>
-                    <input type="password" class="form-control" id="new-password-check">
                 </div>
 
                 <!-- Reset Password Button -->
@@ -249,6 +245,7 @@
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 
 <script>
+    const apiUrl = 'http://192.168.56.1:5000'; 
     // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
@@ -287,6 +284,41 @@
     setTimeout(() => {
         document.getElementById('signup-form').classList.add('active');
     }, 10);
+
+    async function handleSignUp(event) {
+        event.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const userData = {
+            UserName: name,
+            Email: email,
+            Password: password
+        };
+
+        try {
+            const response = await fetch(`${apiUrl}/user`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            if (response.ok) {
+                alert('Регистрацията е успешна!');
+                showLogin(); 
+            } else {
+                const errorData = await response.json();
+                alert(`Грешка: ${errorData.message}`);
+            }
+        } catch (error) {
+            alert('Възникна грешка при регистрацията.');
+            console.error(error);
+        }
+    }
 </script>
 
 </body>

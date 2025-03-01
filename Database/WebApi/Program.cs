@@ -1,8 +1,9 @@
 using DBContexts;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Sockets;
+using System.Net;
 
 var builder = WebApplication.CreateSlimBuilder(args);
-
 builder.Services.AddControllers();
 
 builder.Configuration
@@ -29,8 +30,7 @@ builder.Services.AddCors(options =>
         {
             policy.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
+                .AllowAnyHeader();
         });
 });
 
@@ -38,6 +38,6 @@ var app = builder.Build();
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();
-
+app.UseCors("Disable cross-origin");
 app.Run();
 
