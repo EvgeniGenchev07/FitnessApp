@@ -247,47 +247,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
-
-<script>
-    // JavaScript functions to show/hide the forms with zoom-in and fade animation
-    function showLogin() {
-        hideAllForms();
-        document.getElementById('login-form').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('login-form').classList.add('active');
-        }, 10);
-    }
-
-    function showSignUp() {
-        hideAllForms();
-        document.getElementById('signup-form').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('signup-form').classList.add('active');
-        }, 10);
-    }
-
-    function showForgotPassword() {
-        hideAllForms();
-        document.getElementById('forgot-password-form').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('forgot-password-form').classList.add('active');
-        }, 10);
-    }
-
-    function hideAllForms() {
-        const forms = document.querySelectorAll('.form-container');
-        forms.forEach(form => {
-            form.classList.remove('active');
-            form.style.display = 'none';
-        });
-    }
-
-    // Default to show Sign Up form initially
-    document.getElementById('signup-form').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('signup-form').classList.add('active');
-    }, 10);
-</script>
-
+<script src="assets/js/signUp.js"></script>
 </body>
 </html>
