@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\html\\FitnessApp\\Database\\WebApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -12,10 +16,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
@@ -116,7 +116,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -128,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\Models\\User.cs",
               "RelativeDocumentMoniker": "..\\Models\\User.cs",
@@ -136,18 +136,17 @@
               "RelativeToolTip": "..\\Models\\User.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAuwA8AAABhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-01T21:07:07.989Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-03-01T21:07:07.989Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\html\\FitnessApp\\Database\\WebApi\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAAACAAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-10T20:44:58.506Z",
               "EditorCaption": ""
@@ -178,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
@@ -190,15 +189,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\UserController.cs",
               "RelativeDocumentMoniker": "UserController.cs",
               "ToolTip": "C:\\html\\FitnessApp\\Database\\WebApi\\UserController.cs",
               "RelativeToolTip": "UserController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-17T20:09:03.924Z"
+              "WhenOpened": "2025-02-17T20:09:03.924Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
