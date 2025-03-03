@@ -338,10 +338,52 @@ body {
         border: none;
         animation: none; /* Remove glowing effect */
     }
-
-    .profile-actions button {
-        border: none;
+    
+}
+/* Ensure Post, Follower, and Following are in one row and Likes, Comments, Saved in another row */
+@media screen and (max-width: 768px) {
+    .account-info {
+        display: flex;
+        flex-direction: column; /* Stack the rows vertically */
+        gap: 20px; /* Add gap between the rows */
     }
 
+    .data {
+        display: flex;
+        flex-wrap: wrap; /* Ensure items wrap if there's not enough space */
+        justify-content: space-between;
+        gap: 10px; /* Gap between each item */
+    }
 
+    .important-data {
+        display: flex;
+        justify-content: space-between;
+        width: 100%; /* Ensure these items are on the same row */
+    }
+
+    .other-data {
+        display: flex;
+        justify-content: space-between;
+        width: 100%; /* Ensure these items are on the same row */
+    }
 }
+@media screen and (max-width: 400px) {
+    .account-info {
+        gap: 10px; /* Reduce gap for very small screens */
+    }
+
+    .data {
+        font-size: 12px; /* Smaller font size */
+    }
+
+    .important-data .value,
+    .other-data .value {
+        font-size: 14px; /* Smaller numbers */
+    }
+
+    .important-data .title,
+    .other-data .title {
+        font-size: 10px; /* Smaller labels */
+    }
+}
+
