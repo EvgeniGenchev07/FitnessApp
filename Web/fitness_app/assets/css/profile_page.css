@@ -387,3 +387,42 @@ body {
     }
 }
 
+
+@keyframes flicker {
+    0% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 20px #ff3333; }
+    10% { text-shadow: 0 0 8px #ff3333, 0 0 12px #ff0000, 0 0 22px #ff6666; }
+    20% { text-shadow: 0 0 6px #ff0000, 0 0 9px #ff3333, 0 0 18px #ff6666; }
+    30% { text-shadow: 0 0 10px #ff0000, 0 0 14px #ff3333, 0 0 25px #ff6666; }
+    40% { text-shadow: 0 0 7px #ff0000, 0 0 11px #ff3333, 0 0 19px #ff6666; }
+    50% { text-shadow: 0 0 5px #ff0000, 0 0 8px #ff3333, 0 0 15px #ff6666; opacity: 0.9; }
+    60% { text-shadow: 0 0 6px #ff0000, 0 0 10px #ff3333, 0 0 20px #ff6666; }
+    70% { text-shadow: 0 0 9px #ff0000, 0 0 13px #ff3333, 0 0 23px #ff6666; }
+    80% { text-shadow: 0 0 7px #ff0000, 0 0 11px #ff3333, 0 0 18px #ff6666; }
+    90% { text-shadow: 0 0 8px #ff0000, 0 0 12px #ff3333, 0 0 22px #ff6666; opacity: 1; }
+    100% { text-shadow: 0 0 5px #ff0000, 0 0 10px #ff3333, 0 0 20px #ff6666; opacity: 0.8; }
+}
+
+.back-home {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ff0000;
+    display: flex;
+    align-items: center;
+    animation: flicker 1.5s infinite alternate;
+    transition: all 0.3s ease-in-out;
+    z-index: 99;
+}
+
+.back-home i {
+    margin-right: 8px;
+}
+
+.back-home:hover {
+    color: #ff3333;
+    text-shadow: 0 0 15px #ff3333, 0 0 25px #ff6666, 0 0 30px #ff9999;
+    transform: scale(1.1);
+}
