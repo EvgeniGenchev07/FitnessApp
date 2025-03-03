@@ -281,3 +281,59 @@ body {
 
             .data {gap: 20px;}
 }
+@media screen and (max-width: 768px) {
+    .account-info {
+        grid-template-columns: 1fr 1fr; /* 2 columns instead of 3 */
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .data {
+        padding: 15px;
+        font-size: 14px; /* Smaller text */
+    }
+
+    .important-data .value,
+    .other-data .value {
+        font-size: 16px; /* Smaller numbers */
+    }
+
+    .important-data .title,
+    .other-data .title {
+        font-size: 12px; /* Smaller labels */
+    }
+}
+@media screen and (max-width:400)
+{
+    .account-info {
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .data {
+        padding: 15px;
+        font-size: 12px; /* Smaller text */
+    }
+
+    .important-data .value,
+    .other-data .value {
+        font-size: 13px; /* Smaller numbers */
+    }
+
+    .important-data .title,
+    .other-data .title {
+        font-size: 10px; /* Smaller labels */
+    }
+}
+@media screen and (max-width: 768px) {
+    .profile-card {
+        border: none;
+        animation: none; /* Remove glowing effect */
+    }
+
+    .profile-actions button {
+        border: none;
+    }
+
+
+}
