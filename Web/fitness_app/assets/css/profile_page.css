@@ -47,7 +47,7 @@ body {
     border: 2px solid var(--accent-bg);
     animation: border-glow 2s infinite alternate;
     display: grid;
-    grid-template-rows: 180px auto; /
+    grid-template-rows: 180px auto; 
     overflow: hidden;
 }
 
@@ -78,7 +78,7 @@ body {
         .profile-image {
             width: 150px;
             height: 150px;
-            background: url('/images/profile-image.jpg') center;
+            background: url("../img/profile-image.jpg") center;
             background-size: cover;
             border-radius: 50%;
             border: 10px solid var(--primary-bg);
