@@ -370,6 +370,7 @@ body {
 @media screen and (max-width: 400px) {
     .account-info {
         gap: 10px; /* Reduce gap for very small screens */
+        padding-top: 0.75px;
     }
 
     .data {
@@ -426,8 +427,4 @@ body {
     text-shadow: 0 0 15px #ff3333, 0 0 25px #ff6666, 0 0 30px #ff9999;
     transform: scale(1.1);
 }
-@media (max-width: 768px) {
-    .back-home {
-        font-size: 14px; 
-    }
-}
+
