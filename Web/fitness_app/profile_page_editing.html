@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthloBoostX</title>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/profile_page_editing.css">
+</head>
+<body>
+    <!-- Header with Settings -->
+    <div class="header-container">
+        <i class="fas fa-cog settings-icon" onclick="toggleSettings(event)"></i>
+        <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-option" onclick="showEditProfileModal()">
+                <i class="fas fa-user-edit"></i> Edit Profile
+            </div>
+            <div class="settings-option" onclick="showDeletePostModal()">
+                <i class="fas fa-trash-alt"></i> Delete Post
+            </div>
+            <div class="settings-option">
+                <i class="fas fa-palette"></i> Appearance
+            </div>
+            <div class="settings-option">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <img src="avatar-placeholder.jpg" alt="Profile" class="profile-avatar">
+            <div class="profile-info">
+                <h1 class="profile-name">DARK_USER</h1>
+                <ul class="profile-stats">
+                    <li><span>666</span> posts</li>
+                    <li><span>9.9k</span> followers</li>
+                    <li><span>666</span> following</li>
+                </ul>
+                <p class="profile-bio">
+                    🖤 Blood and darkness enthusiast 🔥 
+                    <br>Living in the shadows 🌑
+                    <br>#DarkAesthetic #RedDevil
+                </p>
+            </div>
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="profile-posts">
+            <div class="post-item">
+                <img src="post-placeholder.jpg" alt="Post">
+                <div class="post-hover">
+                    <span>❤️ 666</span>
+                    <span>💬 66</span>
+                </div>
+            </div>
+            <!-- Add more posts here -->
+        </div>
+    </div>
+
+    <script src="assets/js/profile_page_editing.js"></script>
+</body>
+</html>
