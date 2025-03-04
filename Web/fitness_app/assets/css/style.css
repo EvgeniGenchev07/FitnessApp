@@ -7894,5 +7894,16 @@ del {
 .switch-wrap {
   margin-bottom: 10px;
 }
+@media (min-width: 992px) {
+  .main-menu ul li a {
+      text-transform: uppercase;
+  }
+}
 
+/* За мобилни устройства – нормален текст */
+@media (max-width: 991px) {
+  .mobile_menu ul li a {
+      text-transform: none;
+  }
+}
 /*# sourceMappingURL=style.css.map */

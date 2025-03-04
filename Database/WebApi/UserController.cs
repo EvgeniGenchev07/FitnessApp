@@ -1,4 +1,5 @@
 ﻿using DBContexts;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ namespace WebApi
 {
     [ApiController]
     [Route("user/")]
+    [EnableCors("Disable cross-origin")]
     public class UserController : ControllerBase
     {
         private readonly IDatabase<User, string> _userContext;

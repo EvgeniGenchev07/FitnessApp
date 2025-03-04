@@ -12,7 +12,8 @@ namespace Models
         public int Id { get; set; }
         [Required]
         [MaxLength(50)]
-        [RegularExpression(@"[A-Za-z1-9_\-. ]{3,50}")]
+        [RegularExpression(@"^[A-Za-zА-Яа-я0-9_\-. ]{3,50}$",
+    ErrorMessage = "Only letters (Latin, Cyrillic), numbers, dashes, dots, and spaces are allowed.")]
         public string UserName { get; set; }
         [Required]
         [MaxLength(50)]
