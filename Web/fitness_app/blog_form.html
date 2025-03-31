@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>AthloBoostX</title>
+    <title>AthloBoostX - Blog</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
@@ -23,6 +23,194 @@
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Add the blog form CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Blog Form Styles */
+        .blog-form-container {
+            padding: 60px 0;
+            background-color: #000;
+        }
+        
+        .blog-form-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: #111;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid #ff0000;
+            position: relative;
+        }
+        
+        .blog-form-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 40px 40px 0;
+            border-color: transparent #ff0000 transparent transparent;
+        }
+        
+        .blog-form-title {
+            color: #ff0000;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.2rem;
+            text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.5);
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .form-group-blog {
+            margin-bottom: 25px;
+        }
+        
+        .form-group-blog label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #ff0000;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .form-group-blog input[type="text"],
+        .form-group-blog input[type="email"],
+        .form-group-blog textarea,
+        .form-group-blog select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ff0000;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background-color: #222;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .form-group-blog textarea {
+            min-height: 200px;
+            resize: vertical;
+            display: block;
+        }
+        
+        .blog-form-btn {
+            display: inline-block;
+            background-color: #ff0000;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            box-shadow: 0 4px 0 #cc0000;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .blog-form-btn:hover {
+            background-color: #d10000;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #cc0000;
+        }
+        
+        .blog-form-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #cc0000;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 15px;
+            display: none;
+            border: 2px solid #ff0000;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input {
+            margin-right: 8px;
+            accent-color: #ff0000;
+            width: 18px;
+            height: 18px;
+        }
+        
+        .form-group-blog input[type="file"] {
+            color: white;
+            padding: 10px;
+            background: #222;
+            border: 2px dashed #ff0000;
+        }
+        
+        .form-group-blog input[type="file"]::file-selector-button {
+            background: #ff0000;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 15px;
+            font-family: 'Oswald', sans-serif;
+        }
+        
+        .form-group-blog input[type="file"]::file-selector-button:hover {
+            background: #d10000;
+        }
+        
+        /* Services Section */
+        .services-area {
+            background-color: #2a2a2a;
+            padding: 60px 0;
+        }
+        
+        @media (max-width: 767px) {
+            .blog-form-wrapper {
+                padding: 25px;
+            }
+            
+            .blog-form-title {
+                font-size: 1.8rem;
+            }
+            
+            .blog-form-btn {
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+            
+            .checkbox-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
 </head>
 <body class="black-bg">
     <!-- ? Preloader Start -->
@@ -87,7 +275,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-cap hero-cap2 pt-70">
-                            <h2>Gallery</h2>
+                            <h2>Create Blog Post</h2>
                         </div>
                     </div>
                 </div>
@@ -95,86 +283,81 @@
         </div>
     </div>
     <!-- Hero End -->
-    <!--? Gallery Area Start -->
-    <div class="gallery-area">
-        <div class="container-fluid ">
-            <div class="row">
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery1.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
+    
+    <!-- Blog Form Section -->
+    <section class="blog-form-container">
+        <div class="container">
+            <div class="blog-form-wrapper">
+                <h1 class="blog-form-title">Post Your Gym Story</h1>
+                
+                <form id="blogForm">
+                    <div class="form-group-blog">
+                        <label for="title">Post Title</label>
+                        <input type="text" id="title" name="title" placeholder="Enter your hardcore post title" required>
+                    </div>
+                    
+                    <div class="form-group-blog">
+                        <label for="author">Your Name</label>
+                        <input type="text" id="author" name="author" placeholder="The Beast" required>
+                    </div>
+                    
+                    
+                    <div class="form-group-blog">
+                        <label for="category">Category</label>
+                        <input type="text" id="category" name="category" placeholder="Select your battleground" required>
+                    </div>
+                    
+                    <div class="form-group-blog">
+                        <label for="content">Your Story</label>
+                        <textarea id="content" name="content" placeholder="Share your blood, sweat and tears..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group-blog">
+                        <label for="image">Upload Your Proof</label>
+                        <input type="file" id="image" name="image" accept="image/*">
+                        <img id="imagePreview" class="image-preview" alt="Image preview">
+                    </div>
+                    
+                    <div class="form-group-blog">
+                        <label>Tags (Choose Your Weapons)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag1" name="tags" value="strength">
+                                <label for="tag1">Strength</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag2" name="tags" value="hypertrophy">
+                                <label for="tag2">Hypertrophy</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag3" name="tags" value="conditioning">
+                                <label for="tag3">Conditioning</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag4" name="tags" value="powerlifting">
+                                <label for="tag4">Powerlifting</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="tag5" name="tags" value="bodybuilding">
+                                <label for="tag5">Bodybuilding</label>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery2.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
-                            </div>
-                        </div>
+                    
+                    <div class="form-group-blog">
+                        <button type="submit" class="blog-form-btn">Publish Your Battle Log</button>
                     </div>
-                </div>
-                <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery3.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery4.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery5.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6">
-                    <div class="box snake mb-30">
-                        <div class="gallery-img big-img" style="background-image: url(assets/img/gallery/gallery6.png);"></div>
-                        <div class="overlay">
-                            <div class="overlay-content">
-                                <h3>Muscle gaining </h3>
-                                <a href="gallery.html"><i class="ti-plus"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                </form>
             </div>
         </div>
-    </div>
-    <!-- Gallery Area End -->
-    <!-- ? services-area -->
+    </section>
+
+    <!-- Services Area -->
     <section class="services-area">
         <div class="container">
             <div class="row justify-content-between">
                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40">
+                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".1s">
                         <div class="features-icon">
                             <img src="assets/img/icon/location.png" style="width: 80px; height: 80px;" alt="">
                         </div>
@@ -185,7 +368,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40">
+                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="1s" data-wow-delay=".2s">
                         <div class="features-icon">
                             <img src="assets/img/icon/phone.png" style="width: 80px;height: 80px;" alt="">
                         </div>
@@ -197,7 +380,7 @@
                     </div>
                 </div>
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-8">
-                    <div class="single-services mb-40">
+                    <div class="single-services mb-40 wow fadeInUp" data-wow-duration="2s" data-wow-delay=".4s">
                         <div class="features-icon">
                             <img src="assets/img/icon/email.png" style="width: 80px;height: 80px;" alt="">
                         </div>
@@ -318,6 +501,33 @@
 <!-- Jquery Plugins, main Jquery -->	
 <script src="./assets/js/plugins.js"></script>
 <script src="./assets/js/main.js"></script>
+
+<!-- Blog Form Script -->
+<script>
+    $(document).ready(function() {
+        // Image preview functionality
+        $('#image').on('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    $('#imagePreview').attr('src', event.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        $('#blogForm').on('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            alert('Your battle log has been submitted! No retreat, no surrender!');
+            // Reset form
+            this.reset();
+            $('#imagePreview').hide();
+        });
+    });
+</script>
 
 </body>
 </html>
