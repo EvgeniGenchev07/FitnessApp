@@ -7907,3 +7907,35 @@ del {
   }
 }
 /*# sourceMappingURL=style.css.map */
+@media screen and (max-width: 768px) {
+  .language-selector {
+      margin-top: 2%;
+      margin-left: 17%; 
+      padding-left: 10%;
+      width: 49%;
+  }
+  .logo img {
+      width: 12.5vh; /* Ensure logo size is consistent */
+  }
+}
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .language-selector {
+      margin-left: 2%;
+      width: 10%; 
+  }
+  .logo img {
+      width: 12.5vh; /* Ensure logo size is consistent */
+  }
+}
+@media screen and (min-width: 1024px) and (max-width: 1900px) {
+  .language-selector {
+      margin-top: 0%;
+      margin-left: 2%; 
+      width: 10%; 
+  }
+  .logo img {
+      width: 24vh; /* Ensure logo size is consistent */
+  }
+}
+
+ 
