@@ -245,7 +245,7 @@
 .slicknav_menu .slicknav_icon {
 	margin-right: 6px;
 	margin-top: 3px;
-	position: relative;
+	//position: relative;
 	right: 5px;
 	top: -5px;
 	padding-bottom: 3px;
