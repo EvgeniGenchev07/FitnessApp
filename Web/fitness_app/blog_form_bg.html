@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>AthloBoostX</title>
+    <title>AthloBoostX - Blog</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="site.webmanifest">
@@ -23,9 +23,13 @@
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/blog_form.css">
+
     <!-- Add the blog form CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/blog_form.css">
+    <style>
+
+    </style>
 </head>
 <body class="black-bg">
     <!-- ? Preloader Start -->
@@ -70,7 +74,7 @@
                         </div>          
                         <!-- Header-btn -->
                         <div class="header-btns d-none d-lg-block f-right">
-                           <a href="contact.html" class="btn">Контакти</a>
+                           <a href="contact.html" class="btn">Contact us</a>
                        </div>
                        <!-- Mobile Menu -->
                        <div class="col-12">
@@ -90,7 +94,7 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-cap hero-cap2 pt-70">
-                            <h2>Добавяне на статия</h2>
+                            <h2>Create Blog Post</h2>
                         </div>
                     </div>
                 </div>
@@ -103,67 +107,67 @@
     <section class="blog-form-container">
         <div class="container">
             <div class="blog-form-wrapper">
-                <h1 class="blog-form-title">Публикувайте своята история</h1>
+                <h1 class="blog-form-title">Post Your Gym Story</h1>
                 
                 <form id="blogForm">
                     <div class="form-group-blog">
-                        <label for="title">Заглавие</label>
+                        <label for="title">Post Title</label>
                         <input type="text" id="title" name="title" placeholder="Enter your hardcore post title" required>
                     </div>
                     
                     <div class="form-group-blog">
-                        <label for="author">Вашето име</label>
+                        <label for="author">Your Name</label>
                         <input type="text" id="author" name="author" placeholder="The Beast" required>
                     </div>
                     
                     
                     <div class="form-group-blog">
-                        <label for="category">Категория</label>
+                        <label for="category">Category</label>
                         <input type="text" id="category" name="category" placeholder="Select your battleground" required>
                     </div>
                     
                     <div class="form-group-blog">
-                        <label for="content">Вашата история</label>
+                        <label for="content">Your Story</label>
                         <textarea id="content" name="content" placeholder="Share your blood, sweat and tears..." required></textarea>
                     </div>
                     
                     <div class="form-group-blog">
-                        <label for="image">Качете вашето доказателство</label>
+                        <label for="image">Upload Your Proof</label>
                         <input type="file" id="image" name="image" accept="image/*">
                         <div class="image-preview-container">
                             <img id="imagePreview" class="image-preview" alt="Image preview">
-                            <button class="remove-image-btn">✕</button>
+                            <button type="button" class="close-preview" aria-label="Close preview">&times;</button>
                         </div>
                     </div>
                     
                     <div class="form-group-blog">
-                        <label>Тагове (Изберете своето оръжие)</label>
+                        <label>Tags (Choose Your Weapons)</label>
                         <div class="checkbox-group">
                             <div class="checkbox-item">
                                 <input type="checkbox" id="tag1" name="tags" value="strength">
-                                <label for="tag1">Сила</label>
+                                <label for="tag1">Strength</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="tag2" name="tags" value="hypertrophy">
-                                <label for="tag2">Хипертрофия</label>
+                                <label for="tag2">Hypertrophy</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="tag3" name="tags" value="conditioning">
-                                <label for="tag3">Издръжливост</label>
+                                <label for="tag3">Endurance</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="tag4" name="tags" value="powerlifting">
-                                <label for="tag4">Вдигане на тежести</label>
+                                <label for="tag4">Powerlifting</label>
                             </div>
                             <div class="checkbox-item">
                                 <input type="checkbox" id="tag5" name="tags" value="bodybuilding">
-                                <label for="tag5">Бодибилдинг</label>
+                                <label for="tag5">Bodybuilding</label>
                             </div>
                         </div>
                     </div>
                     
                     <div class="form-group-blog">
-                        <button type="submit" class="blog-form-btn">Публикувайте своята битка!</button>
+                        <button type="submit" class="blog-form-btn">Publish Your Battle Log</button>
                     </div>
                 </form>
             </div>
@@ -234,17 +238,12 @@
                                         <!-- Main-menu -->
                                         <div class="main-menu main-menu2 text-center">
                                             <nav>
-                                                <ul id="navigation">
+                                                <ul>
                                                     <li><a href="index.html">Начало</a></li>
                                                     <li><a href="about_bg.html">За нас</a></li>
                                                     <li><a href="courses_bg.html">Курсове</a></li>
-                                                    <li><a href="blog_bg.html">Блог</a>
-                                                        <ul class="submenu">
-                                                            <li><a href="blog_bg.html">Статии</a></li>
-                                                            <li><a href="blog_form_bg.html">Добави статия</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li><a href="signUp_bg.html" target="_blank">Регистрация</a></li>
+                                                    <li><a href="blog_bg.html">Блог</a></li>
+                                                    <li><a href="signUp_bg.html">Регистрация</a></li>
                                                     <li><a href="contact_bg.html">Контакти</a></li>
                                                 </ul>
                                             </nav>
@@ -326,44 +325,7 @@
 <script src="./assets/js/main.js"></script>
 
 <!-- Blog Form Script -->
-<script>
-$(document).ready(function() {
-    // Show image preview when file is selected
-    $('#image').on('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                $('.image-preview-container').show();
-                $('#imagePreview').attr('src', event.target.result);
-                
-                // Immediately show button on mobile
-                if (window.innerWidth <= 768) {
-                    $('.remove-image-btn').css('opacity', '1');
-                }
-            }
-            reader.readAsDataURL(file);
-        }
-    });
-
-    // Remove image functionality
-    $('.remove-image-btn').on('click', function(e) {
-        e.preventDefault();
-        $('#image').val('');
-        $('.image-preview-container').hide();
-        $('#imagePreview').attr('src', '');
-    });
-
-    // Handle window resize
-    $(window).on('resize', function() {
-        if (window.innerWidth <= 768) {
-            $('.remove-image-btn').css('opacity', '1');
-        } else {
-            $('.remove-image-btn').css('opacity', '0');
-        }
-    });
-});
-</script>
+<script src="./assets/js/blog_form.js"></script>
 
 </body>
 </html>

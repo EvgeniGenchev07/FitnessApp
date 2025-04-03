@@ -23,193 +23,12 @@
     <link rel="stylesheet" href="assets/css/slick.css">
     <link rel="stylesheet" href="assets/css/nice-select.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/blog_form.css">
+
     <!-- Add the blog form CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Blog Form Styles */
-        .blog-form-container {
-            padding: 60px 0;
-            background-color: #000;
-        }
-        
-        .blog-form-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px;
-            background-color: #111;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            border: 1px solid #ff0000;
-            position: relative;
-        }
-        
-        .blog-form-wrapper::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 0 40px 40px 0;
-            border-color: transparent #ff0000 transparent transparent;
-        }
-        
-        .blog-form-title {
-            color: #ff0000;
-            margin-bottom: 30px;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 2.2rem;
-            text-shadow: 1px 1px 2px rgba(255, 0, 0, 0.5);
-            font-family: 'Oswald', sans-serif;
-        }
-        
-        .form-group-blog {
-            margin-bottom: 25px;
-        }
-        
-        .form-group-blog label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #ff0000;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            font-family: 'Oswald', sans-serif;
-        }
-        
-        .form-group-blog input[type="text"],
-        .form-group-blog input[type="email"],
-        .form-group-blog textarea,
-        .form-group-blog select {
-            width: 100%;
-            padding: 14px;
-            border: 2px solid #ff0000;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: all 0.2s ease;
-            background-color: #222;
-            color: white;
-            font-family: 'Oswald', sans-serif;
-        }
-        
-        .form-group-blog textarea {
-            min-height: 200px;
-            resize: vertical;
-            display: block;
-        }
-        
-        .blog-form-btn {
-            display: inline-block;
-            background-color: #ff0000;
-            color: white;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: 700;
-            transition: all 0.2s ease;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            width: 100%;
-            box-shadow: 0 4px 0 #cc0000;
-            position: relative;
-            overflow: hidden;
-            font-family: 'Oswald', sans-serif;
-        }
-        
-        .blog-form-btn:hover {
-            background-color: #d10000;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #cc0000;
-        }
-        
-        .blog-form-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #cc0000;
-        }
-        
-        .image-preview {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-top: 15px;
-            display: none;
-            border: 2px solid #ff0000;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-        }
-        
-        .checkbox-item input {
-            margin-right: 8px;
-            accent-color: #ff0000;
-            width: 18px;
-            height: 18px;
-        }
-        
-        .form-group-blog input[type="file"] {
-            color: white;
-            padding: 10px;
-            background: #222;
-            border: 2px dashed #ff0000;
-        }
-        
-        .form-group-blog input[type="file"]::file-selector-button {
-            background: #ff0000;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-right: 15px;
-            font-family: 'Oswald', sans-serif;
-        }
-        
-        .form-group-blog input[type="file"]::file-selector-button:hover {
-            background: #d10000;
-        }
-        
-        /* Services Section */
-        .services-area {
-            background-color: #111111;
-            padding: 60px 0;
-        }
-        
-        @media (max-width: 767px) {
-            .blog-form-wrapper {
-                padding: 25px;
-            }
-            
-            .blog-form-title {
-                font-size: 1.8rem;
-            }
-            
-            .blog-form-btn {
-                padding: 12px 24px;
-                font-size: 16px;
-            }
-            
-            .checkbox-group {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
+
     </style>
 </head>
 <body class="black-bg">
@@ -315,7 +134,10 @@
                     <div class="form-group-blog">
                         <label for="image">Upload Your Proof</label>
                         <input type="file" id="image" name="image" accept="image/*">
-                        <img id="imagePreview" class="image-preview" alt="Image preview">
+                        <div class="image-preview-container">
+                            <img id="imagePreview" class="image-preview" alt="Image preview">
+                            <button type="button" class="close-preview" aria-label="Close preview">&times;</button>
+                        </div>
                     </div>
                     
                     <div class="form-group-blog">
@@ -503,31 +325,7 @@
 <script src="./assets/js/main.js"></script>
 
 <!-- Blog Form Script -->
-<script>
-    $(document).ready(function() {
-        // Image preview functionality
-        $('#image').on('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    $('#imagePreview').attr('src', event.target.result).show();
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Form submission
-        $('#blogForm').on('submit', function(e) {
-            e.preventDefault();
-            // Here you would typically send the form data to a server
-            alert('Your battle log has been submitted! No retreat, no surrender!');
-            // Reset form
-            this.reset();
-            $('#imagePreview').hide();
-        });
-    });
-</script>
+<script src="./assets/js/blog_form.js"></script>
 
 </body>
 </html>
