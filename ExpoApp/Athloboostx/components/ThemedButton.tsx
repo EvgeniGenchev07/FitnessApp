@@ -24,7 +24,7 @@ export function ThemedButton({
                 {color: colorDefaultText},
                 type === 'default' ? [styles.default, {borderColor}] : undefined,
                 type === 'image' ? styles.image : undefined,
-                type === 'icon' ? styles.icon : undefined,
+                type === 'icon' ? [styles.icon,{borderColor: borderColor}] : undefined,
                 style,
             ]}
             {...rest}
@@ -36,11 +36,17 @@ const styles = StyleSheet.create({
     default: {
         width: '100%',
         borderWidth: 1,
-        paddingVertical: 15,
+        paddingVertical: 10,
         borderRadius: 25,
         alignItems: 'center',
         marginTop: 10,
     },
     image: {},
-    icon: {},
+    icon: {
+        borderWidth: 1,
+        paddingVertical: 10,
+        borderRadius: 25,
+        alignItems: 'center',
+        marginTop: 10,
+    },
 });
