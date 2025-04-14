@@ -296,3 +296,4 @@ C:/html/FitnessApp/Database/WebApi/obj/Debug/net9.0/ref/WebApi.dll
 /home/evgeni/FitnessApp/Database/WebApi/obj/Debug/net9.0/WebApi.pdb
 /home/evgeni/FitnessApp/Database/WebApi/obj/Debug/net9.0/WebApi.genruntimeconfig.cache
 /home/evgeni/FitnessApp/Database/WebApi/obj/Debug/net9.0/ref/WebApi.dll
+/home/evgeni/FitnessApp/Database/WebApi/bin/Debug/net9.0/Scrypt.dll

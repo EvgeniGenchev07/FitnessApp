@@ -16,8 +16,7 @@ namespace Models
     ErrorMessage = "Only letters (Latin, Cyrillic), numbers, dashes, dots, and spaces are allowed.")]
         public string UserName { get; set; }
         [Required]
-        [MaxLength(50)]
-        [RegularExpression(@"(?=.*[A-Z]+)(?=.*[a-z]+)(?=.*[0-9]+)(?=.*\W+).{8,50}")]
+        [MaxLength(1000)]
         public string Password { get; set; }
         [Required]
         [MaxLength(50)]
