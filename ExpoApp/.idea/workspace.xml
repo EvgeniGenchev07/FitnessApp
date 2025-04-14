@@ -4,61 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ef13dc9a-42ee-441c-8edd-385b0f5eccc7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/ExpoApp.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Athloboostx/app/meals.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Athloboostx/app/posts.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Athloboostx/app/workouts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/DBContexts.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/Debug/net9.0/DBContexts.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/DBContexts/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/DBContexts/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Debug/net9.0/Models.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/Models.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/Models/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/Models/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.AssemblyInfo.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.assets.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/Debug/net9.0/WebApi.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.g.props" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.g.targets" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/WebApi.csproj.nuget.g.targets" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Database/WebApi/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../Database/WebApi/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/.expo/types/router.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/.expo/types/router.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/(tabs)/explore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/(tabs)/explore.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/(tabs)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/(tabs)/profile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/app/settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/app/settings.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/components/ThemedButton.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/components/ThemedButton.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/components/ui/IconSymbol.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/components/ui/IconSymbol.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/constants/Colors.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/constants/Colors.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/node_modules/.package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Athloboostx/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Athloboostx/package.json" afterDir="false" />
-    </list>
+    <list default="true" id="ef13dc9a-42ee-441c-8edd-385b0f5eccc7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -97,7 +43,7 @@
     "RunOnceActivity.git.unshallow": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "/home/evgeni/FitnessApp/ExpoApp",
+    "last_opened_file_path": "/home/evgeni/WebstormProjects/KapanaLuxuryApartment",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -125,6 +71,7 @@
       <workItem from="1741114950616" duration="6041000" />
       <workItem from="1741371843345" duration="21000" />
       <workItem from="1744212442624" duration="13621000" />
+      <workItem from="1744395360301" duration="19000" />
     </task>
     <servers />
   </component>

@@ -14,22 +14,33 @@ namespace WebApi
     public class UserController : ControllerBase
     {
         private readonly IDatabase<User, string> _userContext;
+        private readonly UserLogin _userLoginContext;
 
-        public UserController(UserContext context)
+        public UserController(UserContext context, UserLogin userLogin)
         {
             _userContext = context;
+            _userLoginContext = userLogin;
         }
 
-        [HttpGet("{email}/{password}")]
-        public async Task<IActionResult> GetUser(string email,string password)
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> GetUser(IFormCollection form)
         {
             try
             {
-                User user = await _userContext.ReadAsync(email,true,true);
-                if (user == null) return NotFound("User not found");
+                string email = form["email"];
+                string password = form["password"];
+                
+                Tuple<byte,User> response = await _userLoginContext.Login(email, password);
+                if (response.Item1 == (byte)Error.Ok)
+                {
+                    return Ok(response.Item2);
+                }
+                return NotFound(response.Item1);
+             /*   if (user == null) return NotFound("User not found");
                 if (user.Password != password) return Unauthorized();
                 user.Password = "";
-                return Ok(user);
+                return Ok(user);*/
             }
             catch (Exception ex)
             {
@@ -44,11 +55,9 @@ namespace WebApi
         {
             try
             {
-                User user = await _userContext.ReadAsync(data.Email,false,true);
-                if (user != null) return NotFound("User already exists");
-                await _userContext.CreateAsync(data);
-                data.Password = "";
-                return Ok(data);
+                byte response = await _userLoginContext.Register(data);
+                if(response == (byte)Error.Ok) return Ok(response);
+                return NotFound(response);
             }
             catch (DbUpdateException ex)
             {

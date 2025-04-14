@@ -14,6 +14,7 @@ string connectionString = builder.Configuration.GetConnectionString("DefaultConn
 
 builder.Services.AddDbContext<AthloboostDbContext>(options=>options.UseSqlite(connectionString));
 builder.Services.AddScoped<UserContext>();
+builder.Services.AddScoped<UserLogin>();
 builder.Services.AddScoped<ExerciseContext>();
 builder.Services.AddScoped<WorkoutContext>();
 builder.Services.AddScoped<WorkoutExerciseContext>();

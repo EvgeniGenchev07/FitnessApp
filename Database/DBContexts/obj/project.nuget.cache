@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "VCfTwTmC2bU=",
+  "dgSpecHash": "mUI5HIMRqiA=",
   "success": true,
   "projectFilePath": "/home/evgeni/FitnessApp/Database/DBContexts/DBContexts.csproj",
   "expectedPackageFiles": [
+    "/home/evgeni/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/evgeni/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/evgeni/.nuget/packages/microsoft.bcl.asyncinterfaces/7.0.0/microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "/home/evgeni/.nuget/packages/microsoft.build.framework/17.8.3/microsoft.build.framework.17.8.3.nupkg.sha512",

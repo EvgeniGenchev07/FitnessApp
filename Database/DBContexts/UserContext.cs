@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Models;
 
 namespace DBContexts;
@@ -15,6 +16,7 @@ public class UserContext : IDatabase<User, string>
 
     public async Task CreateAsync(User entity)
     {
+        entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
         await _dbContext.Users.AddAsync(entity);
         await _dbContext.SaveChangesAsync();
     }

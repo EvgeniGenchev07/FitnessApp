@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "yqLqSgG+SMY=",
+  "dgSpecHash": "TozCRDLdCg4=",
   "success": true,
   "projectFilePath": "/home/evgeni/FitnessApp/Database/WebApi/WebApi.csproj",
   "expectedPackageFiles": [
+    "/home/evgeni/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/home/evgeni/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/home/evgeni/.nuget/packages/microsoft.aspnetcore.cors/2.3.0/microsoft.aspnetcore.cors.2.3.0.nupkg.sha512",
     "/home/evgeni/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.3.0/microsoft.aspnetcore.http.abstractions.2.3.0.nupkg.sha512",
