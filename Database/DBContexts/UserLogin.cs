@@ -21,7 +21,6 @@ public class UserLogin
         User user = await _userContext.ReadAsync(entity.Email, true);
         if (user == null) 
         {
-            entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
             await _userContext.CreateAsync(entity);
             return (byte)Error.Ok;
         }
