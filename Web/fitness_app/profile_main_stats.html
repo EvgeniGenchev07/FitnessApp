@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Fitness Profile | IronForce</title>
+    <style>
+        :root {
+            --primary: #e74c3c;
+            --primary-dark: #c0392b;
+            --secondary: #2c3e50;
+            --accent: #e67e22;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--dark);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+        }
+        
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid var(--primary);
+        }
+        
+        .profile-info h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        .profile-info p {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .edit-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .edit-btn:hover {
+            background-color: #357abd;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .change {
+            font-size: 14px;
+        }
+        
+        .positive {
+            color: var(--success);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .neutral {
+            color: #666;
+        }
+        
+        .bmi-indicator {
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bmi-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(to right, var(--success), var(--secondary));
+            border-radius: 4px;
+        }
+        
+        .bmi-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 10px;
+            color: #999;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* Original Nutrition Plan Style */
+        .diet-plan {
+            margin-top: 20px;
+        }
+        
+        .meal {
+            margin-bottom: 20px;
+        }
+        
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .meal-title {
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .meal-time {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .meal-items {
+            list-style-type: none;
+        }
+        
+        .meal-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .meal-item:last-child {
+            border-bottom: none;
+        }
+        
+        .meal-item-name {
+            font-weight: 500;
+        }
+        
+        .meal-item-calories {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Original Water Tracker Style */
+        .water-intake {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        
+        .water-cups {
+            display: flex;
+            gap: 5px;
+            margin-right: 20px;
+        }
+        
+        .water-cup {
+            width: 20px;
+            height: 30px;
+            background: #e0f7fa;
+            border: 1px solid #b2ebf2;
+            border-radius: 0 0 5px 5px;
+        }
+        
+        .water-cup.filled {
+            background: #4fc3f7;
+            border-color: #039be5;
+        }
+        
+        /* Edit Profile Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            color: var(--primary);
+        }
+        
+        .modal h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-secondary {
+            background-color: #eee;
+            color: #333;
+            border: none;
+        }
+        
+        /* Calendar styles */
+        .calendar {
+            width: 100%;
+        }
+        
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .calendar-nav {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .calendar-nav button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+        
+        .calendar-day-header {
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding: 5px;
+        }
+        
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            background: #f9f9f9;
+        }
+        
+        .calendar-day:hover {
+            background: #f0f0f0;
+        }
+        
+        .calendar-day.today {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .calendar-day.workout::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            position: absolute;
+            bottom: 5px;
+        }
+        
+        .calendar-day.rest-day {
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-header">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" class="profile-pic" id="profile-pic">
+                <div class="profile-info">
+                    <h1 id="profile-name">MAXIMUS IRON</h1>
+                    <p id="membership-date">Elite Member since January 2021</p>
+                </div>
+            </div>
+            <button class="edit-btn" id="edit-profile-btn">Edit Profile</button>
+        </header>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Current Weight</h3>
+                <div class="value" id="current-weight">94.5 kg</div>
+                <div class="change positive">↓ 2.3 kg last month</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Body Mass Index</h3>
+                <div class="value" id="bmi-value">27.8</div>
+                <div class="change positive">↓ 0.7 last month</div>
+                <div class="bmi-indicator">
+                    <div class="bmi-progress" id="bmi-progress"></div>
+                </div>
+                <div class="bmi-labels">
+                    <span>Underweight</span>
+                    <span>Healthy</span>
+                    <span>Overweight</span>
+                    <span>Obese</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Body Fat Percentage</h3>
+                <div class="value" id="body-fat">18%</div>
+                <div class="change positive">↓ 2.1% last month</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>Goal Weight</h3>
+                <div class="value" id="goal-weight">88 kg</div>
+                <div class="change neutral">6.5 kg to go</div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h2>Workout Calendar</h2>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <h3 id="current-month">July 2023</h3>
+                        <div class="calendar-nav">
+                            <button id="prev-month">←</button>
+                            <button id="next-month">→</button>
+                        </div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-days">
+                        <!-- Calendar days will be generated by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="workout-history">
+                    <h3 id="selected-date-title">Today's Workout</h3>
+                    <div class="workout-item" id="workout-item-1">
+                        <span class="workout-name">Morning Strength Training</span>
+                        <span class="workout-duration">60 min</span>
+                    </div>
+                    <div class="workout-item" id="workout-item-2">
+                        <span class="workout-name">Evening Cardio</span>
+                        <span class="workout-duration">45 min</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>Nutrition Plan</h2>
+                <div class="diet-plan">
+                    <div class="meal">
+                        <div class="meal-header">
+                            <span class="meal-title">Breakfast</span>
+                            <span class="meal-time">6:30 AM</span>
+                        </div>
+                        <ul class="meal-items">
+                            <li class="meal-item">
+                                <span class="meal-item-name">6 Egg whites + 2 whole eggs</span>
+                                <span class="meal-item-calories">320 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Oatmeal with protein powder</span>
+                                <span class="meal-item-calories">450 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Black coffee</span>
+                                <span class="meal-item-calories">5 kcal</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-header">
+                            <span class="meal-title">Lunch</span>
+                            <span class="meal-time">12:30 PM</span>
+                        </div>
+                        <ul class="meal-items">
+                            <li class="meal-item">
+                                <span class="meal-item-name">Grilled chicken breast (250g)</span>
+                                <span class="meal-item-calories">410 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Brown rice (150g)</span>
+                                <span class="meal-item-calories">180 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Steamed broccoli</span>
+                                <span class="meal-item-calories">55 kcal</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-header">
+                            <span class="meal-title">Snack</span>
+                            <span class="meal-time">3:30 PM</span>
+                        </div>
+                        <ul class="meal-items">
+                            <li class="meal-item">
+                                <span class="meal-item-name">Protein shake (2 scoops)</span>
+                                <span class="meal-item-calories">240 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Handful of almonds</span>
+                                <span class="meal-item-calories">200 kcal</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meal">
+                        <div class="meal-header">
+                            <span class="meal-title">Dinner</span>
+                            <span class="meal-time">7:00 PM</span>
+                        </div>
+                        <ul class="meal-items">
+                            <li class="meal-item">
+                                <span class="meal-item-name">Grilled salmon (200g)</span>
+                                <span class="meal-item-calories">415 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Sweet potato (150g)</span>
+                                <span class="meal-item-calories">135 kcal</span>
+                            </li>
+                            <li class="meal-item">
+                                <span class="meal-item-name">Mixed greens salad</span>
+                                <span class="meal-item-calories">80 kcal</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="progress-container">
+                    <h3>Daily Nutrition Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span>2,450 kcal</span>
+                        <span>3,240 / 3,800 kcal</span>
+                    </div>
+                </div>
+                
+                <div class="water-intake">
+                    <h3>Water Intake:</h3>
+                    <div class="water-cups">
+                        <div class="water-cup filled"></div>
+                        <div class="water-cup filled"></div>
+                        <div class="water-cup filled"></div>
+                        <div class="water-cup filled"></div>
+                        <div class="water-cup"></div>
+                        <div class="water-cup"></div>
+                        <div class="water-cup"></div>
+                        <div class="water-cup"></div>
+                    </div>
+                    <span>4/8 glasses</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal" id="edit-profile-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2>Edit Profile</h2>
+            
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" value="MAXIMUS IRON">
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" value="183">
+                </div>
+                <div class="form-group">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" value="94.5">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="goal-weight">Goal Weight (kg)</label>
+                    <input type="number" id="goal-weight-input" value="88">
+                </div>
+                <div class="form-group">
+                    <label for="body-fat">Body Fat (%)</label>
+                    <input type="number" id="body-fat-input" value="18">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="membership">Membership Level</label>
+                <select id="membership">
+                    <option value="Basic">Basic</option>
+                    <option value="Pro">Pro</option>
+                    <option value="Elite" selected>Elite</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="join-date">Join Date</label>
+                <input type="date" id="join-date" value="2021-01-15">
+            </div>
+            
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                <button class="btn btn-primary" id="save-profile">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Calendar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            let currentDate = new Date();
+            let selectedDate = new Date();
+            
+            // Initialize calendar
+            renderCalendar(currentDate);
+            
+            // Navigation buttons
+            document.getElementById('prev-month').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar(currentDate);
+            });
+            
+            document.getElementById('next-month').addEventListener('click', function() {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar(currentDate);
+            });
+            
+            // Function to render calendar
+            function renderCalendar(date) {
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                                    "July", "August", "September", "October", "November", "December"];
+                
+                // Set month title
+                document.getElementById('current-month').textContent = 
+                    `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+                
+                // Get first day of month and total days
+                const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+                const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+                const daysInMonth = lastDay.getDate();
+                
+                // Get day of week for first day (0 = Sunday, 6 = Saturday)
+                const startingDay = firstDay.getDay();
+                
+                // Clear previous calendar
+                const calendarGrid = document.getElementById('calendar-days');
+                calendarGrid.innerHTML = '';
+                
+                // Add day headers
+                const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+                dayNames.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day-header';
+                    dayElement.textContent = day;
+                    calendarGrid.appendChild(dayElement);
+                });
+                
+                // Add empty cells for days before the first day of the month
+                for (let i = 0; i < startingDay; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day rest-day';
+                    const prevMonthLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+                    emptyDay.textContent = prevMonthLastDay - startingDay + i + 1;
+                    calendarGrid.appendChild(emptyDay);
+                }
+                
+                // Add days of the month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'calendar-day';
+                    dayElement.textContent = i;
+                    
+                    // Create date object for this day
+                    const currentDay = new Date(date.getFullYear(), date.getMonth(), i);
+                    
+                    // Check if today
+                    const today = new Date();
+                    if (currentDay.toDateString() === today.toDateString() && 
+                        date.getMonth() === today.getMonth() && 
+                        date.getFullYear() === today.getFullYear()) {
+                        dayElement.classList.add('today');
+                        updateWorkoutDetails(currentDay);
+                    }
+                    
+                    // Check if selected date
+                    if (currentDay.toDateString() === selectedDate.toDateString()) {
+                        dayElement.classList.add('selected');
+                    }
+                    
+                    // Mark workout days (every other day in this example)
+                    if (i % 2 !== 0 && i <= daysInMonth) {
+                        dayElement.classList.add('workout');
+                    }
+                    
+                    // Add click event
+                    dayElement.addEventListener('click', function() {
+                        // Remove selected class from all days
+                        document.querySelectorAll('.calendar-day').forEach(day => {
+                            day.classList.remove('selected');
+                        });
+                        
+                        // Add selected class to clicked day
+                        dayElement.classList.add('selected');
+                        
+                        // Update selected date
+                        selectedDate = new Date(date.getFullYear(), date.getMonth(), i);
+                        
+                        // Update workout details
+                        updateWorkoutDetails(selectedDate);
+                    });
+                    
+                    calendarGrid.appendChild(dayElement);
+                }
+                
+                // Add empty cells for days after the last day of the month
+                const totalCells = startingDay + daysInMonth;
+                const remainingCells = 7 - (totalCells % 7);
+                if (remainingCells < 7) {
+                    for (let i = 1; i <= remainingCells; i++) {
+                        const emptyDay = document.createElement('div');
+                        emptyDay.className = 'calendar-day rest-day';
+                        emptyDay.textContent = i;
+                        calendarGrid.appendChild(emptyDay);
+                    }
+                }
+            }
+            
+            // Function to update workout details based on selected date
+            function updateWorkoutDetails(date) {
+                const dateTitle = document.getElementById('selected-date-title');
+                const workoutDetails = document.getElementById('workout-details');
+                
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateTitle.textContent = date.toLocaleDateString('en-US', options);
+                
+                // In a real app, you would fetch workout data for this date
+                // Here we just simulate different workouts
+                const today = new Date();
+                if (date.toDateString() === today.toDateString()) {
+                    document.getElementById('workout-item-1').innerHTML = `
+                        <span class="workout-name">Morning Strength Training</span>
+                        <span class="workout-duration">60 min</span>
+                    `;
+                    document.getElementById('workout-item-2').innerHTML = `
+                        <span class="workout-name">Evening Cardio</span>
+                        <span class="workout-duration">45 min</span>
+                    `;
+                } else if (date.getDate() % 3 === 0) {
+                    document.getElementById('workout-item-1').innerHTML = `
+                        <span class="workout-name">HIIT Training</span>
+                        <span class="workout-duration">30 min</span>
+                    `;
+                    document.getElementById('workout-item-2').innerHTML = `
+                        <span class="workout-name">Yoga Session</span>
+                        <span class="workout-duration">60 min</span>
+                    `;
+                } else {
+                    document.getElementById('workout-item-1').innerHTML = `
+                        <span class="workout-name">Strength Training</span>
+                        <span class="workout-duration">75 min</span>
+                    `;
+                    document.getElementById('workout-item-2').innerHTML = `
+                        <span class="workout-name">Recovery Run</span>
+                        <span class="workout-duration">30 min</span>
+                    `;
+                }
+            }
+            
+            // Edit Profile Modal Functionality
+            const modal = document.getElementById('edit-profile-modal');
+            const editBtn = document.getElementById('edit-profile-btn');
+            const closeBtn = document.getElementById('close-modal');
+            const cancelBtn = document.getElementById('cancel-edit');
+            const saveBtn = document.getElementById('save-profile');
+            
+            // Open modal
+            editBtn.addEventListener('click', function() {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+            
+            // Close modal
+            function closeModal() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
+            closeBtn.addEventListener('click', closeModal);
+            cancelBtn.addEventListener('click', closeModal);
+            
+            // Close when clicking outside modal
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Save profile changes
+            saveBtn.addEventListener('click', function() {
+                // Get form values
+                const name = document.getElementById('name').value;
+                const height = document.getElementById('height').value;
+                const weight = document.getElementById('weight').value;
+                const goalWeight = document.getElementById('goal-weight-input').value;
+                const bodyFat = document.getElementById('body-fat-input').value;
+                const membership = document.getElementById('membership').value;
+                const joinDate = new Date(document.getElementById('join-date').value);
+                
+                // Update profile information
+                document.getElementById('profile-name').textContent = name;
+                document.getElementById('current-weight').textContent = weight + ' kg';
+                document.getElementById('goal-weight').textContent = goalWeight + ' kg';
+                document.getElementById('body-fat').textContent = bodyFat + '%';
+                
+                // Calculate and update BMI
+                const bmi = (weight / ((height/100) * (height/100))).toFixed(1);
+                document.getElementById('bmi-value').textContent = bmi;
+                
+                // Update BMI progress bar (simple example)
+                const bmiProgress = document.getElementById('bmi-progress');
+                if (bmi < 18.5) {
+                    bmiProgress.style.width = '25%';
+                } else if (bmi < 25) {
+                    bmiProgress.style.width = '50%';
+                } else if (bmi < 30) {
+                    bmiProgress.style.width = '75%';
+                } else {
+                    bmiProgress.style.width = '100%';
+                }
+                
+                // Update membership date
+                const options = { year: 'numeric', month: 'long' };
+                document.getElementById('membership-date').textContent = 
+                    `${membership} Member since ${joinDate.toLocaleDateString('en-US', options)}`;
+                
+                // Close modal
+                closeModal();
+                
+                // Show success message
+                alert('Profile updated successfully!');
+            });
+        });
+    </script>
+</body>
+</html>
