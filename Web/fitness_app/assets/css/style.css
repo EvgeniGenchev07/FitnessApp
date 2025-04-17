@@ -7937,5 +7937,12 @@ del {
       width: 24vh; /* Ensure logo size is consistent */
   }
 }
-
+.footer-logo img{
+  width:600px;
+}
+@media  (max-width:900px) {
+  .footer-logo img{
+    width:200px;
+  }
+}
  
