@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import {Colors} from "@/constants/Colors";
 import {ThemedText} from "@/components/ThemedText";
+import {router} from "expo-router";
 
 // @ts-ignore
 const HorizontalCalendar = ({ onDateSelect }) => {
@@ -110,11 +111,13 @@ export default function HomeScreen() {
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {workouts.map((item, index) => (
-                    <View key={index} style={[styles.card, { backgroundColor: item.color }]}>
+                    <TouchableOpacity key={index} onPress={()=>router.push('/manageWorkout')}>
+                    <View style={[styles.card, { backgroundColor: item.color }]}>
                         <Image source={item.image} style={styles.cardImage} resizeMode="contain" />
                         <Text style={styles.cardTitle}>{item.title}</Text>
                         <Text style={styles.cardSubtitle}>{item.sets}</Text>
                     </View>
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
 

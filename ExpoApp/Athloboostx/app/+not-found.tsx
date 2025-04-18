@@ -19,9 +19,9 @@ const NotFoundScreen = () => {
                 The page you are looking for doesn’t exist or has been moved.
             </ThemedText>
             <ThemedButton type={'default'} onPress={() => {
-
+                router.back();
             }}>
-                <ThemedText type={'button'}>Go to Home</ThemedText>
+                <ThemedText type={'button'}>Return</ThemedText>
             </ThemedButton>
         </ThemedBackground>
     );
