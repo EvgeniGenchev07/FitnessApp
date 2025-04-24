@@ -36,22 +36,7 @@
                 <!-- Password Input -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="password" required
-                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
-                           oninput="checkPasswordStrength(this.value)">
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="password-strength-bar"></div>
-                    </div>
-                    <div class="form-text password-requirements">
-                        Password must contain:
-                        <ul class="requirements-list" id="requirements-list">
-                            <li id="req-length">Minimum 8 characters</li>
-                            <li id="req-uppercase">At least 1 uppercase letter</li>
-                            <li id="req-lowercase">At least 1 lowercase letter</li>
-                            <li id="req-number">At least 1 number</li>
-                            <li id="req-special">At least 1 special character (@$!%*?&#)</li>
-                        </ul>
-                    </div>
+                    <input type="password" class="form-control" id="password" required>
                 </div>
 
                 <!-- Sign Up Button -->
