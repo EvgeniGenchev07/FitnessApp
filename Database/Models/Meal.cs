@@ -18,7 +18,7 @@ namespace Models
         [Required]
         public DateTime Date { get; set; }
         [Required]
-        [Range(1, 2000)]
+        [Range(1, 4000)]
         public ushort Weight { get; set; }  
         [Required]
         public Food Food { get; set; }

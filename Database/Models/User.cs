@@ -10,26 +10,48 @@ namespace Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
         [Required]
         [MaxLength(50)]
         [RegularExpression(@"^[A-Za-zА-Яа-я0-9_\-. ]{3,50}$",
     ErrorMessage = "Only letters (Latin, Cyrillic), numbers, dashes, dots, and spaces are allowed.")]
         public string UserName { get; set; }
+
         [Required]
-        [MaxLength(1000)]
+        [MaxLength(100)]
         public string Password { get; set; }
+
         [Required]
         [MaxLength(50)]
         [EmailAddress]
         public string Email { get; set; }
+
         public DateTime BirthDate { get; set; }
+
+        public DateTime CreationDate { get; init; }
+
         public List<Measurement> Measurements { get; set; }
+
         public List<Workout> Workouts { get; set;}
+
         public List<Meal> Meals { get; set;}
+
         public List<Food> Foods { get; set; }
+
         public List<Exercise> Exercises { get; set; }
+
         public Schedule Schedule { get; set; }
+
         [Range(50, 255)]
         public byte? Height { get; set; }
+
+        [Url]
+        public string Facebook { get; set; }
+
+        [Url]
+        public string Instagram { get; set; }
+
+        [Url] 
+        public string X { get; set; }
     }
 }
