@@ -36,22 +36,7 @@
                 <!-- Password Input -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Парола</label>
-                    <input type="password" class="form-control" id="password" required
-                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$"
-                           oninput="checkPasswordStrength(this.value)">
-                    <div class="password-strength">
-                        <div class="password-strength-bar" id="password-strength-bar"></div>
-                    </div>
-                    <div class="form-text password-requirements">
-                        Паролата трябва да съдържа:
-                        <ul class="requirements-list" id="requirements-list">
-                            <li id="req-length">Минимум 8 символа</li>
-                            <li id="req-uppercase">Поне 1 главна буква</li>
-                            <li id="req-lowercase">Поне 1 малка буква</li>
-                            <li id="req-number">Поне 1 число</li>
-                            <li id="req-special">Поне 1 специален символ (@$!%*?&#)</li>
-                        </ul>
-                    </div>
+                    <input type="password" class="form-control" id="password" required>
                 </div>
 
                 <!-- Sign Up Button -->
