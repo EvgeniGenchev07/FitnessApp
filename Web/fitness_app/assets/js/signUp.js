@@ -71,3 +71,70 @@ const apiUrl = 'http://192.168.56.1:5000';
             console.error(error);
         }
     }
+    //Password pattern
+    function checkPasswordStrength(password) {
+        // Check each requirement
+        const hasMinLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumber = /\d/.test(password);
+        const hasSpecialChar = /[@$!%*?&#]/.test(password);
+        
+        // Update requirement indicators
+        document.getElementById('req-length').classList.toggle('valid', hasMinLength);
+        document.getElementById('req-uppercase').classList.toggle('valid', hasUpperCase);
+        document.getElementById('req-lowercase').classList.toggle('valid', hasLowerCase);
+        document.getElementById('req-number').classList.toggle('valid', hasNumber);
+        document.getElementById('req-special').classList.toggle('valid', hasSpecialChar);
+        
+        // Calculate password strength (0-100)
+        let strength = 0;
+        if (hasMinLength) strength += 20;
+        if (hasUpperCase) strength += 20;
+        if (hasLowerCase) strength += 20;
+        if (hasNumber) strength += 20;
+        if (hasSpecialChar) strength += 20;
+        
+        // Update strength bar
+        const strengthBar = document.getElementById('password-strength-bar');
+        strengthBar.style.width = strength + '%';
+        
+        // Change color based on strength
+        if (strength < 40) {
+            strengthBar.style.backgroundColor = '#dc3545'; // Red
+        } else if (strength < 80) {
+            strengthBar.style.backgroundColor = '#ffc107'; // Yellow
+        } else {
+            strengthBar.style.backgroundColor = '#28a745'; // Green
+        }
+    }
+    
+    function handleSignUp(event) {
+        event.preventDefault();
+        // Your signup logic here
+        alert('Sign up form submitted!');
+    }
+    
+    function handleLogin(event) {
+        event.preventDefault();
+        // Your login logic here
+        alert('Login form submitted!');
+    }
+    
+    function showLogin() {
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('forgot-password-form').style.display = 'none';
+        document.getElementById('login-form').style.display = 'block';
+    }
+    
+    function showSignUp() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('forgot-password-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+    }
+    
+    function showForgotPassword() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'none';
+        document.getElementById('forgot-password-form').style.display = 'block';
+    }

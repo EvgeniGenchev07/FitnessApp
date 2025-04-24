@@ -10,118 +10,7 @@
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #000000;
-            color: #fff;
-        }
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden; /* Prevent overflow during animations */
-        }
-        .auth-box {
-            background: #1d1d1d;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-            width: 100%;
-            max-width: 400px;
-            position: relative;
-        }
-        .btn-social {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .btn-social:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        .btn-social i {
-            margin-right: 10px;
-        }
-        .btn-google {
-            background-color: #db4437;
-            color: white;
-        }
-        .btn-facebook {
-            background-color: #3b5998;
-            color: white;
-        }
-        .btn-primary {
-            background-color: #e60000; /* Fitness Red */
-            border: none;
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #cc0000; /* Darker Red for hover */
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        .form-label {
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        .form-control {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #444;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .form-control:focus {
-            background-color: #444;
-            border-color: #e60000;
-            box-shadow: 0 0 8px rgba(230, 0, 0, 0.6);
-        }
-        .auth-box h3 {
-            text-align: center;
-            color: #e60000; /* Fitness Red */
-            font-weight: bold;
-        }
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            color: #ccc;
-        }
-        .divider span {
-            background-color: #333;
-            padding: 0 10px;
-        }
-        .footer-links {
-            text-align: center;
-            margin-top: 20px;
-            color: #ccc;
-        }
-        .footer-links a {
-            color: #e60000;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        .footer-links a:hover {
-            text-decoration: underline;
-            color: #ff3333;
-        }
-        .form-container {
-            display: none;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-        .form-container.active {
-            opacity: 1;
-            transform: scale(1);
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/signUp.css">
 </head>
 <body>
 
@@ -147,24 +36,27 @@
                 <!-- Password Input -->
                 <div class="mb-3">
                     <label for="password" class="form-label">Парола</label>
-                    <input type="password" class="form-control" id="password" required>
+                    <input type="password" class="form-control" id="password" required
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                           oninput="checkPasswordStrength(this.value)">
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="password-strength-bar"></div>
+                    </div>
+                    <div class="form-text password-requirements">
+                        Паролата трябва да съдържа:
+                        <ul class="requirements-list" id="requirements-list">
+                            <li id="req-length">Минимум 8 символа</li>
+                            <li id="req-uppercase">Поне 1 главна буква</li>
+                            <li id="req-lowercase">Поне 1 малка буква</li>
+                            <li id="req-number">Поне 1 число</li>
+                            <li id="req-special">Поне 1 специален символ (@$!%*?&#)</li>
+                        </ul>
+                    </div>
                 </div>
 
                 <!-- Sign Up Button -->
                 <button type="submit" class="btn btn-primary w-100 mb-3">Регистрация</button>
 
-                <!-- Or divider -->
-                <div class="divider">
-                    <span>или</span>
-                </div>
-
-                <!-- Google and Facebook Login -->
-                <button class="btn btn-social btn-google w-100">
-                    <i class="fab fa-google"></i> Регистрация с Google
-                </button>
-                <button class="btn btn-social btn-facebook w-100">
-                    <i class="fab fa-facebook-f"></i> Регистрация с Facebook
-                </button>
             </form>
 
             <div class="footer-links">
@@ -196,19 +88,6 @@
                 <div class="footer-links">
                     <p><a href="#" onclick="showForgotPassword()">Забравена парола?</a></p>
                 </div>
-
-                <!-- Or divider -->
-                <div class="divider">
-                    <span>или</span>
-                </div>
-
-                <!-- Google and Facebook Login -->
-                <button class="btn btn-social btn-google w-100">
-                    <i class="fab fa-google"></i> Вход с Google
-                </button>
-                <button class="btn btn-social btn-facebook w-100">
-                    <i class="fab fa-facebook-f"></i> Вход с Facebook
-                </button>
             </form>
 
             <div class="footer-links">

@@ -14,11 +14,13 @@ namespace Models
         [Required]
         [MaxLength(50)]
         [RegularExpression(@"^[A-Za-zА-Яа-я0-9_\-. ]{3,50}$",
-    ErrorMessage = "Only letters (Latin, Cyrillic), numbers, dashes, dots, and spaces are allowed.")]
+    ErrorMessage = "Only letters (Latin,Cyrilic), numbers, dashes, dots, and spaces are allowed.")]
         public string UserName { get; set; }
 
         [Required]
         [MaxLength(100)]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+ErrorMessage = "Password must be at least 8 characters, include 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.")]
         public string Password { get; set; }
 
         [Required]
