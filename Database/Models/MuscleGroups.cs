@@ -16,6 +16,8 @@
         Hamstrings,
         Gluteus,
         Calf,
-        Adductor
+        Adductor,
+        RectusAbdominis,
+        Obliques
     }
 }
