@@ -99,7 +99,7 @@ const apiUrl = 'http://192.168.56.1:5000';
                 sessionStorage.setItem('user', JSON.stringify(userData));
                 const userLanguage = navigator.language || navigator.userLanguage;
                 const isBulgarian = userLanguage.startsWith('bg');
-                const page = isBulgarian ? 'index_bg.html' : 'index_en.html';
+                const page = isBulgarian ? 'index.html' : 'index_en.html';
                 window.location.href = `../../Web/fitness_app/${page}`; 
             } else {
                 const error = await response.text();
