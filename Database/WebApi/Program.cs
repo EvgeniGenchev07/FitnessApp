@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("Disable cross-origin",
         policy =>
         {
+
             policy.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
@@ -36,7 +37,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-app.UseRouting();
+app.UseRouting();;
 app.UseAuthorization();
 app.MapControllers();
 app.UseCors("Disable cross-origin");

@@ -24,12 +24,10 @@ namespace WebApi
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> GetUser(IFormCollection form)
+        public async Task<IActionResult> GetUser([FromForm] string email, [FromForm] string password)
         {
             try
             {
-                string email = form["email"];
-                string password = form["password"];
                 
                 Tuple<byte,User> response = await _userLoginContext.Login(email, password);
                 if (response.Item1 == (byte)Error.Ok)

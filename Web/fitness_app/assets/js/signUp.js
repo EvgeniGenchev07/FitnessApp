@@ -71,3 +71,46 @@ const apiUrl = 'http://192.168.56.1:5000';
             console.error(error);
         }
     }
+
+    //login
+    async function handleLogin(event) {
+        event.preventDefault();
+    
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+    
+        // Format data as URL-encoded form (not JSON)
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+        formData.append('password', password);
+    
+        try {
+            const response = await fetch(`${apiUrl}/user/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', // Required for C#
+                },
+                body: formData
+            });
+    
+            if (response.ok) {
+                const userData = await response.json();
+                alert('Успешен вход!');
+                localStorage.setItem('user', JSON.stringify(userData));
+                window.location.href = '/index_en.html'; // Redirect after login
+            } else {
+                const error = await response.text();
+                alert(`Грешка при вход: ${error}`);
+            }
+        } catch (error) {
+            alert('Грешка при връзка със сървъра.');
+            console.error(error);
+        }
+    }
+    
+    // Initialize event listeners when DOM loads
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('signup-form').querySelector('form').addEventListener('submit', handleSignUp);
+    });
+    
