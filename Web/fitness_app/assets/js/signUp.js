@@ -96,11 +96,14 @@ const apiUrl = 'http://192.168.56.1:5000';
             if (response.ok) {
                 const userData = await response.json();
                 alert('Успешен вход!');
-                localStorage.setItem('user', JSON.stringify(userData));
-                window.location.href = '/index_en.html'; // Redirect after login
+                sessionStorage.setItem('user', JSON.stringify(userData));
+                const userLanguage = navigator.language || navigator.userLanguage;
+                const isBulgarian = userLanguage.startsWith('bg');
+                const page = isBulgarian ? 'index_bg.html' : 'index_en.html';
+                window.location.href = `../../Web/fitness_app/${page}`; 
             } else {
                 const error = await response.text();
-                alert(`Грешка при вход: ${error}`);
+                alert(`Грешка при вход: ${error}`)
             }
         } catch (error) {
             alert('Грешка при връзка със сървъра.');
