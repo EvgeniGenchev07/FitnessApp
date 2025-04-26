@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.56.1:5000'; 
+const apiUrl = 'http://192.168.100.3:5000'; 
     // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
@@ -100,7 +100,7 @@ const apiUrl = 'http://192.168.56.1:5000';
                 const userLanguage = navigator.language || navigator.userLanguage;
                 const isBulgarian = userLanguage.startsWith('bg');
                 const page = isBulgarian ? 'index.html' : 'index_en.html';
-                window.location.href = `../../Web/fitness_app/${page}`; 
+                window.location.href = `../fitness_app/${page}`; 
             } else {
                 const error = await response.text();
                 alert(`Грешка при вход: ${error}`)

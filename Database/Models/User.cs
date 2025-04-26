@@ -53,5 +53,6 @@ namespace Models
 
         [Url] 
         public string X { get; set; }
+        public byte[] Photo { get; set; }
     }
 }

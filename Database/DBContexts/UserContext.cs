@@ -54,7 +54,10 @@ public class UserContext : IDatabase<User, string>
             userFromDb.Foods = entity.Foods;
             userFromDb.Exercises = entity.Exercises;
         }
-
+        if (entity.Photo != null)
+        {
+            userFromDb.Photo = entity.Photo;
+        }
         await _dbContext.SaveChangesAsync();
     }
 
