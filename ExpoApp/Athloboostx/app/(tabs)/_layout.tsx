@@ -8,7 +8,6 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import {Colors} from '@/constants/Colors';
 import {useColorScheme} from '@/hooks/useColorScheme';
 import {NavigationContainer} from "@react-navigation/native";
-import {transparent} from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 
 export default function TabLayout() {
     const colorScheme = useColorScheme();
@@ -20,6 +19,10 @@ export default function TabLayout() {
                     tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
                     headerShown: false,
                     tabBarButton: HapticTab,
+                    tabBarItemStyle: {
+                        height: 60, // Ensure the button has a proper height
+                        paddingTop: 15,
+                    },
                     //@ts-ignore
                     tabBarStyle:Platform.select({
                         ios: {
@@ -38,7 +41,8 @@ export default function TabLayout() {
                             left: 'center',
                             right: 'center',
                             borderTopWidth: 0,
-                            backgroundColor:Colors[colorScheme ?? 'light'].background
+                            backgroundColor: Colors[colorScheme ?? 'light'].background,
+                            paddingHorizontal: 15, // Adjust padding if necessary
                         },
                         default: {
                             position: 'absolute',
@@ -56,7 +60,8 @@ export default function TabLayout() {
                             left: 'center',
                             right: 'center',
                             borderTopWidth: 0,
-                            backgroundColor:Colors[colorScheme ?? 'light'].background
+                            backgroundColor: Colors[colorScheme ?? 'light'].background,
+                            paddingHorizontal: 15, // Adjust padding if necessary
                         },
                     }),
                 }}>
@@ -74,7 +79,30 @@ export default function TabLayout() {
                         tabBarIcon: ({color}) => <MaterialIcons name='article' size={28} color={color} />,
                     }}
                 />
-
+                <Tabs.Screen
+                    name="createPost"
+                    options={{
+                        tabBarItemStyle: {
+                            marginBottom: 40,
+                            borderRadius: 30, // Ensure the button is circular
+                            backgroundColor: Colors[colorScheme ?? 'light'].background,
+                            height: 60, // Circle size (same width and height)
+                            width: 60,  // Circle size (same width and height)
+                            top: -20,
+                            zIndex: 2, // Ensure it's above other tab items
+                            elevation: 20,
+                        },
+                        title: 'Create Post',
+                        tabBarIcon: ({color}) => <IconSymbol size={28} name='plus' color={color}/>,
+                    }}
+                />
+                <Tabs.Screen
+                    name="nutritions"
+                    options={{
+                        title: 'Nutrition',
+                        tabBarIcon: ({color}) => <IconSymbol size={28} name="n.circle.fill" color={color}/>,
+                    }}
+                />
                 <Tabs.Screen
                     name="profile"
                     options={{
