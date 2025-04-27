@@ -14,7 +14,7 @@ const SettingsScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.top_icon_container}>
-                <TouchableOpacity style={styles.top_icon_content} onPress={() => router.push('/(tabs)/profile')}>
+                <TouchableOpacity style={styles.top_icon_content} onPress={() => router.back()}>
                     <Icon name="chevron-left" size={25} color="red"/>
                     <ThemedText type={'bar'}>Back</ThemedText>
                 </TouchableOpacity>
@@ -62,7 +62,6 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
         padding: 20
     },
     top_icon_container: {

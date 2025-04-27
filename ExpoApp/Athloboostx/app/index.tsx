@@ -30,7 +30,7 @@ const FitnessScreen = () => {
                 </View>
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => router.push('/(tabs)/profile')}>
+                    onPress={() => router.push('/(tabs)')}>
                     <Text style={styles.buttonText}>Get Started</Text>
                 </TouchableOpacity>
             </LinearGradient>
