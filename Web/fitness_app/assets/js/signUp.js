@@ -1,5 +1,5 @@
 const apiUrl = 'http://192.168.100.3:5000'; 
-    // JavaScript functions to show/hide the forms with zoom-in and fade animation
+// JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
         document.getElementById('login-form').style.display = 'block';
@@ -110,6 +110,7 @@ const apiUrl = 'http://192.168.100.3:5000';
             console.error(error);
         }
     }
+    
     
     // Initialize event listeners when DOM loads
     document.addEventListener('DOMContentLoaded', () => {

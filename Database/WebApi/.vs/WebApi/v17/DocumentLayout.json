@@ -3,7 +3,7 @@
   "WorkspaceRootPath": "C:\\html\\FitnessApp\\Database\\WebApi\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\html\\FitnessApp\\Database\\DBContexts\\Migrations\\20250425203442_UserUpdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\html\\fitnessapp\\database\\dbcontexts\\migrations\\20250425203442_userupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\html\\fitnessapp\\database\\dbcontexts\\usercontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -123,8 +123,7 @@
               "RelativeToolTip": "UserController.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAYwDcAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T19:55:21.733Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-25T19:55:21.733Z"
             },
             {
               "$type": "Document",
@@ -136,8 +135,7 @@
               "RelativeToolTip": "..\\Models\\User.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAA4wDcAAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T19:52:15.018Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-25T19:52:15.018Z"
             },
             {
               "$type": "Document",
@@ -149,8 +147,7 @@
               "RelativeToolTip": "Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-25T19:47:48.602Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-25T19:47:48.602Z"
             },
             {
               "$type": "Document",
@@ -174,8 +171,7 @@
               "RelativeToolTip": "..\\DBContexts\\UserContext.cs",
               "ViewState": "AgIAACYAAAAAAAAAAAAgwDsAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-24T20:15:16.631Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-24T20:15:16.631Z"
             },
             {
               "$type": "Document",
