@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\html\\FitnessApp\\Database\\WebApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\html\\fitnessapp\\database\\dbcontexts\\migrations\\20250425203442_userupdate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -14,10 +18,6 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{09863985-C9C3-4E62-A270-20E09AD65E1C}|..\\Models\\Models.csproj|c:\\html\\fitnessapp\\database\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08620E20-329B-4C5A-AD0B-CB256A8D3B91}|..\\DBContexts\\DBContexts.csproj|c:\\html\\fitnessapp\\database\\dbcontexts\\userlogin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
@@ -90,8 +90,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 6,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -102,7 +106,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "20250425203442_UserUpdate.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\DBContexts\\Migrations\\20250425203442_UserUpdate.cs",
               "RelativeDocumentMoniker": "..\\DBContexts\\Migrations\\20250425203442_UserUpdate.cs",
@@ -110,12 +114,11 @@
               "RelativeToolTip": "..\\DBContexts\\Migrations\\20250425203442_UserUpdate.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-25T20:34:42.285Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-25T20:34:42.285Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\UserController.cs",
               "RelativeDocumentMoniker": "UserController.cs",
@@ -127,7 +130,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\Models\\User.cs",
               "RelativeDocumentMoniker": "..\\Models\\User.cs",
@@ -139,15 +142,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 0,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "Properties\\launchSettings.json",
               "ToolTip": "C:\\html\\FitnessApp\\Database\\WebApi\\Properties\\launchSettings.json",
               "RelativeToolTip": "Properties\\launchSettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-04-25T19:47:48.602Z"
+              "WhenOpened": "2025-04-25T19:47:48.602Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -163,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "UserContext.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\DBContexts\\UserContext.cs",
               "RelativeDocumentMoniker": "..\\DBContexts\\UserContext.cs",

@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.3:5000'; 
+const apiUrl = 'http://192.168.56.1:5000'; 
 // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
