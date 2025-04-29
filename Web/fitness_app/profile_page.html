@@ -2,97 +2,65 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="author" content="Mohammad Sahragard">
     <title>AthloBoostX</title>
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
-    <!-- import font icon (fontawesome) -->
-    <script src="https://kit.fontawesome.com/b8b432d7d3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- import css file (style.css) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/profile_page.css">
 </head>
 <body>
-    <div class="container">
-
-        <div class="profile-card">
-            <div class="profile-header"><!-- profile header section -->
-                <div class="main-profile">
-                    <div class="profile-image"></div>
-                    <div class="profile-names">
-                        <h1 class="username">Mohammad.S</h1>
-                        <small class="page-title">Front-End developer</small>
-                    </div>
-                </div>
+    <!-- Header with Settings -->
+    <div class="header-container">
+        <i class="fas fa-cog settings-icon" onclick="toggleSettings(event)"></i>
+        <div class="settings-dropdown" id="settingsDropdown">
+            <div class="settings-option" onclick="showEditProfileModal()">
+                <i class="fas fa-user-edit"></i> Edit Profile
             </div>
+            <div class="settings-option" onclick="showDeletePostModal()">
+                <i class="fas fa-trash-alt"></i> Delete Post
+            </div>
+            <div class="settings-option">
+                <i class="fas fa-palette"></i> Appearance
+            </div>
+            <div class="settings-option">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+    </div>
 
-            <div class="profile-body"><!-- profile body section -->
-                <div class="profile-actions">
-                    <button class="follow">Follow</button>
-                    <button class="message">Message</button>
-                    <section class="bio">
-                        <div class="bio-header">
-                            <i class="fa fa-info-circle"></i>
-                            Bio
-                        </div>
-                        <p class="bio-text">
-                            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                        </p>
-                    </section>
-                </div>
-
-                <div class="account-info">
-                    <div class="data">
-                        <div class="important-data">
-                            <section class="data-item">
-                                <h3 class="value">104</h3>
-                                <small class="title">Post</small>
-                            </section>
-                            <section class="data-item">
-                                <h3 class="value">21K</h3>
-                                <small class="title">Follower</small>
-                            </section>
-                            </section>
-                            <section class="data-item">
-                                <h3 class="value">51</h3>
-                                <small class="title">Following</small>
-                            </section>
-                        </div>
-                        <div class="other-data">
-                            <section class="data-item">
-                                <h3 class="value">41K</h3>
-                                <small class="title">Likes</small>
-                            </section>
-                            <section class="data-item">
-                                <h3 class="value">12K</h3>
-                                <small class="title">Comments</small>
-                            </section>
-                            <section class="data-item">
-                                <h3 class="value">2K</h3>
-                                <small class="title">Saved</small>
-                            </section>
-                        </div>
-                    </div>
-
-                    <div class="social-media">
-                        <span>Follow me in:</span>
-                        <a href="" class="media-link"><i class="fab fa-facebook-square"></i></a>
-                        <a href="https://twitter.com/MammadSahragard" class="media-link"><i class="fa-brands fa-square-x-twitter"></i></a>
-                        <a href="https://www.instagram.com/mammad.sahragard/" class="media-link"><i class="fab fa-instagram-square"></i></a>
-                    </div>
-
-                    <div class="last-post">
-                        <div class="post-cover">
-                            <span class="last-badge">Last Post</span>
-                        </div>
-                        <h3 class="post-title">3D layer</h3>
-                        <button class="post-CTA">View</button>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <img src="avatar-placeholder.jpg" alt="Profile" class="profile-avatar">
+            <div class="profile-info">
+                <h1 class="profile-name">DARK_USER</h1>
+                <ul class="profile-stats">
+                    <li><span>666</span> posts</li>
+                    <li><span>9.9k</span> followers</li>
+                    <li><span>666</span> following</li>
+                </ul>
+                <p class="profile-bio">
+                    🖤 Blood and darkness enthusiast 🔥 
+                    <br>Living in the shadows 🌑
+                    <br>#DarkAesthetic #RedDevil
+                </p>
             </div>
         </div>
 
+        <!-- Posts Grid -->
+        <div class="profile-posts">
+            <div class="post-item">
+                <img src="post-placeholder.jpg" alt="Post">
+                <div class="post-hover">
+                    <span>❤️ 666</span>
+                    <span>💬 66</span>
+                </div>
+            </div>
+            <!-- Add more posts here -->
+        </div>
     </div>
+
+    <script src="assets/js/profile_page.js"></script>
 </body>
 </html>

@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Create Profile link
                 const profileLink = document.createElement('a');
-                profileLink.href = "profile_page_editing.html";
+                profileLink.href = "profile_page.html";
                 profileLink.style.display = 'block';
                 profileLink.style.padding = '5px 0';
                 profileLink.style.color = '#333';
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } else { // Desktop
                 const newLink = document.createElement('a');
-                newLink.href = "profile_page_editing.html";
+                newLink.href = "profile_page.html";
 
                 const avatarImg = document.createElement('img');
                 avatarImg.src = userData.avatarUrl || 'assets/img/index/avatar.jpg';

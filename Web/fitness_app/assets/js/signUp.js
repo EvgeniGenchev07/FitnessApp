@@ -48,7 +48,8 @@ const apiUrl = 'http://192.168.56.1:5000';
         const userData = {
             UserName: name,
             Email: email,
-            Password: password
+            Password: password,
+            CreationDate: new Date().toISOString()
         };
 
         try {
