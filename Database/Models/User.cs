@@ -54,5 +54,8 @@ namespace Models
         [Url] 
         public string X { get; set; }
         public byte[] Photo { get; set; }
+        public int? Followers { get; set; }
+        public int? Following { get; set; }
+        public string Bio { get; set; }
     }
 }

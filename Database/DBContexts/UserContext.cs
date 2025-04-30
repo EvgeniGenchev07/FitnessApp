@@ -45,6 +45,12 @@ public class UserContext : IDatabase<User, string>
         userFromDb.BirthDate = entity.BirthDate;
         userFromDb.Height = entity.Height;
         userFromDb.Password = entity.Password;
+        userFromDb.Facebook = entity.Facebook;
+        userFromDb.Instagram = entity.Instagram;
+        userFromDb.X = entity.X;
+        userFromDb.Bio = entity.Bio;
+        userFromDb.Followers = entity.Followers;
+        userFromDb.Following = entity.Following;
         if (navigationalProperties)
         {
             userFromDb.Meals = entity.Meals;
