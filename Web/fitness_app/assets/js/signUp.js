@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.56.1:5000'; 
+const apiUrl = 'http://192.168.100.3:5000'; 
 // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
@@ -112,6 +112,45 @@ const apiUrl = 'http://192.168.56.1:5000';
         }
     }
     
+    async function handleForgotPassword(event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        const email = document.getElementById('forgot-email').value;
+    
+        // Ensure the email field is not empty
+        if (!email) {
+            alert('Please enter your email address.');
+            return;
+        }
+    
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+    
+        try {
+            // Send the request to the API endpoint for forgot password
+            const response = await fetch(`${apiUrl}/user/forgot-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded', // Form data encoding
+                },
+                body: formData
+            });
+    
+            if (response.ok) {
+                // If response is successful, show success message and redirect to login
+                alert('If an account with that email exists, we have sent you instructions to reset your password.');
+                showLogin();
+            } else {
+                // If error occurs, show the error message
+                const error = await response.text();
+                alert(`Error: ${error}`);
+            }
+        } catch (error) {
+            // Catch any network or server errors
+            alert('There was an error while trying to reset your password.');
+            console.error(error);
+        }
+    }
     
     // Initialize event listeners when DOM loads
     document.addEventListener('DOMContentLoaded', () => {

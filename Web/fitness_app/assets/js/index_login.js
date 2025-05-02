@@ -5,19 +5,30 @@ document.addEventListener('DOMContentLoaded', function () {
     if (userData) {
         const logoDiv = document.querySelector('.logo');
         if (logoDiv) {
-            // Clear existing content
             logoDiv.innerHTML = '';
 
             if (window.innerWidth <= 768) { // Mobile
                 const welcomeDiv = document.createElement('div');
                 welcomeDiv.style.fontFamily = "Cursive";
                 welcomeDiv.style.color = "orange";
-                welcomeDiv.style.fontSize = '17px';
+                welcomeDiv.style.fontSize = '15px';
                 welcomeDiv.style.position = 'relative';
                 welcomeDiv.style.cursor = 'pointer';
-                
-                // Set welcome text based on language
-                welcomeDiv.innerHTML = `${userData.userName}&#x25BC;`;
+                welcomeDiv.style.display = 'flex';
+                welcomeDiv.style.alignItems = 'center';
+                welcomeDiv.style.gap = '5px';
+
+                // Set welcome text
+                const welcomeText = document.createElement('span');
+                welcomeText.textContent = userData.userName;
+                welcomeDiv.appendChild(welcomeText);
+
+                // Create arrow span (pointing right when closed)
+                const arrowSpan = document.createElement('span');
+                arrowSpan.innerHTML = '&#x25B6;'; // Right-pointing triangle ▶
+                arrowSpan.style.display = 'inline-block';
+                arrowSpan.style.transition = 'transform 0.3s ease';
+                welcomeDiv.appendChild(arrowSpan);
 
                 const dropdownMenu = document.createElement('div');
                 dropdownMenu.style.display = 'none';
@@ -55,13 +66,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 dropdownMenu.appendChild(profileLink);
                 dropdownMenu.appendChild(logoutLink);
 
-                welcomeDiv.addEventListener('click', function () {
-                    dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+                welcomeDiv.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    const isOpen = dropdownMenu.style.display === 'block';
+                    dropdownMenu.style.display = isOpen ? 'none' : 'block';
+                    arrowSpan.innerHTML = isOpen ? '&#x25B6;' : '&#x25BC;'; // Switch between ▶ and ▼
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function () {
+                    dropdownMenu.style.display = 'none';
+                    arrowSpan.innerHTML = '&#x25B6;'; // Reset to ▶
                 });
 
                 welcomeDiv.appendChild(dropdownMenu);
                 logoDiv.appendChild(welcomeDiv);
-
             } else { // Desktop
                 const newLink = document.createElement('a');
                 newLink.href = (language.startsWith('bg')) ? 'profile_page_bg.html' : 'profile_page.html';

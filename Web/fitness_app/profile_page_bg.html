@@ -13,21 +13,19 @@
     <div class="header-container">
         <i class="fas fa-cog settings-icon" onclick="toggleSettings(event)"></i>
         <div class="settings-dropdown" id="settingsDropdown">
-            <div class="settings-option" onclick="showEditProfileModal()">
-                <i class="fas fa-user-edit"></i> Edit Profile
+            <div class="settings-option" onclick="navigateToDashboard()">
+                <i class="fas fa-user-edit"></i> Редактирай профила
             </div>
-            <div class="settings-option">
+            <div class="settings-option" onclick="navigateToDashboard()">
                 <i class="fas fa-chart-line"></i> Статистика
             </div>
             <div class="settings-option" onclick="showDeletePostModal()">
                 <i class="fas fa-trash-alt"></i> Изтриване на публикация
             </div>
-            <div class="settings-option">
-                <a href="index.html">
+            <div class="settings-option" onclick="">
                 <i class="fas fa-home"></i> Начална страница
-                </a>
             </div>
-            <div class="settings-option">
+            <div class="settings-option" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Изход
             </div>
         </div>

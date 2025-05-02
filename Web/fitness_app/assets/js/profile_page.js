@@ -61,8 +61,10 @@ function loadProfileData() {
         
         // Set bio if available
         if (userData.bio) {
-            profileBio.innerHTML = userData.bio.replace(/\n/g, '<br>') || 
-                `🖤 Blood and darkness enthusiast 🔥 <br>Living in the shadows 🌑 <br>#DarkAesthetic #RedDevil`;
+            profileBio.innerHTML = userData.bio.replace(/\n/g, '<br>');
+        }
+        else{
+            profileBio.innerHTML = 'AthloBoostX Warrior';
         }
 
         // Social media links could be added here if needed
@@ -73,21 +75,33 @@ function loadProfileData() {
         // window.location.href = '/login';
     }
 }
-
-// Placeholder functions for modals
-function showEditProfileModal() {
-    // Load current data into modal
-    const userData = JSON.parse(sessionStorage.getItem('user')) || {};
-    
-    // In a real implementation, you would populate a modal form
-    console.log('Edit Profile:', userData);
-    alert(`Edit Profile modal would appear here with current data:\nUsername: ${userData.userName}\nBio: ${userData.bio}`);
-}
-
 function showDeletePostModal() {
     alert('Delete Post modal would appear here');
     // In a real implementation, you would show a modal here
 }
-
+//Logout
+function logout() {
+    sessionStorage.removeItem('user');
+    const language=navigator.language;
+    if(language.startsWith("bg"))
+    {
+        window.location.href="index.html"
+    }
+    else{
+        window.location.href="index_en.html"
+    }
+}
+//Redirect to dashboard
+function navigateToDashboard()
+{
+    const language=navigator.language;
+    if(language.startsWith("bg"))
+    {
+        window.location.href="dashboard_bg.html"
+    }
+    else{
+        window.location.href="dashboard.html"
+    }
+}
 // Load profile data when page loads
 document.addEventListener('DOMContentLoaded', loadProfileData);
