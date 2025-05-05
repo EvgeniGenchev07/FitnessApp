@@ -39,7 +39,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Exercises");
+                    b.ToTable("Exercises", (string)null);
                 });
 
             modelBuilder.Entity("Models.Food", b =>
@@ -72,7 +72,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Foods");
+                    b.ToTable("Foods", (string)null);
                 });
 
             modelBuilder.Entity("Models.Meal", b =>
@@ -100,7 +100,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Meals");
+                    b.ToTable("Meals", (string)null);
                 });
 
             modelBuilder.Entity("Models.Measurement", b =>
@@ -147,7 +147,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Measurements");
+                    b.ToTable("Measurements", (string)null);
                 });
 
             modelBuilder.Entity("Models.Schedule", b =>
@@ -164,7 +164,7 @@ namespace DBContexts.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Schedules");
+                    b.ToTable("Schedules", (string)null);
                 });
 
             modelBuilder.Entity("Models.Set", b =>
@@ -187,7 +187,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("WorkoutExerciseId");
 
-                    b.ToTable("Sets");
+                    b.ToTable("Sets", (string)null);
                 });
 
             modelBuilder.Entity("Models.User", b =>
@@ -246,7 +246,7 @@ namespace DBContexts.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Models.Workout", b =>
@@ -270,7 +270,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Workouts");
+                    b.ToTable("Workouts", (string)null);
                 });
 
             modelBuilder.Entity("Models.WorkoutExercise", b =>
@@ -292,7 +292,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("WorkoutId");
 
-                    b.ToTable("WorkoutExercises");
+                    b.ToTable("WorkoutExercises", (string)null);
                 });
 
             modelBuilder.Entity("Models.Exercise", b =>

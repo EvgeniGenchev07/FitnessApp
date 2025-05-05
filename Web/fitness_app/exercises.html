@@ -1,0 +1,326 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout Cards</title>
+    <style>
+        :root {
+            --primary-red: #ff0000;
+            --dark-red: #cc0000;
+            --black: #121212;
+            --light-black: #222222;
+            --white: #f1f1f1;
+            --gray: #444444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: var(--primary-red);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--gray);
+        }
+        
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            padding: 12px 25px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            font-size: 14px;
+        }
+        
+        .tab-btn.active {
+            color: var(--primary-red);
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary-red);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .workout-card {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), var(--bg-image);
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            aspect-ratio: 1/1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        
+        .workout-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .card-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-level {
+            background-color: var(--primary-red);
+            color: var(--white);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .card-footer {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .start-btn {
+            background-color: var(--primary-red);
+            color: var(--white);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .start-btn:hover {
+            background-color: var(--dark-red);
+        }
+        
+        @media (min-width: 768px) {
+            .workout-card {
+                aspect-ratio: 2/1;
+            }
+        }
+        
+        /* Background images */
+        .arms-card { --bg-image: url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .chest-card { --bg-image: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .abs-card { --bg-image: url('https://images.unsplash.com/photo-1535914254981-b5012eebbd15?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .legs-card { --bg-image: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .fullbody-card { --bg-image: url('https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .group-card { --bg-image: url('https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .hiit-card { --bg-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+        .yoga-card { --bg-image: url('https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'); }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Workout Programs</h1>
+        <p>Choose your training style</p>
+    </div>
+    
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="individual">Individual Exercises</button>
+        <button class="tab-btn" data-tab="group">Group Exercises</button>
+    </div>
+    
+    <!-- Individual Exercises Tab -->
+    <div id="individual" class="tab-content active">
+        <div class="container">
+            <!-- Arms Card -->
+            <div class="workout-card arms-card">
+                <div class="card-header">
+                    <div class="card-title">Arms</div>
+                    <div class="card-level">Easy</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Chest Card -->
+            <div class="workout-card chest-card">
+                <div class="card-header">
+                    <div class="card-title">Chest</div>
+                    <div class="card-level">Medium</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Abs Card -->
+            <div class="workout-card abs-card">
+                <div class="card-header">
+                    <div class="card-title">Abs</div>
+                    <div class="card-level">Hard</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Legs Card -->
+            <div class="workout-card legs-card">
+                <div class="card-header">
+                    <div class="card-title">Legs</div>
+                    <div class="card-level">Medium</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Full Body Card -->
+            <div class="workout-card fullbody-card">
+                <div class="card-header">
+                    <div class="card-title">Full Body</div>
+                    <div class="card-level">Hard</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Group Exercises Tab -->
+    <div id="group" class="tab-content">
+        <div class="container">
+            <!-- Group Training Card -->
+            <div class="workout-card group-card">
+                <div class="card-header">
+                    <div class="card-title">Group Training</div>
+                    <div class="card-level">Medium</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- HIIT Card -->
+            <div class="workout-card hiit-card">
+                <div class="card-header">
+                    <div class="card-title">HIIT</div>
+                    <div class="card-level">Hard</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Yoga Card -->
+            <div class="workout-card yoga-card">
+                <div class="card-header">
+                    <div class="card-title">Yoga</div>
+                    <div class="card-level">Easy</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+            
+            <!-- Partner Card -->
+            <div class="workout-card fullbody-card">
+                <div class="card-header">
+                    <div class="card-title">Partner Workout</div>
+                    <div class="card-level">Medium</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                tabBtns.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Start button functionality (would link to actual workout pages)
+        const startBtns = document.querySelectorAll('.start-btn');
+        startBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.workout-card');
+                const workoutName = card.querySelector('.card-title').textContent;
+                alert(`Starting ${workoutName} workout!`);
+                // In a real app, this would navigate to the workout page
+            });
+        });
+    </script>
+</body>
+</html>

@@ -13,19 +13,19 @@
     <div class="header-container">
         <i class="fas fa-cog settings-icon" onclick="toggleSettings(event)"></i>
         <div class="settings-dropdown" id="settingsDropdown">
-            <div class="settings-option" onclick="showEditProfileModal()">
+            <div class="settings-option" onclick="navigateToEditPage()">
                 <i class="fas fa-user-edit"></i> Edit Profile
             </div>
-            <div class="settings-option">
+            <div class="settings-option" onclick="navigateToDashboard()">
                 <i class="fas fa-chart-line"></i> Dashboard
             </div>
             <div class="settings-option" onclick="showDeletePostModal()">
                 <i class="fas fa-trash-alt"></i> Delete Post
             </div>
-            <div class="settings-option">
+            <div class="settings-option" onclick="navigateToMainPage()">
                 <i class="fas fa-home"></i> Back to home
             </div>
-            <div class="settings-option">
+            <div class="settings-option" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </div>
         </div>

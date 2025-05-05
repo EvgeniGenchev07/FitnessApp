@@ -222,121 +222,6 @@
             background-color: var(--primary);
         }
         
-        /* Exercise/Meal Selection */
-        .selection-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        
-        .selection-section {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            padding: 15px;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .filter-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-bar select, .filter-bar input {
-            padding: 8px 12px;
-            border: 2px solid var(--primary);
-            border-radius: 6px;
-            font-size: 0.8rem;
-            min-width: 120px;
-            background: var(--bg);
-            color: var(--text);
-            font-weight: 600;
-            flex: 1 1 120px;
-        }
-        
-        .item-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .item-card {
-            border: 2px solid var(--primary-darker);
-            border-radius: 6px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: var(--bg);
-        }
-        
-        .item-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-        }
-        
-        .item-card.selected {
-            background: var(--primary-darker);
-            border-color: var(--primary);
-        }
-        
-        .item-card h3 {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-        
-        .item-card p {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin: 2px 0;
-        }
-        
-        .item-card .calories {
-            color: var(--primary);
-            font-weight: 700;
-            font-size: 0.8rem;
-        }
-        
-        .selected-items {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 2px solid var(--primary-darker);
-        }
-        
-        .selected-items h4 {
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-        
-        .selected-list {
-            list-style: none;
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 0.8rem;
-        }
-        
-        .selected-list li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--primary-darker);
-            display: flex;
-            justify-content: space-between;
-            font-weight: 600;
-        }
-        
-        .total-info {
-            margin-top: 10px;
-            padding: 10px;
-            background: var(--primary-darker);
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        
         /* Weekly Plan */
         .week-plan {
             display: grid;
@@ -506,6 +391,96 @@
             background: var(--primary-darker);
         }
         
+        /* Exercise/Meal Selection Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 800px;
+            border: 3px solid var(--primary);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .modal-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .selection-item {
+            background: var(--bg);
+            border: 2px solid var(--primary-darker);
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .selection-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+        
+        .selection-item.selected {
+            background: var(--primary-darker);
+            border-color: var(--primary);
+        }
+        
+        .selection-item h3 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .selection-item p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 2px 0;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
         /* Tablet Styles */
         @media (min-width: 768px) {
             body {
@@ -606,10 +581,6 @@
                 font-size: 2rem;
             }
             
-            .selection-container {
-                flex-direction: row;
-            }
-            
             .week-plan {
                 gap: 20px;
             }
@@ -621,18 +592,14 @@
             .bank-gif {
                 height: 180px;
             }
+            
+            .selection-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
         }
         
         /* Desktop Styles */
         @media (min-width: 992px) {
-            .selection-container {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .item-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-            
             .measurement-grid {
                 grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
@@ -683,7 +650,6 @@
                 <h1 class="page-title">Today's Battle Plan</h1>
                 <div class="header-actions">
                     <button class="btn btn-primary">Save Plan</button>
-                    <button class="btn btn-outline">Randomize</button>
                 </div>
             </div>
             
@@ -733,139 +699,10 @@
                 </div>
             </div>
             
-            <div class="selection-container">
-                <!-- Exercise Selection -->
-                <div class="selection-section">
-                    <div class="card-header">
-                        <h2 class="card-title">Select Exercises</h2>
-                    </div>
-                    <div class="filter-bar">
-                        <select>
-                            <option>All Types</option>
-                            <option>Strength</option>
-                            <option>Power</option>
-                            <option>Destruction</option>
-                        </select>
-                        <select>
-                            <option>All Levels</option>
-                            <option>Beginner</option>
-                            <option>Warrior</option>
-                            <option>Elite</option>
-                        </select>
-                        <input type="text" placeholder="Search exercises...">
-                    </div>
-                    <div class="item-grid">
-                        <div class="item-card">
-                            <h3>Deadlifts</h3>
-                            <p>Type: Strength</p>
-                            <p>Level: Elite</p>
-                            <p class="calories">500 kcal/30min</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Battle Ropes</h3>
-                            <p>Type: Power</p>
-                            <p>Level: Warrior</p>
-                            <p class="calories">450 kcal/30min</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Sledgehammer</h3>
-                            <p>Type: Destruction</p>
-                            <p>Level: Elite</p>
-                            <p class="calories">600 kcal/30min</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Tire Flips</h3>
-                            <p>Type: Power</p>
-                            <p>Level: Warrior</p>
-                            <p class="calories">550 kcal/30min</p>
-                        </div>
-                    </div>
-                    <div class="selected-items">
-                        <h4>Selected Exercises</h4>
-                        <ul class="selected-list">
-                            <!-- Selected exercises will appear here -->
-                        </ul>
-                        <div class="total-info">
-                            <p>Total Duration: <strong>0 min</strong></p>
-                            <p>Estimated Burn: <strong>0 kcal</strong></p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Meal Selection -->
-                <div class="selection-section">
-                    <div class="card-header">
-                        <h2 class="card-title">Select Meals</h2>
-                    </div>
-                    <div class="filter-bar">
-                        <select>
-                            <option>All Meals</option>
-                            <option>Fuel</option>
-                            <option>Recovery</option>
-                            <option>Power</option>
-                        </select>
-                        <select>
-                            <option>All Diets</option>
-                            <option>High Protein</option>
-                            <option>Mass Builder</option>
-                            <option>Shred</option>
-                        </select>
-                        <input type="text" placeholder="Search meals...">
-                    </div>
-                    <div class="item-grid">
-                        <div class="item-card">
-                            <h3>Meat & Eggs</h3>
-                            <p>Type: Fuel</p>
-                            <p>Diet: High Protein</p>
-                            <p class="calories">800 kcal</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Beef & Rice</h3>
-                            <p>Type: Power</p>
-                            <p>Diet: Mass Builder</p>
-                            <p class="calories">1000 kcal</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Protein Shake</h3>
-                            <p>Type: Recovery</p>
-                            <p>Diet: Shred</p>
-                            <p class="calories">500 kcal</p>
-                        </div>
-                        <div class="item-card">
-                            <h3>Chicken & Veg</h3>
-                            <p>Type: Fuel</p>
-                            <p>Diet: Shred</p>
-                            <p class="calories">600 kcal</p>
-                        </div>
-                    </div>
-                    <div class="selected-items">
-                        <h4>Selected Meals</h4>
-                        <ul class="selected-list">
-                            <!-- Selected meals will appear here -->
-                        </ul>
-                        <div class="total-info">
-                            <p>Total Calories: <strong>0 kcal</strong></p>
-                            <p>Macros: <strong>0g P / 0g C / 0g F</strong></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Weekly Plan Page -->
-        <div id="weekly-plan" class="page-content">
-            <div class="page-header">
-                <h1 class="page-title">Weekly War Plan</h1>
-                <div class="header-actions">
-                    <button class="btn btn-primary">Save Plan</button>
-                    <button class="btn btn-outline">Generate Plan</button>
-                </div>
-            </div>
-            
             <div class="week-plan">
-                <!-- Monday -->
+                <!-- Today's Plan -->
                 <div class="day-card">
-                    <div class="day-header">Monday - Destruction</div>
+                    <div class="day-header">Today's Plan</div>
                     <div class="day-section">
                         <h4>Exercises</h4>
                         <ul class="day-list">
@@ -883,126 +720,147 @@
                         </ul>
                     </div>
                 </div>
-                
-                <!-- Tuesday -->
-                <div class="day-card">
-                    <div class="day-header">Tuesday - Power</div>
+            </div>
+        </div>
+        
+        <!-- Weekly Plan Page -->
+        <div id="weekly-plan" class="page-content">
+            <div class="page-header">
+                <h1 class="page-title">Weekly War Plan</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="save-plan-btn">Save Plan</button>
+                    <button class="btn btn-outline" id="history-plan-btn">History</button>
+                </div>
+            </div>
+            
+            <div class="week-plan">
+                <!-- Monday -->
+                <div class="day-card" data-day="monday">
+                    <div class="day-header">Monday - Destruction</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
-                            <li>Tire Flips - 10x10</li>
-                            <li>Box Jumps - 5x10</li>
-                            <li>Kettlebell - 100</li>
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
+                            <li>Deadlifts - 5x5</li>
+                            <li>Sledgehammer - 10x30s</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
+                            <li>Pre: Coffee + Banana</li>
+                            <li>Post: 2lb Steak</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Tuesday -->
+                <div class="day-card" data-day="tuesday">
+                    <div class="day-header">Tuesday - Power</div>
+                    <div class="day-section">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
+                            <li>Tire Flips - 10x10</li>
+                            <li>Box Jumps - 5x10</li>
+                        </ul>
+                    </div>
+                    <div class="day-section">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Pre: Oatmeal + Eggs</li>
                             <li>Post: Chicken + Rice</li>
-                            <li>Night: Yogurt</li>
                         </ul>
                     </div>
                 </div>
                 
                 <!-- Wednesday -->
-                <div class="day-card">
+                <div class="day-card" data-day="wednesday">
                     <div class="day-header">Wednesday - Strength</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
                             <li>Squats - 5x5</li>
                             <li>Pull-ups - Max</li>
-                            <li>Farmers Walk</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Pre: Banana + PB</li>
                             <li>Post: Salmon</li>
-                            <li>Night: Cheese</li>
                         </ul>
                     </div>
                 </div>
                 
                 <!-- Thursday -->
-                <div class="day-card">
+                <div class="day-card" data-day="thursday">
                     <div class="day-header">Thursday - Endurance</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
                             <li>Rucking - 5 miles</li>
                             <li>Sandbag Carries</li>
-                            <li>Sled Push</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Pre: Coffee + MCT</li>
                             <li>Post: Beef</li>
-                            <li>Night: Shake</li>
                         </ul>
                     </div>
                 </div>
                 
                 <!-- Friday -->
-                <div class="day-card">
+                <div class="day-card" data-day="friday">
                     <div class="day-header">Friday - Arms & Neck</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
                             <li>Neck Harness</li>
                             <li>Barbell Curls</li>
-                            <li>Skull Crushers</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Pre: Eggs</li>
                             <li>Post: Chicken</li>
-                            <li>Night: Pudding</li>
                         </ul>
                     </div>
                 </div>
                 
                 <!-- Saturday -->
-                <div class="day-card">
+                <div class="day-card" data-day="saturday">
                     <div class="day-header">Saturday - Calves & Core</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
                             <li>Calf Raises</li>
                             <li>Leg Raises</li>
-                            <li>Plank</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Pre: Yogurt</li>
                             <li>Post: Steak</li>
-                            <li>Night: Almonds</li>
                         </ul>
                     </div>
                 </div>
                 
                 <!-- Sunday -->
-                <div class="day-card">
+                <div class="day-card" data-day="sunday">
                     <div class="day-header">Sunday - Recovery</div>
                     <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
+                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <ul class="day-list exercise-list">
                             <li>Cold Plunge</li>
                             <li>Sauna</li>
-                            <li>Mobility</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
+                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <ul class="day-list meal-list">
                             <li>Cheat Meal</li>
                             <li>Hydrate</li>
                         </ul>
@@ -1021,6 +879,7 @@
             </div>
             
             <div class="exercise-bank">
+                <!-- Strength Exercises -->
                 <div class="bank-card">
                     <img src="https://media.giphy.com/media/l0HU7JI1u2J9wYe2A/giphy.gif" alt="Deadlift" class="bank-gif">
                     <div class="bank-content">
@@ -1034,26 +893,14 @@
                 </div>
                 
                 <div class="bank-card">
-                    <img src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif" alt="Battle Ropes" class="bank-gif">
+                    <img src="https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif" alt="Squat" class="bank-gif">
                     <div class="bank-content">
-                        <h3>Battle Ropes</h3>
+                        <h3>Barbell Squat</h3>
                         <div class="bank-meta">
-                            <span>Power</span>
-                            <span>Warrior</span>
+                            <span>Strength</span>
+                            <span>Elite</span>
                         </div>
-                        <p>High-intensity conditioning that torches calories.</p>
-                    </div>
-                </div>
-                
-                <div class="bank-card">
-                    <img src="https://media.giphy.com/media/l0HU7uNfzOW0X5l3W/giphy.gif" alt="Kettlebell" class="bank-gif">
-                    <div class="bank-content">
-                        <h3>Kettlebell</h3>
-                        <div class="bank-meta">
-                            <span>Power</span>
-                            <span>Warrior</span>
-                        </div>
-                        <p>Builds explosive hip power. 100 reps for time.</p>
+                        <p>Build massive leg strength and core stability.</p>
                     </div>
                 </div>
                 
@@ -1069,6 +916,44 @@
                     </div>
                 </div>
                 
+                <!-- Power Exercises -->
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif" alt="Battle Ropes" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Battle Ropes</h3>
+                        <div class="bank-meta">
+                            <span>Power</span>
+                            <span>Warrior</span>
+                        </div>
+                        <p>High-intensity conditioning that torches calories.</p>
+                    </div>
+                </div>
+                
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/l0HU7uNfzOW0X5l3W/giphy.gif" alt="Kettlebell" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Kettlebell Swings</h3>
+                        <div class="bank-meta">
+                            <span>Power</span>
+                            <span>Warrior</span>
+                        </div>
+                        <p>Builds explosive hip power. 100 reps for time.</p>
+                    </div>
+                </div>
+                
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/3o6ZsVGl3uQxqgWb3q/giphy.gif" alt="Sledgehammer" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Sledgehammer</h3>
+                        <div class="bank-meta">
+                            <span>Destruction</span>
+                            <span>Elite</span>
+                        </div>
+                        <p>Primal power development. 10x30s rounds.</p>
+                    </div>
+                </div>
+                
+                <!-- Additional Exercises -->
                 <div class="bank-card">
                     <img src="https://media.giphy.com/media/l0HU20BZ6LbSEITza/giphy.gif" alt="Calf" class="bank-gif">
                     <div class="bank-content">
@@ -1082,14 +967,26 @@
                 </div>
                 
                 <div class="bank-card">
-                    <img src="https://media.giphy.com/media/3o6ZsVGl3uQxqgWb3q/giphy.gif" alt="Sledgehammer" class="bank-gif">
+                    <img src="https://media.giphy.com/media/l0HU1QxYw2XyfX7g4/giphy.gif" alt="Pull-ups" class="bank-gif">
                     <div class="bank-content">
-                        <h3>Sledgehammer</h3>
+                        <h3>Weighted Pull-ups</h3>
                         <div class="bank-meta">
-                            <span>Destruction</span>
+                            <span>Strength</span>
                             <span>Elite</span>
                         </div>
-                        <p>Primal power development. 10x30s rounds.</p>
+                        <p>Build back and grip strength. 5x5 with added weight.</p>
+                    </div>
+                </div>
+                
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/l0HUnNQx8dXW6XHk4/giphy.gif" alt="Farmers Walk" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Farmers Walk</h3>
+                        <div class="bank-meta">
+                            <span>Strength</span>
+                            <span>Warrior</span>
+                        </div>
+                        <p>Full body strength and endurance. Walk until failure.</p>
                     </div>
                 </div>
             </div>
@@ -1140,8 +1037,6 @@
                     <button class="btn btn-primary">Save</button>
                 </div>
             </div>
-            
-            <div class="measurement-form">
                 <h2>Record New Measurements</h2>
                 <div class="measurement-grid">
                     <div class="form-group">

@@ -103,5 +103,28 @@ function navigateToDashboard()
         window.location.href="dashboard.html"
     }
 }
+//Redirext to edit page
+function navigateToEditPage()
+{
+    const language=navigator.language;
+    if(language.startsWith("bg"))
+        {
+            window.location.href="profile_page_edit_bg.html"
+        }
+        else{
+            window.location.href="profile_page_edit.html"
+        }
+}
+function navigateToMainPage()
+{
+    const language=navigator.language;
+    if(language.startsWith("bg"))
+        {
+            window.location.href="index.html"
+        }
+        else{
+            window.location.href="index_en.html"
+        }
+}
 // Load profile data when page loads
 document.addEventListener('DOMContentLoaded', loadProfileData);
