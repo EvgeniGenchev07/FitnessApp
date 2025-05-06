@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -15,6 +15,8 @@ import moment from 'moment';
 import {Colors} from "@/constants/Colors";
 import {ThemedText} from "@/components/ThemedText";
 import {router} from "expo-router";
+import * as SecureStore from 'expo-secure-store';
+import {GetWorkouts} from "@/serviceLayer/managerHandler";
 
 // @ts-ignore
 const HorizontalCalendar = ({ onDateSelect }) => {
@@ -57,19 +59,32 @@ const HorizontalCalendar = ({ onDateSelect }) => {
         </ScrollView>
     );
 };
-    const workouts = [
-    { title: 'Pogo Hops', sets: '20 sets', color: '#B892F0', image: require('../../assets/images/app-icon.png') },
-    { title: 'Bodyweight Squat', sets: '30 sets', color: '#F49C5A', image: require('../../assets/images/app-icon.png') },
-    { title: 'Lunges', sets: '15 sets', color: '#D69CF9', image: require('../../assets/images/app-icon.png') },
-];
-
-const trainingPaths = [
-    { title: 'Weightloss', image: require('../../assets/images/app-icon.png'), bgColor: '#B8959E' },
-    { title: 'Muscle gain', image: require('../../assets/images/app-icon.png'), bgColor: '#80AFAF' },
-];
 
 
 export default function HomeScreen() {
+    const [userData, setUserData] = useState({});
+    const [username, setUsernameData] = useState('');
+    const [todayWorkout, setTodayWorkout] = useState([{}]);
+    const [workouts, setWorkouts] = useState([]);
+    useEffect(() => {
+        const loadUser = async () => {
+            const data = await SecureStore.getItemAsync('user');
+            if (data) {
+                const user = JSON.parse(data);
+                setUserData(user);
+                setUsernameData(user.userName);
+                setTodayWorkout([{ title: 'Pogo Hops', sets: '20 sets', color: '#B892F0', image: require('../../assets/images/app-icon.png') },
+                    { title: 'Bodyweight Squat', sets: '30 sets', color: '#F49C5A', image: require('../../assets/images/app-icon.png') },
+                    { title: 'Lunges', sets: '15 sets', color: '#D69CF9', image: require('../../assets/images/app-icon.png') }]);
+                if(user.workouts) setWorkouts(user.workouts);
+            } else {
+                router.push('/login');
+            }
+        };
+
+        loadUser();
+    }, []);
+
     const [selectedDate, setSelectedDate] = useState('');
     const colorScheme = useColorScheme();
     const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
@@ -79,24 +94,31 @@ export default function HomeScreen() {
         setSelectedDate(date);
     };
 
+    function convertToImage(photo: any) {
+        const base64String = btoa(String.fromCharCode(...photo));
+        const imageUri = `data:image/jpeg;base64,${base64String}`;
+        return imageUri;
+    }
+
     return (
         <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]}>
             {/* Header */}
             <View style={styles.header}>
-                <Image source={require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg')} style={[styles.profilePic]} />
+                <Image source={
+                    userData.photo
+                        ? { uri: convertToImage(userData.photo) }
+                        : require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg')
+                } style={[styles.profilePic]} />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
 
-            <ThemedText style={styles.welcome}>Hello Tracy,</ThemedText>
+            <ThemedText style={styles.welcome}>Hello {username},</ThemedText>
             <Text style={styles.subtitle}>Welcome back.</Text>
 
             {/* Workout Starter */}
             <View style={styles.starterBox}>
-                <Text style={styles.starterText}>How would you like to start your workout today?</Text>
                 <View style={styles.iconRow}>
-                    <TouchableOpacity style={styles.starterIcon}>
-                        <Ionicons name="walk" size={24} color="white" />
-                    </TouchableOpacity>
+                <Text style={styles.starterText}>Start your workout, now!</Text>
                     <TouchableOpacity style={styles.starterIcon}>
                         <Ionicons name="barbell" size={24} color="white" />
                     </TouchableOpacity>
@@ -110,7 +132,7 @@ export default function HomeScreen() {
                 <Text style={styles.viewAll}>view all</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {workouts.map((item, index) => (
+                {todayWorkout.map((item, index) => (
                     <TouchableOpacity key={index} onPress={()=>router.push('/manageWorkout')}>
                     <View style={[styles.card, { backgroundColor: item.color }]}>
                         <Image source={item.image} style={styles.cardImage} resizeMode="contain" />
@@ -119,6 +141,11 @@ export default function HomeScreen() {
                     </View>
                     </TouchableOpacity>
                 ))}
+                <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
+                    <View style={styles.plusCard}>
+                        <Text style={styles.plusIcon}>+</Text>
+                    </View>
+                </TouchableOpacity>
             </ScrollView>
 
             {/* Training Path */}
@@ -127,12 +154,17 @@ export default function HomeScreen() {
                 <Text style={styles.viewAll}>view all</Text>
             </View>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginBottom: 48}}>
-                {trainingPaths.map((item, index) => (
+                {workouts.map((item, index) => (
                     <View key={index} style={[styles.cardSmall, { backgroundColor: item.bgColor }]}>
                         <Image source={item.image} style={styles.cardSmallImage} resizeMode="contain" />
                         <Text style={styles.cardSmallTitle}>{item.title}</Text>
                     </View>
                 ))}
+                <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
+                    <View style={styles.plusCard}>
+                        <Text style={styles.plusIcon}>+</Text>
+                    </View>
+                </TouchableOpacity>
             </ScrollView>
             </ScrollView>
 
@@ -173,6 +205,24 @@ const styles = StyleSheet.create({
     selectedDateText: {
         color: '#fff',
     },
+    plusCard: {
+        width: 140,
+        backgroundColor: '#989898',
+        opacity: 0.4,
+        borderWidth: 1,
+        flex: 1,
+        borderColor: '#f6f6f6',
+        height: 160,
+        borderRadius: 15,
+        marginRight: 15,
+    },
+
+    plusIcon: {
+        fontSize: 80,
+        marginTop: '30%',
+        textAlign: 'center',
+        color: 'white',
+    },
     container: {
         flex: 1,
         backgroundColor: '#F2F3FA',
@@ -203,19 +253,21 @@ const styles = StyleSheet.create({
     starterBox: {
         backgroundColor: '#6B4EFF',
         borderRadius: 15,
+        margin: '2%',
         padding: 20,
     },
     starterText: {
         color: '#fff',
         fontSize: 16,
-        marginBottom: 15,
+        alignSelf: 'center',
     },
     iconRow: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
     },
     starterIcon: {
         backgroundColor: '#9C89FF',
+
         borderRadius: 10,
         padding: 15,
     },

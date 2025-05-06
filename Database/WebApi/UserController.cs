@@ -23,13 +23,46 @@ namespace WebApi
         }
 
         [HttpPost]
+        [Route("workouts")]
+        public async Task<IActionResult> GetWorkouts([FromBody]string email)
+        {
+            try
+            {
+                User user = await _userContext.ReadAsync(email, true, true);
+                if (user == null) return NotFound("User not found");
+                return Ok(user.Workouts);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
+        [HttpPost]
+        [Route("user")]
+        public async Task<IActionResult> GetUserProfile([FromBody] Dictionary<string,object> data)
+        {
+            try
+            {
+                User user = await _userContext.ReadAsync(data["email"].ToString(), true, true);
+                if (user == null) return NotFound(Error.UserNotFound);
+                user.Password = "";
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        
+        [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> GetUser([FromForm] string email, [FromForm] string password)
+        public async Task<IActionResult> GetUser([FromBody] Dictionary<string,object> data)
         {
             try
             {
                 
-                Tuple<byte,User> response = await _userLoginContext.Login(email, password);
+                Tuple<byte,User> response = await _userLoginContext.Login(data["email"].ToString(), data["password"].ToString());
                 if (response.Item1 == (byte)Error.Ok)
                 {
                     return Ok(response.Item2);
@@ -46,9 +79,11 @@ namespace WebApi
             }
 
         }
-
+        
+        
 
         [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> PostUser([FromBody] User data)
         {
             try
@@ -98,14 +133,17 @@ namespace WebApi
                         case "newEmail":
                             user.Email = pair.Value.ToString();
                             break;
-                        case "username":
+                        case "userName":
                             user.UserName = pair.Value.ToString();
+                            break;
+                        case "bio":
+                            user.Bio = pair.Value.ToString();
+                            break;
+                        case "photo":
+                            user.Photo = Convert.FromBase64String(pair.Value.ToString());
                             break;
                         case "password":
                             user.Password = pair.Value.ToString();
-                            break;
-                        case "birthDate":
-                            user.BirthDate = Convert.ToDateTime(pair.Value);
                             break;
                         case "height":
                             user.Height = Convert.ToByte(pair.Value);

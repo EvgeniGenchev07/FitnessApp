@@ -17,6 +17,33 @@ namespace DBContexts.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
 
+            modelBuilder.Entity("Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Models.Exercise", b =>
                 {
                     b.Property<int>("Id")
@@ -87,6 +114,9 @@ namespace DBContexts.Migrations
                     b.Property<int>("FoodId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte>("Type")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
@@ -150,6 +180,34 @@ namespace DBContexts.Migrations
                     b.ToTable("Measurements", (string)null);
                 });
 
+            modelBuilder.Entity("Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("Models.Schedule", b =>
                 {
                     b.Property<int>("UserId")
@@ -197,9 +255,12 @@ namespace DBContexts.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bio")
+<<<<<<< Updated upstream
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("BirthDate")
+=======
+>>>>>>> Stashed changes
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreationDate")
@@ -237,6 +298,14 @@ namespace DBContexts.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
+
+                    b.Property<double>("Weight")
+                        .HasPrecision(2, 5)
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("WeightGoal")
+                        .HasPrecision(2, 5)
+                        .HasColumnType("REAL");
 
                     b.Property<string>("X")
                         .HasColumnType("TEXT");
@@ -295,6 +364,34 @@ namespace DBContexts.Migrations
                     b.ToTable("WorkoutExercises", (string)null);
                 });
 
+            modelBuilder.Entity("UserUser", b =>
+                {
+                    b.Property<int>("FollowersId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FollowingId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("FollowersId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("UserUser");
+                });
+
+            modelBuilder.Entity("Models.Comment", b =>
+                {
+                    b.HasOne("Models.Post", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Models.Exercise", b =>
                 {
                     b.HasOne("Models.User", null)
@@ -329,6 +426,15 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.User", null)
                         .WithMany("Measurements")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("Models.Post", b =>
+                {
+                    b.HasOne("Models.User", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Schedule", b =>
@@ -373,6 +479,26 @@ namespace DBContexts.Migrations
                     b.Navigation("Exercise");
                 });
 
+            modelBuilder.Entity("UserUser", b =>
+                {
+                    b.HasOne("Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("FollowersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("FollowingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Models.Post", b =>
+                {
+                    b.Navigation("Comments");
+                });
+
             modelBuilder.Entity("Models.Schedule", b =>
                 {
                     b.Navigation("Workouts");
@@ -387,6 +513,8 @@ namespace DBContexts.Migrations
                     b.Navigation("Meals");
 
                     b.Navigation("Measurements");
+
+                    b.Navigation("Posts");
 
                     b.Navigation("Schedule");
 

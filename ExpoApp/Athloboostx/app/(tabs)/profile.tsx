@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -15,19 +15,50 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {router} from "expo-router"; // dummy or real post data
+import {router} from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import {GetProfile} from "@/serviceLayer/managerHandler"; // dummy or real post data
 
 export default function ProfileScreen() {
     const colorScheme = useColorScheme();
     const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
-    const navigation = useNavigation();
+    const [userData,setUserData] = useState({});
+    const [image, setImage] = useState(require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
+    const [username, setUsername] = useState('');
+    const [description, setDescription] = useState('');
+    const [followers, setFollowers] = useState(0);
+    const [following, setFollowing] = useState(0);
+    const [likes, setLikes] = useState(0);
+    const [posts, setPosts] = useState([]);
+    useEffect(() => {
+        const loadUser = async () => {
+                const user = await GetProfile();
+                setUserData(user);
+                if(user.photo){
+                    const base64String = btoa(String.fromCharCode(...user.photo));
+                    const imageUri = `data:image/jpeg;base64,${base64String}`;
+                    setImage(imageUri);
+                }
+                setUsername(user.userName);
+                setDescription(user.description);
+                setFollowers(user.followers.length);
+                setFollowing(user.following.length);
+                let likes = 0;
+                for (let post of posts)
+                {
+                    likes += post.likes;
+                }
+                setLikes(likes);
+                if(user.posts) setPosts(user.posts);
+        };
 
+        loadUser();
+    }, []);
     const renderPost = ({ item }) => (
         <View style={styles.postItem}>
             <Text style={styles.postText}>{item.title}</Text>
         </View>
     );
-    const posts = [];
     return (
         <ThemedView type={'default'} style={styles.container}>
             {/* Profile Section */}
@@ -43,29 +74,29 @@ export default function ProfileScreen() {
             <View style={styles.profileContainer}>
                 <TouchableOpacity onPress={() => router.navigate('/editProfile')}>
                     <Image
-                        source={require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg')}
+                        source={image}
                         style={styles.profileImage}
                     />
                     <View style={styles.editIcon}>
                         <Text style={styles.editText}>✎</Text>
                     </View>
                 </TouchableOpacity>
-                <ThemedText type={'subtitle'}>John Doe</ThemedText>
+                <ThemedText type={'subtitle'}>{username}</ThemedText>
                 <ThemedText style={styles.description} type={'description'}>
-                    123 Maple Street, Anytown, PA 17101
+                    {description}
                 </ThemedText>
 
                 <View style={styles.stats}>
                     <View style={styles.stats_el}>
-                        <ThemedText type={'defaultBold'}>100</ThemedText>
+                        <ThemedText type={'defaultBold'}>{followers}</ThemedText>
                         <ThemedText type={'description'}>Followers</ThemedText>
                     </View>
                     <View style={styles.stats_el}>
-                        <ThemedText type={'defaultBold'}>1000</ThemedText>
+                        <ThemedText type={'defaultBold'}>{following}</ThemedText>
                         <ThemedText type={'description'}>Following</ThemedText>
                     </View>
                     <View style={styles.stats_el}>
-                        <ThemedText type={'defaultBold'}>100000</ThemedText>
+                        <ThemedText type={'defaultBold'}>{likes}</ThemedText>
                         <ThemedText type={'description'}>Likes</ThemedText>
                     </View>
                 </View>

@@ -31,7 +31,11 @@ public class UserContext : IDatabase<User, string>
                 .Include(u => u.Measurements)
                 .Include(u => u.Schedule)
                 .Include(u => u.Foods)
-                .Include(u => u.Exercises);
+                .Include(u => u.Exercises)
+                .Include(u => u.Followers)
+                .Include(u => u.Following)
+                .Include(u => u.Posts);
+                
         if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
         User user = await query.FirstOrDefaultAsync(u => u.Email == key);
         return user;
@@ -42,15 +46,20 @@ public class UserContext : IDatabase<User, string>
         User userFromDb = await ReadAsync(entity.Email, navigationalProperties, false);
         userFromDb.UserName = entity.UserName;
         userFromDb.Email = entity.Email;
-        userFromDb.BirthDate = entity.BirthDate;
+        userFromDb.Weight = entity.Weight;
+        userFromDb.WeightGoal = entity.WeightGoal;
         userFromDb.Height = entity.Height;
         userFromDb.Password = entity.Password;
+<<<<<<< Updated upstream
         userFromDb.Facebook = entity.Facebook;
         userFromDb.Instagram = entity.Instagram;
         userFromDb.X = entity.X;
         userFromDb.Bio = entity.Bio;
         userFromDb.Followers = entity.Followers;
         userFromDb.Following = entity.Following;
+=======
+        userFromDb.Bio = entity.Bio;
+>>>>>>> Stashed changes
         if (navigationalProperties)
         {
             userFromDb.Meals = entity.Meals;
@@ -59,6 +68,9 @@ public class UserContext : IDatabase<User, string>
             userFromDb.Workouts = entity.Workouts;
             userFromDb.Foods = entity.Foods;
             userFromDb.Exercises = entity.Exercises;
+            userFromDb.Followers = entity.Followers;
+            userFromDb.Following = entity.Following;
+            userFromDb.Posts = entity.Posts;
         }
         if (entity.Photo != null)
         {

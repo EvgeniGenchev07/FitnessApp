@@ -13,7 +13,7 @@ namespace Models
 
         [Required]
         [MaxLength(50)]
-        [RegularExpression(@"^[A-Za-zА-Яа-я0-9_\-. ]{3,50}$",
+        [RegularExpression(@"^[A-Za-zА-Яа-я0-9_\-. ]{3,16}$",
     ErrorMessage = "Only letters (Latin,Cyrilic), numbers, dashes, dots, and spaces are allowed.")]
         public string UserName { get; set; }
 
@@ -25,8 +25,6 @@ namespace Models
         [MaxLength(50)]
         [EmailAddress]
         public string Email { get; set; }
-
-        public DateTime BirthDate { get; set; }
 
         public DateTime CreationDate { get; init; }
 
@@ -54,8 +52,18 @@ namespace Models
         [Url] 
         public string X { get; set; }
         public byte[] Photo { get; set; }
+<<<<<<< Updated upstream
         public int? Followers { get; set; }
         public int? Following { get; set; }
+=======
+        [Precision(2,5)]
+        public double Weight { get; set; }
+        [Precision(2,5)]
+        public double WeightGoal { get; set; }
+        public List<User> Followers { get; set; }
+        public List<User> Following { get; set; }
+        public List<Post> Posts { get; set; }
+>>>>>>> Stashed changes
         public string Bio { get; set; }
     }
 }

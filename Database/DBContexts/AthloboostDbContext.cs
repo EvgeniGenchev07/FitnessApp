@@ -14,6 +14,8 @@ namespace DBContexts
         internal DbSet<Food> Foods { get; set; }
         internal DbSet<Exercise> Exercises { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
+        internal DbSet<Comment> Comments { get; set; }
+        internal DbSet<Post> Posts { get; set; }
 
         public AthloboostDbContext() : base()
         {
@@ -46,6 +48,7 @@ namespace DBContexts
                 .WithOne()
                 .HasForeignKey<WorkoutExercise>(we => we.ExerciseId)
                 .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Comment>().HasOne<User>(c => c.User).WithMany();
             base.OnModelCreating(modelBuilder);
         }
 

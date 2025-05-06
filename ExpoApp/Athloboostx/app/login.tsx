@@ -4,7 +4,7 @@ import {useRouter} from 'expo-router';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Colors} from "@/constants/Colors";
 import Icon from "react-native-vector-icons/Feather";
-import {Login, ValidateLogin} from "@/controllers/UserController";
+import {Login} from "@/serviceLayer/managerHandler";
 import {ThemedView} from "@/components/ThemedView";
 import {ThemedText} from "@/components/ThemedText";
 import {ThemedButton} from "@/components/ThemedButton";
@@ -19,16 +19,9 @@ const LoginScreen: React.FC = () => {
     const [errors, setErrors] = useState({});
 
     const OnPressLogin = async () => {
-        const formErrors = ValidateLogin(email, password);
-        if (Object.keys(formErrors).length !== 0) {
-            setErrors(formErrors);
-        } else {
-            const message = await Login(email, password);
-            if (message) {
-                let error = {};
-                error.login = "Invalid email or password";
-                setErrors(error);
-            }
+        const errors = await Login(email, password);
+        if(errors) {
+            setErrors(errors);
         }
     };
 

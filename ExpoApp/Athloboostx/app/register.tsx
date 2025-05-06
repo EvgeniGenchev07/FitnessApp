@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {Ionicons} from '@expo/vector-icons';
 import {Colors} from "@/constants/Colors";
 import Icon from "react-native-vector-icons/Feather";
-import {Register, ValidateRegister} from "@/controllers/UserController";
+import {Login, Register} from "@/serviceLayer/managerHandler";
 import {ThemedText} from "@/components/ThemedText";
 import {ThemedView} from "@/components/ThemedView";
 import {ThemedButton} from "@/components/ThemedButton";
@@ -21,16 +21,9 @@ const RegisterScreen: React.FC = () => {
     const [errors, setErrors] = useState({});
 
     const OnPressRegister = async () => {
-        const formErrors = ValidateRegister(email, password, username);
-        if (Object.keys(formErrors).length !== 0) {
-            setErrors(formErrors);
-        } else {
-            const message = await Register(email, password, username);
-            if (message) {
-                let error = {};
-                error.register = "Account already exists";
-                setErrors(error);
-            }
+        const errors = await Register(email, password,username);
+        if(errors) {
+            setErrors(errors);
         }
     };
     return (

@@ -6,7 +6,8 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
 import {router} from "expo-router";
-import {ThemedButton} from "@/components/ThemedButton"; // To allow image picking
+import {ThemedButton} from "@/components/ThemedButton";
+import {PatchProfile} from "@/serviceLayer/managerHandler"; // To allow image picking
 
 export default function EditProfileScreen() {
     const [name, setName] = useState('John Doe');
@@ -14,7 +15,7 @@ export default function EditProfileScreen() {
     const [profileImage, setProfileImage] = useState(
         require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg') // Default image
     );
-
+    const [imageArray,setImageArray] = useState([]);
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -26,13 +27,27 @@ export default function EditProfileScreen() {
 
         // Check if result is not cancelled and is an object with 'uri'
         if (result && !result.canceled && result.assets.length == 1) {
-            setProfileImage({ uri: result.assets[0].uri });
+            const uri = result.assets[0].uri;
+            setProfileImage({ uri });
+            const base64 = await uriToBase64(uri);
+            setImageArray(base64);
         }
     };
+    const uriToBase64 = async (uri) => {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
+            fileReader.onloadend = () => {
+                resolve(fileReader.result);
+            };
+            fileReader.onerror = reject;
+            fetch(uri)
+                .then((response) => response.blob())
+                .then((blob) => fileReader.readAsDataURL(blob));
+        });
+    };
 
-
-    const handleSave = () => {
-        Alert.alert('Profile Updated', `Name: ${name}\nBio: ${bio}`);
+    const handleSave = async () => {
+        const res = await PatchProfile(imageArray,name,bio);
         router.back();
     };
 
