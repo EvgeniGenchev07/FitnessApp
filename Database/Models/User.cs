@@ -52,13 +52,6 @@ namespace Models
         [Url] 
         public string X { get; set; }
         public byte[] Photo { get; set; }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        public int? Followers { get; set; }
-        public int? Following { get; set; }
-=======
-=======
->>>>>>> Stashed changes
         [Precision(2,5)]
         public double Weight { get; set; }
         [Precision(2,5)]
@@ -66,10 +59,6 @@ namespace Models
         public List<User> Followers { get; set; }
         public List<User> Following { get; set; }
         public List<Post> Posts { get; set; }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         public string Bio { get; set; }
     }
 }
