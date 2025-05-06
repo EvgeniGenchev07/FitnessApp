@@ -208,6 +208,34 @@ namespace DBContexts.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("Models.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("Models.Schedule", b =>
                 {
                     b.Property<int>("UserId")
@@ -256,9 +284,12 @@ namespace DBContexts.Migrations
 
                     b.Property<string>("Bio")
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("BirthDate")
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
                         .HasColumnType("TEXT");
@@ -362,6 +393,34 @@ namespace DBContexts.Migrations
                     b.HasIndex("WorkoutId");
 
                     b.ToTable("WorkoutExercises", (string)null);
+                });
+
+            modelBuilder.Entity("UserUser", b =>
+                {
+                    b.Property<int>("FollowersId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("FollowingId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("FollowersId", "FollowingId");
+
+                    b.HasIndex("FollowingId");
+
+                    b.ToTable("UserUser");
+                });
+
+            modelBuilder.Entity("Models.Comment", b =>
+                {
+                    b.HasOne("Models.Post", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("UserUser", b =>
