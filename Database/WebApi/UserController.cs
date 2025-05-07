@@ -189,7 +189,22 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost]
+        [Route("check-email")]
+        public async Task<IActionResult> CheckEmail([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                string email = data["email"].ToString();
+                User user = await _userContext.ReadAsync(email, true, false);
+                if (user == null) return NotFound("User not found");
+                return Ok("User exists");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-       
     }
 }
