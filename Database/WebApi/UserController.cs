@@ -133,7 +133,7 @@ namespace WebApi
                         case "newEmail":
                             user.Email = pair.Value.ToString();
                             break;
-                        case "userName":
+                        case "username":
                             user.UserName = pair.Value.ToString();
                             break;
                         case "bio":

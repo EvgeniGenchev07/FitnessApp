@@ -50,20 +50,13 @@ public class UserContext : IDatabase<User, string>
         userFromDb.WeightGoal = entity.WeightGoal;
         userFromDb.Height = entity.Height;
         userFromDb.Password = entity.Password;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         userFromDb.Facebook = entity.Facebook;
         userFromDb.Instagram = entity.Instagram;
         userFromDb.X = entity.X;
         userFromDb.Bio = entity.Bio;
         userFromDb.Followers = entity.Followers;
         userFromDb.Following = entity.Following;
-=======
         userFromDb.Bio = entity.Bio;
->>>>>>> Stashed changes
-=======
-        userFromDb.Bio = entity.Bio;
->>>>>>> Stashed changes
         if (navigationalProperties)
         {
             userFromDb.Meals = entity.Meals;

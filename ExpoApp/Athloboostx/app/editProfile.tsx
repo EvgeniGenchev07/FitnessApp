@@ -8,7 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import {router} from "expo-router";
 import {ThemedButton} from "@/components/ThemedButton";
 import {PatchProfile} from "@/serviceLayer/managerHandler"; // To allow image picking
-
+import * as FileSystem from 'expo-file-system';
 export default function EditProfileScreen() {
     const [name, setName] = useState('John Doe');
     const [bio, setBio] = useState('This is my bio...');
@@ -22,15 +22,18 @@ export default function EditProfileScreen() {
             allowsMultipleSelection: false,
             mediaTypes: 'images',
             aspect: [4, 4],
-            quality: 0.3,
+            quality: 0.1,
         });
 
         // Check if result is not cancelled and is an object with 'uri'
         if (result && !result.canceled && result.assets.length == 1) {
             const uri = result.assets[0].uri;
+            console.log(uri);
             setProfileImage({ uri });
-            const base64 = await uriToBase64(uri);
-            setImageArray(base64);
+            const base64String = await FileSystem.readAsStringAsync(uri, {
+                encoding: FileSystem.EncodingType.Base64,
+            });
+            setImageArray(base64String);
         }
     };
     const uriToBase64 = async (uri) => {

@@ -16,7 +16,8 @@ import {Colors} from "@/constants/Colors";
 import {ThemedText} from "@/components/ThemedText";
 import {router} from "expo-router";
 import * as SecureStore from 'expo-secure-store';
-import {GetWorkouts} from "@/serviceLayer/managerHandler";
+import {GetProfile, GetWorkouts} from "@/serviceLayer/managerHandler";
+import {HttpGetUser} from "@/serviceLayer/httpManager";
 
 // @ts-ignore
 const HorizontalCalendar = ({ onDateSelect }) => {
@@ -64,22 +65,19 @@ const HorizontalCalendar = ({ onDateSelect }) => {
 export default function HomeScreen() {
     const [userData, setUserData] = useState({});
     const [username, setUsernameData] = useState('');
+    const [photo,setPhoto] = useState(require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
     const [todayWorkout, setTodayWorkout] = useState([{}]);
     const [workouts, setWorkouts] = useState([]);
     useEffect(() => {
         const loadUser = async () => {
-            const data = await SecureStore.getItemAsync('user');
-            if (data) {
-                const user = JSON.parse(data);
+                const user = await GetProfile();
                 setUserData(user);
                 setUsernameData(user.userName);
+                if(user.photo) setPhoto({ uri: convertToImage(user.photo) });
                 setTodayWorkout([{ title: 'Pogo Hops', sets: '20 sets', color: '#B892F0', image: require('../../assets/images/app-icon.png') },
                     { title: 'Bodyweight Squat', sets: '30 sets', color: '#F49C5A', image: require('../../assets/images/app-icon.png') },
                     { title: 'Lunges', sets: '15 sets', color: '#D69CF9', image: require('../../assets/images/app-icon.png') }]);
                 if(user.workouts) setWorkouts(user.workouts);
-            } else {
-                router.push('/login');
-            }
         };
 
         loadUser();
@@ -95,7 +93,8 @@ export default function HomeScreen() {
     };
 
     function convertToImage(photo: any) {
-        const base64String = btoa(String.fromCharCode(...photo));
+        const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
+        const base64String = btoa(binaryString);
         const imageUri = `data:image/jpeg;base64,${base64String}`;
         return imageUri;
     }
@@ -104,11 +103,7 @@ export default function HomeScreen() {
         <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]}>
             {/* Header */}
             <View style={styles.header}>
-                <Image source={
-                    userData.photo
-                        ? { uri: convertToImage(userData.photo) }
-                        : require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg')
-                } style={[styles.profilePic]} />
+                <Image source={photo} style={[styles.profilePic]} />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
 

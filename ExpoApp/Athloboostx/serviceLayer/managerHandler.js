@@ -17,8 +17,7 @@ async function Login(email, password) {
             error.login = "Invalid email or password";
             return error;
         }else {
-            console.log(message.data);
-            await SecureStore.setItemAsync('user',JSON.stringify(message.data));
+            await SecureStore.setItemAsync('user',email);
             router.push("/(tabs)");
         }
     }
@@ -36,7 +35,7 @@ async function Register(email, password,username) {
             return error;
         }else {
             console.log(message.data);
-            await SecureStore.setItemAsync('user',message.data);
+            await SecureStore.setItemAsync('user',email);
             router.push("/(tabs)");
         }
     }
@@ -50,9 +49,7 @@ function IsLoggedIn() {
 
 async function GetWorkouts() {
     const data = await SecureStore.getItemAsync('user');
-    const user = JSON.parse(data);
-    const email = user.email;
-    const res = await HttpGetWorkouts(email);
+    const res = await HttpGetWorkouts(data);
     if (!res || res.status !== Status.OK) {
         await Updates.reloadAsync();
     }else {
@@ -64,9 +61,7 @@ async function GetProfile() {
     try {
 
         const data = await SecureStore.getItemAsync('user');
-        const user = JSON.parse(data);
-        const email = user.email;
-        const res = await HttpGetProfile(email);
+        const res = await HttpGetProfile(data);
         if (!res || res.status !== Status.OK) {
             await Updates.reloadAsync();
         } else {
@@ -80,11 +75,8 @@ async function GetProfile() {
 }
 async function PatchProfile(photo,username,bio) {
     try {
-
         const data = await SecureStore.getItemAsync('user');
-        const user = JSON.parse(data);
-        const email = user.email;
-        const res = await HttpPatchProfile(email,photo,username,bio);
+        const res = await HttpPatchProfile(data,photo,username,bio);
         if (!res || res.status !== Status.OK) {
             Alert.alert("Something happened");
         } else {

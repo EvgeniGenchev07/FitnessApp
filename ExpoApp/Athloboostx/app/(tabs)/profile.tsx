@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import {router} from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import { Buffer } from 'buffer';
 import {GetProfile} from "@/serviceLayer/managerHandler"; // dummy or real post data
 
 export default function ProfileScreen() {
@@ -35,12 +36,14 @@ export default function ProfileScreen() {
                 const user = await GetProfile();
                 setUserData(user);
                 if(user.photo){
-                    const base64String = btoa(String.fromCharCode(...user.photo));
-                    const imageUri = `data:image/jpeg;base64,${base64String}`;
-                    setImage(imageUri);
+                    const base64String = Buffer.from(user.photo).toString('base64');
+                    const imageUri = `data:image/png;base64,${base64String}`;
+                    setImage({ uri: imageUri });
                 }
+                console.log(user.userName);
+                console.log(user.bio);
                 setUsername(user.userName);
-                setDescription(user.description);
+                setDescription(user.bio);
                 setFollowers(user.followers.length);
                 setFollowing(user.following.length);
                 let likes = 0;
