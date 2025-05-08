@@ -42,7 +42,8 @@ body {
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 .form-control:focus {
-    background-color: #444;
+    background-color:#333;
+    color: white;
     border-color: #e60000;
     box-shadow: 0 0 8px rgba(230, 0, 0, 0.6);
 }
@@ -74,49 +75,4 @@ body {
 .form-container.active {
     opacity: 1;
     transform: scale(1);
-}
-.password-requirements {
-    margin-top: 0.5rem;
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.requirements-list {
-    padding-left: 1.2rem;
-    margin-top: 0.3rem;
-    margin-bottom: 0;
-    list-style-type: none;
-}
-
-.requirements-list li {
-    margin-bottom: 0.2rem;
-    position: relative;
-    padding-left: 1.5em;
-}
-
-.requirements-list li:before {
-    content: "✗";
-    color: #dc3545;
-    position: absolute;
-    left: 0;
-}
-
-.requirements-list li.valid:before {
-    content: "✓";
-    color: #28a745;
-}
-
-.password-strength {
-    height: 5px;
-    margin-top: 5px;
-    background-color: #e9ecef;
-    border-radius: 3px;
-    overflow: hidden;
-}
-
-.password-strength-bar {
-    height: 100%;
-    width: 0%;
-    background-color: #dc3545;
-    transition: width 0.3s ease, background-color 0.3s ease;
 }

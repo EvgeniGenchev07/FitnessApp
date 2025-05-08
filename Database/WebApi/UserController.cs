@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebApi
 {
@@ -118,56 +119,82 @@ namespace WebApi
         }
 
         [HttpPatch]
-        public async Task<IActionResult> PutUser([FromBody] Dictionary<string,object> data)
+        public async Task<IActionResult> PutUser([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                User user = await _userContext.ReadAsync(data["email"].ToString(),true);
-                
+                User user = await _userContext.ReadAsync(data["email"].ToString(), true);
+
                 if (user == null) return NotFound("User not found");
+
                 bool useNavigationalProperties = false;
+
                 foreach (var pair in data)
                 {
+                    object value = pair.Value;
+                    if (value is JsonElement jsonElement)
+                    {
+                        value = jsonElement.ValueKind switch
+                        {
+                            JsonValueKind.String => jsonElement.GetString(),
+                            JsonValueKind.Number => jsonElement.GetDecimal(),
+                            JsonValueKind.True => true,
+                            JsonValueKind.False => false,
+                            JsonValueKind.Null => null,
+                            _ => value
+                        };
+                    }
+
                     switch (pair.Key)
                     {
                         case "newEmail":
-                            user.Email = pair.Value.ToString();
+                            user.Email = value?.ToString();
                             break;
                         case "username":
-                            user.UserName = pair.Value.ToString();
+                            user.UserName = value?.ToString();
                             break;
                         case "bio":
-                            user.Bio = pair.Value.ToString();
+                            user.Bio = value?.ToString();
                             break;
                         case "photo":
-                            user.Photo = Convert.FromBase64String(pair.Value.ToString());
+                            user.Photo = Convert.FromBase64String(value?.ToString());
                             break;
                         case "password":
-                            user.Password = pair.Value.ToString();
+                            user.Password = value?.ToString();
                             break;
                         case "height":
-                            user.Height = Convert.ToByte(pair.Value);
+                            if (value != null)
+                                user.Height = Convert.ToByte(value);
                             break;
                         case "meals":
-                            user.Meals = JsonConvert.DeserializeObject<List<Meal>>(pair.Value.ToString());
+                            user.Meals = JsonConvert.DeserializeObject<List<Meal>>(value?.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "schedule":
-                            user.Schedule = JsonConvert.DeserializeObject<Schedule>(pair.Value.ToString());
+                            user.Schedule = JsonConvert.DeserializeObject<Schedule>(value?.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "workouts":
-                            user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
+                            user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(value?.ToString());
                             useNavigationalProperties = true;
                             break;
                         case "measurements":
-                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(pair.Value.ToString());
+                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(value?.ToString());
                             useNavigationalProperties = true;
+                            break;
+                        case "weight":
+                            if (value != null)
+                                user.Weight = Convert.ToDouble(value);
+                            break;
+
+                        case "weightGoal":
+                            if (value != null)
+                                user.WeightGoal = Convert.ToDouble(value);
                             break;
                     }
                 }
-                
-                await _userContext.UpdateAsync(user,useNavigationalProperties);
+
+                await _userContext.UpdateAsync(user, useNavigationalProperties);
                 return Ok();
             }
             catch (Exception ex)

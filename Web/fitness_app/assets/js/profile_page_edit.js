@@ -1,4 +1,5 @@
-const apiUrl = 'http://192.168.100.3:5000'; 
+const apiUrl = 'http://192.168.56.1:5000';
+let selectedPhotoFile = null;
 // Image preview functionality
         document.getElementById('photo-upload').addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -10,6 +11,7 @@ const apiUrl = 'http://192.168.100.3:5000';
                 reader.readAsDataURL(file);
             }
         });
+        //loading data
         function loadProfileData() {
             // Get user data from session storage
             const user = JSON.parse(sessionStorage.getItem('user')) || {};
@@ -27,128 +29,142 @@ const apiUrl = 'http://192.168.100.3:5000';
             const userNameDisplay = document.querySelector('.username-display');
             const memberSinceDisplay = document.querySelector('.member-since');
         
-            // Set profile image
-            if (user.photo) {
-                const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(user.photo)));
-                avatarPreview.src = `data:image/jpeg;base64,${base64String}`;
+            // Set profile image (handle byte array or default)
+            if (user.photo && Array.isArray(user.photo)) {
+                try {
+                    const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(user.photo)));
+                    avatarPreview.src = `data:image/jpeg;base64,${base64String}`;
+                } catch (e) {
+                    console.error('Error processing profile photo:', e);
+                    avatarPreview.src = 'assets/img/index/avatar.jpg';
+                }
             } else {
                 avatarPreview.src = 'assets/img/index/avatar.jpg';
             }
-            avatarPreview.alt = user.userName || 'Profile';
+            avatarPreview.alt = user.userName;
         
-            // Set userName
-            const userName =user.userName || 'BEAST_USER';
+            // Set username with validation
+            const userName = user.userName;
             userNameInput.value = userName;
             userNameDisplay.textContent = userName;
         
-            // Set other form fields
-            emailInput.value = user.email || 'beast@example.com';
-            heightInput.value = user.height || '185';
-            weightInput.value = user.measurements.weight || '85';
+            // Set email (required field)
+            emailInput.value = user.email || '';
+        
+            // Set height (50-255 range)
+            heightInput.value = user.height || '';
+        
+            // Set weight (with precision handling)
+            weightInput.value = user.weight?.toFixed(1) || '';
+        
+            // Set bio
             bioInput.value = user.bio || '';
+        
+            // Set social media links (validate URLs)
             facebookInput.value = user.facebook || '';
-            twitterInput.value = user.twitter || '';
+            twitterInput.value = user.x || ''; // Note: Model uses 'x' for Twitter
             instagramInput.value = user.instagram || '';
         
-            // Calculate and display "Member since" (registration date is required)
-            if (!user.creationDate) {
-                console.error('Registration date is required but missing');
-                // Set a default registration date if absolutely necessary
-                user.creationDate = new Date().toISOString();
-            }
-            
-            const creationDate = new Date(user.creationDate);
-            const now = new Date();
-            
-            // Calculate difference in months
-            const months = (now.getFullYear() - creationDate.getFullYear()) * 12 + 
-                          (now.getMonth() - creationDate.getMonth());
-            
-            // Format the display text
-            let memberSinceText;
-            if (months < 1) {
-                memberSinceText = 'New member';
-            } else if (months < 12) {
-                memberSinceText = `Member for ${months} month${months > 1 ? 's' : ''}`;
+            // Calculate and display "Member since" 
+            if (user.creationDate) {
+                const creationDate = new Date(user.creationDate);
+                const options = { year: 'numeric', month: 'long' };
+                memberSinceDisplay.textContent = `Member since:${creationDate.toLocaleDateString('en-US', options)}`;
             } else {
-                const years = Math.floor(months / 12);
-                const remainingMonths = months % 12;
-                memberSinceText = `Member for ${years} year${years > 1 ? 's' : ''}`;
-                if (remainingMonths > 0) {
-                    memberSinceText += ` and ${remainingMonths} month${remainingMonths > 1 ? 's' : ''}`;
-                }
+                memberSinceDisplay.textContent = 'New member';
             }
-            
-            memberSinceDisplay.textContent = memberSinceText;
         }
-        
         // Call the function when the page loads
-        document.addEventListener('DOMContentLoaded', loadProfileData);
+         document.addEventListener('DOMContentLoaded', loadProfileData); 
 
-        // Save profile changes
+
+         document.getElementById('photo-upload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            selectedPhotoFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('avatar-preview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
         document.querySelector('.edit-form').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Show loading state
             const saveBtn = document.querySelector('.save-btn');
             saveBtn.disabled = true;
-            saveBtn.textContent = 'Saving...';
+            saveBtn.textContent = 'Запазване...';
             
             try {
-                // Get the current user from session storage
                 const user = JSON.parse(sessionStorage.getItem('user')) || {};
                 
-                // Get form values
-                const updatedUser = {
-                    id: user.id, // Ensure we keep the same ID
-                    userName: document.getElementById('username').value,
-                    password:user.password,
-                    email: document.getElementById('email').value,
-                    height: document.getElementById('height').value ? parseInt(document.getElementById('height').value) : null,
-                    birthDate: document.getElementById('birthdate').value || "0001-01-01T00:00:00",
-                    bio: document.getElementById('bio').value,
+                const patchData = {
+                    email: user.email,
+                    username: document.getElementById('username').value,
+                    bio: document.getElementById('bio').value || null,
+                    height: document.getElementById('height').value ? 
+                           parseInt(document.getElementById('height').value) : null,
+                    weight: document.getElementById('weight').value ? 
+                           parseFloat(document.getElementById('weight').value) : null,
                     facebook: document.getElementById('facebook').value || null,
                     twitter: document.getElementById('twitter').value || null,
-                    instagram: document.getElementById('instagram').value || null,
-                    measurements: user.measurements || []
+                    instagram: document.getElementById('instagram').value || null
                 };
-                
-                // Update weight in measurements
-                const weight = parseFloat(document.getElementById('weight').value);
-                if (updatedUser.measurements.length > 0) {
-                    updatedUser.measurements[0].weight = weight;
-                } else {
-                    updatedUser.measurements.push({ weight: weight });
+        
+                if (selectedPhotoFile) {
+                    const base64String = await convertFileToBase64(selectedPhotoFile);
+                    patchData.photo = base64String;
                 }
-                
-                // Send update request to backend
+        
                 const response = await fetch(`${apiUrl}/user`, {
-                    method: 'PUT',
+                    method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token || ''}`
                     },
-                    body: JSON.stringify(updatedUser)
+                    body: JSON.stringify(patchData)
                 });
                 
                 if (response.ok) {
-                    const updatedUserData = await response.json();
-                    // Update session storage with new data
-                    sessionStorage.setItem('user', JSON.stringify(updatedUserData));
+                    const updatedUser = {
+                        ...user,
+                        userName: patchData.username,
+                        bio: patchData.bio,
+                        height: patchData.height,
+                        weight: patchData.weight,
+                        facebook: patchData.facebook,
+                        x: patchData.twitter,
+                        instagram: patchData.instagram
+                    };
                     
-                    // Show success message
-                    alert('Profile updated successfully!');
-                    // Redirect to profile page
+                    if (selectedPhotoFile) {
+                        updatedUser.photo = Array.from(new Uint8Array(await selectedPhotoFile.arrayBuffer()));
+                        selectedPhotoFile = null; 
+                        document.getElementById('photo-upload').value = ''; 
+                    }
+                    sessionStorage.setItem('user', JSON.stringify(updatedUser));
+                    alert('Профилът е обновен успешно!');
                     window.location.href = 'profile_page.html';
                 } else {
                     const error = await response.text();
-                    throw new Error(error || 'Failed to update profile');
+                    throw new Error(error || 'Грешка при обновяване на профила');
                 }
             } catch (error) {
-                console.error('Error updating profile:', error);
-                alert('Error updating profile: ' + error.message);
+                console.error('Грешка при обновяване на профила:', error);
+                alert('Грешка при обновяване на профила: ' + error.message);
             } finally {
-                // Reset button state
                 saveBtn.disabled = false;
-                saveBtn.textContent = 'Save Changes';
+                saveBtn.textContent = 'Запази промените';
             }
         });
+        
+        function convertFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
