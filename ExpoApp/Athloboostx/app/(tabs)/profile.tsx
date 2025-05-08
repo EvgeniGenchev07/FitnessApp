@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     useColorScheme,
     StatusBar,
+    Platform,
 } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -19,26 +20,45 @@ import {router} from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Buffer } from 'buffer';
 import {GetProfile} from "@/serviceLayer/managerHandler"; // dummy or real post data
+import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+
+interface Post {
+    title: string;
+    likes: number;
+}
+
+interface UserData {
+    userName: string;
+    bio: string;
+    photo: string | null;
+    followers: any[];
+    following: any[];
+    posts: Post[];
+}
+
+const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight as number) ?? 0 : 0;
 
 export default function ProfileScreen() {
+    const { colors } = useTheme();
+    const { t } = useLanguage();
     const colorScheme = useColorScheme();
-    const colors = colorScheme === 'dark' ? Colors.dark : Colors.light;
-    const [userData,setUserData] = useState({});
+    const [userData, setUserData] = useState<UserData | null>(null);
     const [image, setImage] = useState(require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
     const [username, setUsername] = useState('');
     const [description, setDescription] = useState('');
     const [followers, setFollowers] = useState(0);
     const [following, setFollowing] = useState(0);
     const [likes, setLikes] = useState(0);
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<Post[]>([]);
+
     useEffect(() => {
         const loadUser = async () => {
                 const user = await GetProfile();
                 setUserData(user);
                 if(user.photo){
-                    const base64String = Buffer.from(user.photo).toString('base64');
-                    const imageUri = `data:image/png;base64,${base64String}`;
-                    setImage({ uri: imageUri });
+                    const imageUri = convertToImage(user.photo);
+                    setImage({uri:imageUri});
                 }
                 console.log(user.userName);
                 console.log(user.bio);
@@ -46,24 +66,48 @@ export default function ProfileScreen() {
                 setDescription(user.bio);
                 setFollowers(user.followers.length);
                 setFollowing(user.following.length);
-                let likes = 0;
-                for (let post of posts)
+                let totalLikes = 0;
+                for (let post of user.posts || [])
                 {
-                    likes += post.likes;
+                    totalLikes += post.likes;
                 }
-                setLikes(likes);
+                setLikes(totalLikes);
                 if(user.posts) setPosts(user.posts);
         };
 
         loadUser();
     }, []);
-    const renderPost = ({ item }) => (
-        <View style={styles.postItem}>
-            <Text style={styles.postText}>{item.title}</Text>
+    const renderPost = ({ item }: { item: Post }) => (
+        <View style={[styles.postItem, { borderColor: colors.border }]}>
+            <ThemedText style={styles.postText}>{item.title}</ThemedText>
         </View>
     );
+    const convertToImage = (photo: any) => {
+        if (!photo) {
+            return null;
+        }
+        try {
+            // If photo is already a base64 string, just add the data URL prefix
+            if (typeof photo === 'string') {
+                if (photo.startsWith('data:image')) {
+                    return photo;
+                }
+                return `data:image/jpeg;base64,${photo}`;
+            }
+            // If photo is a byte array, convert it
+            if (Array.isArray(photo)) {
+                const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
+                const base64String = btoa(binaryString);
+                return `data:image/jpeg;base64,${base64String}`;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error converting photo:', error);
+            return null;
+        }
+    };
     return (
-        <ThemedView type={'default'} style={styles.container}>
+        <ThemedView type={'default'} style={[styles.container, { paddingTop: STATUSBAR_HEIGHT + 50 }]}>
             {/* Profile Section */}
             <View style={styles.headerContainer}>
                 <TouchableOpacity
@@ -75,15 +119,10 @@ export default function ProfileScreen() {
             </View>
 
             <View style={styles.profileContainer}>
-                <TouchableOpacity onPress={() => router.navigate('/editProfile')}>
                     <Image
                         source={image}
                         style={styles.profileImage}
                     />
-                    <View style={styles.editIcon}>
-                        <Text style={styles.editText}>✎</Text>
-                    </View>
-                </TouchableOpacity>
                 <ThemedText type={'subtitle'}>{username}</ThemedText>
                 <ThemedText style={styles.description} type={'description'}>
                     {description}
@@ -92,21 +131,21 @@ export default function ProfileScreen() {
                 <View style={styles.stats}>
                     <View style={styles.stats_el}>
                         <ThemedText type={'defaultBold'}>{followers}</ThemedText>
-                        <ThemedText type={'description'}>Followers</ThemedText>
+                        <ThemedText type={'description'}>{t('profile.followers')}</ThemedText>
                     </View>
                     <View style={styles.stats_el}>
                         <ThemedText type={'defaultBold'}>{following}</ThemedText>
-                        <ThemedText type={'description'}>Following</ThemedText>
+                        <ThemedText type={'description'}>{t('profile.following')}</ThemedText>
                     </View>
                     <View style={styles.stats_el}>
                         <ThemedText type={'defaultBold'}>{likes}</ThemedText>
-                        <ThemedText type={'description'}>Likes</ThemedText>
+                        <ThemedText type={'description'}>{t('profile.likes')}</ThemedText>
                     </View>
                 </View>
 
                 <View style={styles.container_buttons}>
                     <ThemedButton type={'default'} style={styles.follow_button}>
-                        <ThemedText type={'button'}>Follow</ThemedText>
+                        <ThemedText type={'button'}>{t('profile.follow')}</ThemedText>
                     </ThemedButton>
                     <ThemedButton type={'icon'} style={{ marginLeft: 10 }}>
                         <Ionicons
@@ -121,8 +160,8 @@ export default function ProfileScreen() {
             {/* Posts Section */}
             {posts.length === 0 ? (
                 <View style={styles.emptyContainer}>
-                    <Ionicons name="image-outline" size={64} color="gray" />
-                    <Text style={styles.emptyText}>No posts available</Text>
+                    <Ionicons name="image-outline" size={64} color={colors.text + '80'} />
+                    <ThemedText style={styles.emptyText}>{t('profile.noPosts')}</ThemedText>
                 </View>
             ) : (
                 <FlatList
@@ -167,7 +206,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         borderRadius: 50,
-        marginBottom: -20,
+        marginBottom: 10,
         zIndex: 90,
     },
     editIcon: {
@@ -175,7 +214,6 @@ const styles = StyleSheet.create({
         bottom: 10,
         marginLeft: '15%',
         width: '20%',
-        backgroundColor: '#007bff',
         borderRadius: 20,
         padding: 5,
         zIndex: 99,
@@ -216,7 +254,6 @@ const styles = StyleSheet.create({
     postItem: {
         padding: 16,
         borderBottomWidth: 1,
-        borderColor: '#ddd',
     },
     postText: {
         fontSize: 16,
@@ -229,6 +266,5 @@ const styles = StyleSheet.create({
     emptyText: {
         marginTop: 10,
         fontSize: 16,
-        color: 'gray',
     },
 });

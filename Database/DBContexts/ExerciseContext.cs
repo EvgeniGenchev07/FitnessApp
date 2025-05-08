@@ -30,11 +30,8 @@ public class ExerciseContext : IDatabase<Exercise, int>
     {
         Exercise exercise = await ReadAsync(entity.Id, useNavigationalProperties);
         exercise.Name = entity.Name;
-        if (useNavigationalProperties)
-        {
-            exercise.MuscleGroups = entity.MuscleGroups;
-        }
-
+        exercise.EstimatedTime = entity.EstimatedTime;
+        exercise.Sets = entity.Sets;
         await _dbContext.SaveChangesAsync();
     }
 

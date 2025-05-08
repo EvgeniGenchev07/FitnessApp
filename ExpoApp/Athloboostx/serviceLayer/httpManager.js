@@ -119,21 +119,33 @@ async function GetUser(email){
         return responseMessage;
     }
 }
-async function UpdateProfile(email,photo,username,bio){
+async function UpdateProfile(data){
     if (!isRunning) {
         isRunning = true;
         let responseMessage = "";
         try {
+            console.log('Sending to server:', JSON.stringify(data, null, 2));
             const res = await fetch(`${url}user/`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify( {email,photo,username,bio})
+                body: JSON.stringify({
+                    email: data.email,
+                    workouts: JSON.stringify(data.workouts)
+                })
             });
-            console.log(res);
-            responseMessage = { status: Status.OK };
+            
+            const responseData = await res.json();
+            console.log('Server response:', responseData);
+            
+            if (res.ok) {
+                responseMessage = { status: Status.OK };
+            } else {
+                responseMessage = { status: Status.ServerError, error: responseData };
+            }
         } catch (error) {
+            console.error('Server error:', error);
             responseMessage = { status: Status.ServerError, error };
         }
         isRunning = false;

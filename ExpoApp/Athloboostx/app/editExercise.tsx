@@ -1,127 +1,269 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    TextInput,
     StyleSheet,
+    TextInput,
     TouchableOpacity,
-    Modal,
-    Platform,
     ScrollView,
+    Platform,
+    StatusBar,
     KeyboardAvoidingView,
-    StatusBar
+    Animated
 } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import {router} from "expo-router";
-import Icon from "react-native-vector-icons/Feather";
-import {ThemedText} from "@/components/ThemedText";
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import { workoutService } from '@/services/workoutService';
+import { Exercise } from '@/types/workout';
 
-const ExerciseEditScreen = () => {
-    const [name, setName] = useState('');
-    const [type, setType] = useState('Choose a type');
-    const [hours, setHours] = useState('');
-    const [minutes, setMinutes] = useState('');
-    const [seconds, setSeconds] = useState('');
-    const [sets, setSets] = useState('');
-    const [restTime, setRestTime] = useState('');
-    const [notes, setNotes] = useState('');
+const HEADER_HEIGHT = Platform.OS === 'ios' ? 100 : 80;
 
-    const handleDelete = () => {
-        console.log('Exercise deleted');
+const defaultExercise: Exercise = {
+    name: '',
+    muscleGroups: [],
+    sets: [{ reps: 0, weight: 0, restTime: 60 }],
+    estimatedTime: 5
+};
+
+const EditExerciseScreen = () => {
+    const params = useLocalSearchParams();
+    const [exercise, setExercise] = useState<Exercise>(() => {
+        if (params.exercise) {
+            const exerciseData = JSON.parse(decodeURIComponent(params.exercise as string));
+            return {
+                ...exerciseData,
+                sets: exerciseData.sets || [{ reps: 0, weight: 0, restTime: 60 }]
+            };
+        }
+        return defaultExercise;
+    });
+    const [isLoading, setIsLoading] = useState(true);
+    const [scrollY] = useState(new Animated.Value(0));
+    const router = useRouter();
+
+    useEffect(() => {
+        setIsLoading(false);
+    }, []);
+
+    const fetchExerciseData = async (id: number) => {
+        try {
+            setIsLoading(true);
+            const data = await workoutService.getExercise(id);
+            setExercise(data || defaultExercise);
+            setExercise(defaultExercise);
+        } catch (error) {
+            console.error('Error fetching exercise:', error);
+            setExercise(defaultExercise);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleSave = () => {
-        console.log('Exercise saved');
+    const handleNameChange = (text: string) => {
+        setExercise(prev => ({ ...prev, name: text }));
     };
 
-    const [typeModalVisible, setTypeModalVisible] = useState(false);
+    const handleTimeChange = (text: string) => {
+        const time = parseInt(text) || 5;
+        setExercise(prev => ({ ...prev, estimatedTime: time }));
+    };
+
+    const handleSetChange = (index: number, field: 'reps' | 'weight' | 'restTime', value: string) => {
+        const updatedSets = [...exercise.sets];
+        updatedSets[index] = {
+            ...updatedSets[index],
+            [field]: parseInt(value) || 0
+        };
+        setExercise(prev => ({ ...prev, sets: updatedSets }));
+    };
+
+    const addSet = () => {
+        setExercise(prev => ({
+            ...prev,
+            sets: [...prev.sets, { reps: 0, weight: 0, restTime: 60 }]
+        }));
+    };
+
+    const removeSet = (index: number) => {
+        if (exercise.sets.length <= 1) return;
+        setExercise(prev => ({
+            ...prev,
+            sets: prev.sets.filter((_, i) => i !== index)
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            const updatedExercise = {
+                ...exercise,
+                sets: exercise.sets.map(set => ({
+                    reps: parseInt(set.reps.toString()) || 0,
+                    weight: parseInt(set.weight.toString()) || 0,
+                    restTime: parseInt(set.restTime.toString()) || 60
+                }))
+            };
+            
+            const currentWorkout = JSON.parse(decodeURIComponent(params.workout as string));
+            
+            const updatedWorkout = {
+                ...currentWorkout,
+                exercises: currentWorkout.exercises.map((ex: Exercise) => 
+                    ex.id === updatedExercise.id ? updatedExercise : ex
+                )
+            };
+            
+            router.push({
+                pathname: '/manageWorkout',
+                params: {
+                    workout: encodeURIComponent(JSON.stringify(updatedWorkout)),
+                    edit: 'true'
+                }
+            });
+        } catch (error) {
+            console.error('Error saving exercise:', error);
+        }
+    };
+
+    const headerOpacity = scrollY.interpolate({
+        inputRange: [0, HEADER_HEIGHT],
+        outputRange: [0, 1],
+        extrapolate: 'clamp',
+    });
+
+    if (isLoading) {
+        return (
+            <View style={[styles.container, styles.loadingContainer]}>
+                <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+        );
+    }
 
     return (
-        <KeyboardAvoidingView
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={10}
-        >
-            <View style={styles.top_icon_container}>
-                <TouchableOpacity style={styles.top_icon_content} onPress={() => router.back()}>
-                    <Icon name="chevron-left" size={25} color="red"/>
-                    <ThemedText type={'bar'}>Back</ThemedText>
-                </TouchableOpacity>
-            </View>
-            <ScrollView contentContainerStyle={{ paddingBottom: 5 }} showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
-        <View>
-
-            <View style={styles.iconContainer}>
-                <Ionicons name="barbell" size={48} color="white" />
-            </View>
-
-            <Text style={styles.label}>Name</Text>
-            <TextInput style={styles.input} value={name} onChangeText={setName} placeholder='Enter a name' />
-
-            <Text style={styles.label}>Type</Text>
-            <TouchableOpacity style={styles.selectBox} onPress={() => setTypeModalVisible(true)}>
-                <Text style={styles.selectText}>{type}</Text>
-                <Ionicons name="chevron-up" size={20} color="#aaa" />
-            </TouchableOpacity>
-
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={typeModalVisible}
-                onRequestClose={() => setTypeModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.pickerWrapper}>
-                        <TouchableOpacity onPress={() => setTypeModalVisible(false)} style={styles.modalCloseButton}>
-                            <Text style={styles.modalCloseText}>Done</Text>
-                        </TouchableOpacity>
-                        <Picker
-                            selectedValue={type}
-                            onValueChange={(itemValue) => setType(itemValue)}
-                            style={styles.picker}
-                            dropdownIconColor="#fff"
-                        >
-                            <Picker.Item label="Strength" value="Strength" />
-                            <Picker.Item label="Cardio" value="Cardio" />
-                            <Picker.Item label="Yoga" value="Yoga" />
-                            <Picker.Item label="HIIT" value="HIIT" />
-                            <Picker.Item label="Pilates" value="Pilates" />
-                        </Picker>
-
-                    </View>
+        <View style={styles.container}>
+            <Animated.View style={[styles.header]}>
+                <BlurView intensity={80} style={StyleSheet.absoluteFill} />
+                <View style={styles.headerContent}>
+                    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+                        <Ionicons name="chevron-back" size={24} color="#fff" />
+                    </TouchableOpacity>
+                    <Text style={styles.headerTitle}>Edit Exercise</Text>
+                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                        <Text style={styles.saveButtonText}>Save</Text>
+                    </TouchableOpacity>
                 </View>
-            </Modal>
+            </Animated.View>
 
-            <Text style={styles.label}>Duration</Text>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <TextInput style={[styles.input, styles.timeInput]} keyboardType="numeric" value={hours} onChangeText={setHours} placeholder="hh" />
-                <TextInput style={[styles.input, styles.timeInput]} keyboardType="numeric" value={minutes} onChangeText={setMinutes} placeholder="mm" />
-                <TextInput style={[styles.input, styles.timeInput]} keyboardType="numeric" value={seconds} onChangeText={setSeconds} placeholder="ss" />
-            </View>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={styles.keyboardAvoid}
+            >
+                <Animated.ScrollView
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
+                    showsVerticalScrollIndicator={false}
+                    onScroll={Animated.event(
+                        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+                        { useNativeDriver: true }
+                    )}
+                    scrollEventThrottle={16}
+                >
+                    <View style={styles.content}>
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Exercise Name</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={exercise.name}
+                                onChangeText={handleNameChange}
+                                placeholder="Enter exercise name"
+                                placeholderTextColor="rgba(255,255,255,0.5)"
+                            />
+                        </View>
 
-            <Text style={styles.label}>Sets</Text>
-            <TextInput style={styles.input} keyboardType="numeric" value={sets} onChangeText={setSets} placeholder="Sets" />
+                        <View style={styles.inputGroup}>
+                            <Text style={styles.label}>Estimated Time (minutes)</Text>
+                            <TextInput
+                                style={styles.input}
+                                value={exercise.estimatedTime?.toString()}
+                                onChangeText={handleTimeChange}
+                                keyboardType="numeric"
+                                placeholder="5"
+                                placeholderTextColor="rgba(255,255,255,0.5)"
+                            />
+                        </View>
 
-            <Text style={styles.label}>Rest Time</Text>
-            <TextInput style={styles.input} keyboardType="numeric" value={restTime} onChangeText={setRestTime} placeholder='ss' />
+                        <View style={styles.setsContainer}>
+                            <View style={styles.setsHeader}>
+                                <Text style={styles.setsTitle}>Sets</Text>
+                                <TouchableOpacity style={styles.addSetButton} onPress={addSet}>
+                                    <Ionicons name="add-circle-outline" size={24} color="#007AFF" />
+                                </TouchableOpacity>
+                            </View>
 
-            <Text style={styles.label}>Notes</Text>
-            <TextInput
-                style={[styles.input, { height: 60 }]
-                } value={notes} onChangeText={setNotes} multiline
-                placeholder='Enter notes here'
-            />
-            <TouchableOpacity style={styles.deleteButton} onPress={handleSave}>
-                <Text style={styles.deleteText}>Save changes</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-                <Text style={styles.deleteText}>Delete Exercise</Text>
-            </TouchableOpacity>
+                            {exercise.sets.map((set, index) => (
+                                <View key={index} style={styles.setCard}>
+                                    <LinearGradient
+                                        colors={['#2A2A2A', '#1A1A1A']}
+                                        style={styles.setGradient}
+                                    >
+                                        <View style={styles.setHeader}>
+                                            <Text style={styles.setNumber}>Set {index + 1}</Text>
+                                            {exercise.sets.length > 1 && (
+                                                <TouchableOpacity
+                                                    style={styles.removeSetButton}
+                                                    onPress={() => removeSet(index)}
+                                                >
+                                                    <Ionicons name="trash-outline" size={20} color="#FF3B30" />
+                                                </TouchableOpacity>
+                                            )}
+                                        </View>
 
+                                        <View style={styles.setInputs}>
+                                            <View style={styles.inputWrapper}>
+                                                <Text style={styles.inputLabel}>Reps</Text>
+                                                <TextInput
+                                                    style={styles.setInput}
+                                                    value={set.reps.toString()}
+                                                    onChangeText={(value) => handleSetChange(index, 'reps', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="0"
+                                                    placeholderTextColor="rgba(255,255,255,0.5)"
+                                                />
+                                            </View>
+
+                                            <View style={styles.inputWrapper}>
+                                                <Text style={styles.inputLabel}>Weight (kg)</Text>
+                                                <TextInput
+                                                    style={styles.setInput}
+                                                    value={set.weight.toString()}
+                                                    onChangeText={(value) => handleSetChange(index, 'weight', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="0"
+                                                    placeholderTextColor="rgba(255,255,255,0.5)"
+                                                />
+                                            </View>
+
+                                            <View style={styles.inputWrapper}>
+                                                <Text style={styles.inputLabel}>Rest (sec)</Text>
+                                                <TextInput
+                                                    style={styles.setInput}
+                                                    value={set.restTime?.toString()}
+                                                    onChangeText={(value) => handleSetChange(index, 'restTime', value)}
+                                                    keyboardType="numeric"
+                                                    placeholder="60"
+                                                    placeholderTextColor="rgba(255,255,255,0.5)"
+                                                />
+                                            </View>
+                                        </View>
+                                    </LinearGradient>
+                                </View>
+                            ))}
+                        </View>
+                    </View>
+                </Animated.ScrollView>
+            </KeyboardAvoidingView>
         </View>
-</ScrollView>
-        </KeyboardAvoidingView>
     );
 };
 
@@ -129,92 +271,144 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#000',
+    },
+    loadingContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        color: '#fff',
+        fontSize: 18,
+    },
+    header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        height: HEADER_HEIGHT,
+        zIndex: 1000,
+        paddingTop: Platform.OS === 'ios' ? 50 : StatusBar.currentHeight,
+    },
+    headerContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 20,
+        height: 50,
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    headerTitle: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    saveButton: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
+        backgroundColor: '#007AFF',
+    },
+    saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    keyboardAvoid: {
+        flex: 1,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        paddingTop: HEADER_HEIGHT,
+        paddingBottom: 40,
+    },
+    content: {
         padding: 20,
     },
-    top_icon_container: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        // @ts-ignore
-        marginTop: StatusBar.currentHeight + 30,
-        alignItems: 'center',
-    },
-    top_icon_content: {
-        flexDirection: 'row',
-    },
-    top_icon_text: {
-        fontSize: 20,
-        color: 'red'
-
-    },
-    iconContainer: {
-        alignItems: 'center',
-        marginVertical: 20,
+    inputGroup: {
+        marginBottom: 24,
     },
     label: {
-        color: '#aaa',
-        marginTop: 10,
-        marginBottom: 5,
+        color: '#fff',
         fontSize: 16,
+        marginBottom: 8,
     },
     input: {
-        backgroundColor: '#1c1c1e',
-        color: '#fff',
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-    },
-    selectBox: {
-        flexDirection: 'row',
-        backgroundColor: '#1c1c1e',
-        borderRadius: 8,
-        padding: 12,
-        alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    selectText: {
-        color: '#fff',
-        fontSize: 16,
-    },
-    deleteButton: {
-        marginTop: 30,
-        backgroundColor: 'red',
+        backgroundColor: '#1A1A1A',
         borderRadius: 12,
-        paddingVertical: 16,
-        alignItems: 'center',
+        padding: 16,
+        color: '#fff',
+        fontSize: 16,
     },
-    deleteText: {
+    setsContainer: {
+        marginTop: 8,
+    },
+    setsHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    setsTitle: {
+        color: '#fff',
+        fontSize: 20,
+        fontWeight: '600',
+    },
+    addSetButton: {
+        padding: 8,
+    },
+    setCard: {
+        marginBottom: 16,
+        borderRadius: 16,
+        overflow: 'hidden',
+    },
+    setGradient: {
+        padding: 16,
+    },
+    setHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    setNumber: {
         color: '#fff',
         fontSize: 18,
         fontWeight: '600',
     },
-    picker: {
-        color: '#fff',
-        backgroundColor: '#1c1c1e',
+    removeSetButton: {
+        padding: 8,
     },
-    timeInput: {
+    setInputs: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    inputWrapper: {
         flex: 1,
         marginHorizontal: 4,
     },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    inputLabel: {
+        color: '#fff',
+        fontSize: 14,
+        marginBottom: 8,
+        opacity: 0.7,
     },
-    pickerWrapper: {
-        backgroundColor: '#1c1c1e',
-        borderTopLeftRadius: 40,
-        borderTopRightRadius: 40,
-        padding: 20,
-    },
-    modalCloseButton: {
-        alignItems: 'flex-start',
-        paddingVertical: 0,
-    },
-    modalCloseText: {
-        color: '#007aff',
-        fontSize: 18,
-        fontWeight: '600',
+    setInput: {
+        backgroundColor: 'rgba(255,255,255,0.1)',
+        borderRadius: 8,
+        padding: 12,
+        color: '#fff',
+        fontSize: 16,
+        textAlign: 'center',
     },
 });
 
-export default ExerciseEditScreen;
+export default EditExerciseScreen;

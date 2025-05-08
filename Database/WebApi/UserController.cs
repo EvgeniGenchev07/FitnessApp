@@ -122,6 +122,7 @@ namespace WebApi
         {
             try
             {
+                Console.WriteLine(data["email"]);
                 User user = await _userContext.ReadAsync(data["email"].ToString(),true);
                 
                 if (user == null) return NotFound("User not found");
@@ -157,7 +158,12 @@ namespace WebApi
                             useNavigationalProperties = true;
                             break;
                         case "workouts":
-                            user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
+                            var workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
+                            if (workouts != null)
+                            {
+                                user.Workouts.Clear();
+                                user.Workouts.AddRange(workouts);
+                            }
                             useNavigationalProperties = true;
                             break;
                         case "measurements":

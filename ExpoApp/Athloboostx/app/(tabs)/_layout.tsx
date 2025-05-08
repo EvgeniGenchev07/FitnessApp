@@ -4,15 +4,17 @@ import { Platform } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { HapticTab } from '@/components/HapticTab';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+
 export default function TabLayout() {
-    const colorScheme = useColorScheme();
+    const { colors } = useTheme();
+    const { t } = useLanguage();
 
     return (
         <Tabs
             screenOptions={{
-                tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+                tabBarActiveTintColor: colors.tint,
                 headerShown: false,
                 tabBarButton: HapticTab,
                 tabBarItemStyle: {
@@ -24,7 +26,7 @@ export default function TabLayout() {
                         position: 'absolute',
                         elevation: 30,
                         shadowOpacity: 1,
-                        shadowColor: Colors[colorScheme ?? 'light'].shadow,
+                        shadowColor: colors.shadow,
                         outline: 'none',
                         width: '90%',
                         marginLeft: '5%',
@@ -32,14 +34,14 @@ export default function TabLayout() {
                         borderRadius: 50,
                         bottom: 20,
                         borderTopWidth: 0,
-                        backgroundColor: Colors[colorScheme ?? 'light'].background,
+                        backgroundColor: colors.background,
                         paddingHorizontal: 15,
                     },
                     default: {
                         position: 'absolute',
                         elevation: 0,
                         shadowOpacity: 5,
-                        shadowColor: Colors[colorScheme ?? 'light'].shadow,
+                        shadowColor: colors.shadow,
                         outline: 'none',
                         marginLeft: '5%',
                         marginRight: 'auto',
@@ -47,7 +49,7 @@ export default function TabLayout() {
                         borderRadius: 50,
                         bottom: 20,
                         borderTopWidth: 0,
-                        backgroundColor: Colors[colorScheme ?? 'light'].background,
+                        backgroundColor: colors.background,
                         paddingHorizontal: 15,
                     },
                 }),
@@ -56,14 +58,14 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Home',
+                    title: t('tabs.home'),
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="square.grid.2x2" color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="explore"
                 options={{
-                    title: 'Explore',
+                    title: t('tabs.explore'),
                     tabBarIcon: ({ color }) => <MaterialIcons name="article" size={28} color={color} />,
                 }}
             />
@@ -73,32 +75,31 @@ export default function TabLayout() {
                     tabBarItemStyle: {
                         marginBottom: 40,
                         borderRadius: 30,
-                        backgroundColor: Colors[colorScheme ?? 'light'].background,
+                        backgroundColor: colors.background,
                         height: 60,
                         width: 60,
                         top: -20,
                         zIndex: 2,
                         elevation: 20,
                     },
-                    title: 'Create Post',
+                    title: t('tabs.createPost'),
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="plus" color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="nutritions"
                 options={{
-                    title: 'Nutrition',
+                    title: t('tabs.nutrition'),
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="n.circle.fill" color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: 'Profile',
+                    title: t('tabs.profile'),
                     tabBarIcon: ({ color }) => <IconSymbol size={28} name="person" color={color} />,
                 }}
             />
         </Tabs>
-
     );
 }

@@ -23,8 +23,7 @@ public class WorkoutContext : IDatabase<Workout, int>
         IQueryable<Workout> query = _dbContext.Workouts;
         if (useNavigationalProperties)
             query = query
-                .Include(w => w.WorkoutExercises)
-                .ThenInclude(we => we.Exercise);
+                .Include(w => w.Exercises);
         if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
         Workout workout = await query.FirstOrDefaultAsync(w => w.Id == key);
         return workout;
@@ -33,10 +32,10 @@ public class WorkoutContext : IDatabase<Workout, int>
     public async Task UpdateAsync(Workout entity, bool useNavigationalProperties)
     {
         Workout workoutFromDb = await ReadAsync(entity.Id, useNavigationalProperties);
-        workoutFromDb.Date = workoutFromDb.Date;
+        workoutFromDb.Title = workoutFromDb.Title;
         if (useNavigationalProperties)
         {
-            workoutFromDb.WorkoutExercises = workoutFromDb.WorkoutExercises;
+            workoutFromDb.Exercises = workoutFromDb.Exercises;
         }
 
         await _dbContext.SaveChangesAsync();
@@ -47,8 +46,8 @@ public class WorkoutContext : IDatabase<Workout, int>
         Workout workout = await ReadAsync(key, true);
         if (workout != null)
         {
-            _dbContext.Sets.RemoveRange(workout.WorkoutExercises.SelectMany(we => we.Sets));
-            _dbContext.WorkoutExercises.RemoveRange(workout.WorkoutExercises);
+            _dbContext.Sets.RemoveRange(workout.Exercises.SelectMany(we => we.Sets));
+            _dbContext.Exercises.RemoveRange(workout.Exercises);
             _dbContext.Workouts.Remove(workout);
             await _dbContext.SaveChangesAsync();
         }

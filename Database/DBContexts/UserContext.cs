@@ -44,6 +44,8 @@ public class UserContext : IDatabase<User, string>
     public async Task UpdateAsync(User entity, bool navigationalProperties)
     {
         User userFromDb = await ReadAsync(entity.Email, navigationalProperties, false);
+        if (userFromDb == null) return;
+
         userFromDb.UserName = entity.UserName;
         userFromDb.Email = entity.Email;
         userFromDb.Weight = entity.Weight;
@@ -57,23 +59,75 @@ public class UserContext : IDatabase<User, string>
         userFromDb.Followers = entity.Followers;
         userFromDb.Following = entity.Following;
         userFromDb.Bio = entity.Bio;
+
         if (navigationalProperties)
         {
-            userFromDb.Meals = entity.Meals;
-            userFromDb.Measurements = entity.Measurements;
-            userFromDb.Schedule = entity.Schedule;
-            userFromDb.Workouts = entity.Workouts;
-            userFromDb.Foods = entity.Foods;
-            userFromDb.Exercises = entity.Exercises;
-            userFromDb.Followers = entity.Followers;
-            userFromDb.Following = entity.Following;
-            userFromDb.Posts = entity.Posts;
+            // Clear existing collections before updating
+            if (entity.Meals != null)
+            {
+                userFromDb.Meals.Clear();
+                userFromDb.Meals = entity.Meals;
+            }
+            if (entity.Measurements != null)
+            {
+                userFromDb.Measurements.Clear();
+                userFromDb.Measurements = entity.Measurements;
+            }
+            if (entity.Schedule != null)
+            {
+                userFromDb.Schedule = entity.Schedule;
+            }
+            if (entity.Workouts != null)
+            {
+                userFromDb.Workouts.Clear();
+                userFromDb.Workouts = entity.Workouts;
+            }
+            if (entity.Foods != null)
+            {
+                userFromDb.Foods.Clear();
+                userFromDb.Foods = entity.Foods;
+            }
+            if (entity.Exercises != null)
+            {
+                userFromDb.Exercises.Clear();
+                userFromDb.Exercises = entity.Exercises;
+            }
+            if (entity.Followers != null)
+            {
+                userFromDb.Followers.Clear();
+                userFromDb.Followers = entity.Followers;
+            }
+            if (entity.Following != null)
+            {
+                userFromDb.Following.Clear();
+                userFromDb.Following = entity.Following;
+            }
+            if (entity.Posts != null)
+            {
+                userFromDb.Posts.Clear();
+                userFromDb.Posts = entity.Posts;
+            }
         }
+
         if (entity.Photo != null)
         {
             userFromDb.Photo = entity.Photo;
         }
-        await _dbContext.SaveChangesAsync();
+
+        try
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            // If we get a concurrency exception, reload the entity and try again
+            _dbContext.Entry(userFromDb).State = EntityState.Detached;
+            userFromDb = await ReadAsync(entity.Email, navigationalProperties, false);
+            if (userFromDb != null)
+            {
+                await UpdateAsync(entity, navigationalProperties);
+            }
+        }
     }
 
     public async Task DeleteAsync(string key)

@@ -22,6 +22,8 @@ namespace Models
         [Required]
         [Range(1, 255)]
         public byte Reps { get; set; }
+        [Required]
+        public int RestTime { get; set; }
 
     }
 }

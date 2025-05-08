@@ -1,27 +1,47 @@
 import React, {useEffect, useState} from 'react';
 import {
     View,
-    Text,
     StyleSheet,
     Image,
     ScrollView,
     TouchableOpacity,
-    ImageBackground,
-    useColorScheme
+    ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
-import {Colors} from "@/constants/Colors";
 import {ThemedText} from "@/components/ThemedText";
 import {router} from "expo-router";
-import * as SecureStore from 'expo-secure-store';
-import {GetProfile, GetWorkouts} from "@/serviceLayer/managerHandler";
-import {HttpGetUser} from "@/serviceLayer/httpManager";
+import {GetProfile} from "@/serviceLayer/managerHandler";
+import {LinearGradient} from 'expo-linear-gradient';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+interface Workout {
+    id: string;
+    title: string;
+    exercises: Array<{
+        name: string;
+        sets: number;
+        reps: number;
+        weight: number;
+    }>;
+    bgColor: string;
+}
+
+interface UserProfile {
+    userName: string;
+    photo: string;
+    workouts: Workout[];
+    schedule:null
+}
 
 // @ts-ignore
 const HorizontalCalendar = ({ onDateSelect }) => {
     const [selectedDate, setSelectedDate] = useState(moment());
+    const { colors } = useTheme();
+    const { t } = useLanguage();
 
     const generateDates = () => {
         let dates = [];
@@ -36,6 +56,7 @@ const HorizontalCalendar = ({ onDateSelect }) => {
     const handleDatePress = (date) => {
         setSelectedDate(date);
         if (onDateSelect) onDateSelect(date.format('YYYY-MM-DD'));
+
     };
 
     return (
@@ -45,15 +66,19 @@ const HorizontalCalendar = ({ onDateSelect }) => {
                 return (
                     <TouchableOpacity
                         key={index}
-                        style={[styles.dateItem, isSelected && styles.selectedDateItem]}
+                        style={[
+                            styles.dateItem, 
+                            isSelected && styles.selectedDateItem,
+                            { backgroundColor: isSelected ? colors.tint : colors.card }
+                        ]}
                         onPress={() => handleDatePress(date)}
                     >
-                        <Text style={[styles.dayText, isSelected && styles.selectedDayText]}>
+                        <ThemedText style={[styles.dayText, isSelected && styles.selectedDayText]}>
                             {date.format('ddd')}
-                        </Text>
-                        <Text style={[styles.dateText, isSelected && styles.selectedDateText]}>
+                        </ThemedText>
+                        <ThemedText style={[styles.dateText, isSelected && styles.selectedDateText]}>
                             {date.format('D')}
-                        </Text>
+                        </ThemedText>
                     </TouchableOpacity>
                 );
             })}
@@ -61,265 +86,332 @@ const HorizontalCalendar = ({ onDateSelect }) => {
     );
 };
 
-
 export default function HomeScreen() {
-    const [userData, setUserData] = useState({});
-    const [username, setUsernameData] = useState('');
-    const [photo,setPhoto] = useState(require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
-    const [todayWorkout, setTodayWorkout] = useState([{}]);
-    const [workouts, setWorkouts] = useState([]);
-    useEffect(() => {
-        const loadUser = async () => {
-                const user = await GetProfile();
-                setUserData(user);
-                setUsernameData(user.userName);
-                if(user.photo) setPhoto({ uri: convertToImage(user.photo) });
-                setTodayWorkout([{ title: 'Pogo Hops', sets: '20 sets', color: '#B892F0', image: require('../../assets/images/app-icon.png') },
-                    { title: 'Bodyweight Squat', sets: '30 sets', color: '#F49C5A', image: require('../../assets/images/app-icon.png') },
-                    { title: 'Lunges', sets: '15 sets', color: '#D69CF9', image: require('../../assets/images/app-icon.png') }]);
-                if(user.workouts) setWorkouts(user.workouts);
-        };
+    const [userData, setUserData] = useState<UserProfile | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [selectedDate, setSelectedDate] = useState('');
+    const { colors } = useTheme();
+    const { t } = useLanguage();
 
-        loadUser();
+    useEffect(() => {
+        loadUserData();
     }, []);
 
-    const [selectedDate, setSelectedDate] = useState('');
-    const colorScheme = useColorScheme();
-    const colors = colorScheme === "dark" ? Colors.dark : Colors.light;
-    // @ts-ignore
-    const handleDateSelect = (date) => {
-        console.log('Selected date:', date);
+    const loadUserData = async () => {
+        try {
+            setLoading(true);
+            let profile = await AsyncStorage.getItem('profile');
+            let workouts = await AsyncStorage.getItem('workouts');
+            let schedule = await AsyncStorage.getItem('schedule');
+            //@ts-ignore
+                profile = JSON.parse(profile);
+            //@ts-ignore
+                workouts = JSON.parse(workouts);
+            //@ts-ignore
+                schedule = JSON.parse(schedule);
+            //@ts-ignore
+            setUserData({...profile,workouts: workouts,schedule:schedule});
+            console.log(userData);
+        } catch (error) {
+            console.error('Error loading user data:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDateSelect = (date: string) => {
         setSelectedDate(date);
     };
 
-    function convertToImage(photo: any) {
-        const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
-        const base64String = btoa(binaryString);
-        const imageUri = `data:image/jpeg;base64,${base64String}`;
-        return imageUri;
+    const convertToImage = (photo: any) => {
+        if (!photo) {
+            return null;
+        }
+        try {
+            if (typeof photo === 'string') {
+                if (photo.startsWith('data:image')) {
+                    return photo;
+                }
+                return `data:image/jpeg;base64,${photo}`;
+            }
+            if (Array.isArray(photo)) {
+                const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
+                const base64String = btoa(binaryString);
+                return `data:image/jpeg;base64,${base64String}`;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error converting photo:', error);
+            return null;
+        }
+    };
+
+    if (loading) {
+        return (
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
+                <ActivityIndicator size="large" color={colors.tint} />
+            </View>
+        );
     }
 
     return (
-        <SafeAreaView style={[styles.container,{backgroundColor:colors.background}]}>
-            {/* Header */}
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <View style={styles.header}>
-                <Image source={photo} style={[styles.profilePic]} />
+                <Image 
+                    source={userData?.photo ? { uri: convertToImage(userData.photo) } : require('../../assets/images/man-avatar-icon-free-vector-3688420316.jpg')} 
+                    style={styles.profilePic} 
+                />
             </View>
             <ScrollView showsVerticalScrollIndicator={false}>
+                <ThemedText style={styles.welcome}>{`${t('home.welcome')} ${userData?.userName || 'User'}`}</ThemedText>
+                <ThemedText style={styles.subtitle}>{t('home.welcomeBack')}</ThemedText>
 
-            <ThemedText style={styles.welcome}>Hello {username},</ThemedText>
-            <Text style={styles.subtitle}>Welcome back.</Text>
+                <TouchableOpacity style={styles.starterBox}>
+                    <LinearGradient
+                        colors={[colors.tint, colors.tint + '80']}
+                        style={styles.starterGradient}
+                    >
+                        <View style={styles.iconRow}>
+                            <ThemedText style={styles.starterText}>{t('home.startWorkout')}</ThemedText>
+                            <TouchableOpacity style={styles.starterIcon}>
+                                <Ionicons name="barbell" size={24} color="white" />
+                            </TouchableOpacity>
+                        </View>
+                    </LinearGradient>
+                </TouchableOpacity>
 
-            {/* Workout Starter */}
-            <View style={styles.starterBox}>
-                <View style={styles.iconRow}>
-                <Text style={styles.starterText}>Start your workout, now!</Text>
-                    <TouchableOpacity style={styles.starterIcon}>
-                        <Ionicons name="barbell" size={24} color="white" />
+                <HorizontalCalendar onDateSelect={handleDateSelect} />
+
+                <View style={styles.sectionHeader}>
+                    <ThemedText style={styles.sectionTitle}>{t('home.todaysWorkout')}</ThemedText>
+                    <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
+                        <ThemedText style={styles.viewAll}>{t('common.viewAll')}</ThemedText>
                     </TouchableOpacity>
                 </View>
-            </View>
-            <HorizontalCalendar onDateSelect={handleDateSelect} />
 
-            {/* Today's Workout */}
-            <View style={styles.sectionHeader}>
-                <ThemedText style={styles.sectionTitle}>Today's Workout</ThemedText>
-                <Text style={styles.viewAll}>view all</Text>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {todayWorkout.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={()=>router.push('/manageWorkout')}>
-                    <View style={[styles.card, { backgroundColor: item.color }]}>
-                        <Image source={item.image} style={styles.cardImage} resizeMode="contain" />
-                        <Text style={styles.cardTitle}>{item.title}</Text>
-                        <Text style={styles.cardSubtitle}>{item.sets}</Text>
-                    </View>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {userData?.workouts?.map((workout, index) => (
+                        <TouchableOpacity 
+                            key={index} 
+                            onPress={() => router.push({
+                                pathname: '/manageWorkout',
+                                params: { workout: JSON.stringify(workout) }
+                            })}
+                        >
+                            { /*[workout.bgColor, `${workout.bgColor}80`]*/}
+                            <LinearGradient
+                                colors={['#000','#fff']}
+                                style={styles.card}
+                            >
+                                <ThemedText style={styles.cardTitle}>{workout.title}</ThemedText>
+                                <ThemedText style={styles.cardSubtitle}>
+                                    {t('home.exercises', { count: workout?.exercises?.length })}
+                                </ThemedText>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    ))}
+                    <TouchableOpacity 
+                        onPress={() => router.push({
+                            pathname: '/manageWorkout',
+                            params: { edit: 'true' }
+                        })}
+                    >
+                        <View style={[styles.plusCard, { backgroundColor: colors.card }]}>
+                            <ThemedText style={styles.plusIcon}>+</ThemedText>
+                        </View>
                     </TouchableOpacity>
-                ))}
-                <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
-                    <View style={styles.plusCard}>
-                        <Text style={styles.plusIcon}>+</Text>
-                    </View>
-                </TouchableOpacity>
-            </ScrollView>
+                </ScrollView>
 
-            {/* Training Path */}
-            <View style={styles.sectionHeader}>
-                <ThemedText style={styles.sectionTitle}>Training Path</ThemedText>
-                <Text style={styles.viewAll}>view all</Text>
-            </View>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginBottom: 48}}>
-                {workouts.map((item, index) => (
-                    <View key={index} style={[styles.cardSmall, { backgroundColor: item.bgColor }]}>
-                        <Image source={item.image} style={styles.cardSmallImage} resizeMode="contain" />
-                        <Text style={styles.cardSmallTitle}>{item.title}</Text>
-                    </View>
-                ))}
-                <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
-                    <View style={styles.plusCard}>
-                        <Text style={styles.plusIcon}>+</Text>
-                    </View>
-                </TouchableOpacity>
-            </ScrollView>
-            </ScrollView>
+                <View style={styles.sectionHeader}>
+                    <ThemedText style={styles.sectionTitle}>{t('home.trainingPath')}</ThemedText>
+                    <TouchableOpacity onPress={() => router.push('/manageWorkout')}>
+                        <ThemedText style={styles.viewAll}>{t('common.viewAll')}</ThemedText>
+                    </TouchableOpacity>
+                </View>
 
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{marginBottom: 48}}>
+                    {userData?.workouts?.map((workout, index) => (
+                        <TouchableOpacity 
+                            key={index} 
+                            onPress={() => router.push({
+                                pathname: '/manageWorkout',
+                                params: { workout: JSON.stringify(workout) }
+                            })}
+                        >
+                            <LinearGradient
+                                colors={[workout.bgColor, `${workout.bgColor}80`]}
+                                style={styles.cardSmall}
+                            >
+                                <Image 
+                                    source={workout.image ? { uri: workout.image } : require('../../assets/images/app-icon.png')} 
+                                    style={styles.cardSmallImage} 
+                                    resizeMode="contain" 
+                                />
+                                <ThemedText style={styles.cardSmallTitle}>{workout.title}</ThemedText>
+                            </LinearGradient>
+                        </TouchableOpacity>
+                    ))}
+                    <TouchableOpacity 
+                        onPress={() => router.push({
+                            pathname: '/manageWorkout',
+                            params: { edit: 'true' }
+                        })}
+                    >
+                        <View style={[styles.plusCard, { backgroundColor: colors.card }]}>
+                            <ThemedText style={styles.plusIcon}>+</ThemedText>
+                        </View>
+                    </TouchableOpacity>
+                </ScrollView>
+            </ScrollView>
         </SafeAreaView>
     );
 }
 
-
 const styles = StyleSheet.create({
-    scrollContainer: {
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-    },
-    dateItem: {
-        width: 60,
-        height: 70,
-        borderRadius: 12,
-        backgroundColor: '#eee',
-        marginRight: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    selectedDateItem: {
-        backgroundColor: '#6B4EFF',
-    },
-    dayText: {
-        fontSize: 14,
-        color: '#444',
-    },
-    dateText: {
-        fontSize: 18,
-        fontWeight: '600',
-        color: '#000',
-    },
-    selectedDayText: {
-        color: '#fff',
-    },
-    selectedDateText: {
-        color: '#fff',
-    },
-    plusCard: {
-        width: 140,
-        backgroundColor: '#989898',
-        opacity: 0.4,
-        borderWidth: 1,
-        flex: 1,
-        borderColor: '#f6f6f6',
-        height: 160,
-        borderRadius: 15,
-        marginRight: 15,
-    },
-
-    plusIcon: {
-        fontSize: 80,
-        marginTop: '30%',
-        textAlign: 'center',
-        color: 'white',
-    },
     container: {
         flex: 1,
-        backgroundColor: '#F2F3FA',
-        paddingHorizontal: 10,
     },
     header: {
-        marginTop: 10,
-        paddingBottom: 10,
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: 'center',
+        padding: 20,
+        alignItems: 'flex-end',
     },
     profilePic: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: '#ccc',
     },
     welcome: {
         fontSize: 24,
-        fontWeight: '600',
-        marginTop: 10,
+        fontWeight: 'bold',
+        marginLeft: 20,
     },
     subtitle: {
-        color: '#777',
+        fontSize: 16,
+        marginLeft: 20,
         marginBottom: 20,
     },
     starterBox: {
-        backgroundColor: '#6B4EFF',
+        margin: 20,
         borderRadius: 15,
-        margin: '2%',
-        padding: 20,
+        overflow: 'hidden',
     },
-    starterText: {
-        color: '#fff',
-        fontSize: 16,
-        alignSelf: 'center',
+    starterGradient: {
+        padding: 20,
     },
     iconRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    starterText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
     },
     starterIcon: {
-        backgroundColor: '#9C89FF',
-
-        borderRadius: 10,
-        padding: 15,
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    scrollContainer: {
+        paddingHorizontal: 20,
+    },
+    dateItem: {
+        width: 60,
+        height: 80,
+        borderRadius: 15,
+        marginRight: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    selectedDateItem: {
+        borderWidth: 2,
+    },
+    dayText: {
+        fontSize: 14,
+        marginBottom: 5,
+    },
+    dateText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+    },
+    selectedDayText: {
+        color: 'white',
+    },
+    selectedDateText: {
+        color: 'white',
     },
     sectionHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: 30,
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        marginTop: 20,
         marginBottom: 10,
     },
     sectionTitle: {
-        fontSize: 18,
-        fontWeight: '600',
+        fontSize: 20,
+        fontWeight: 'bold',
     },
     viewAll: {
         fontSize: 14,
-        color: '#6B4EFF',
+        opacity: 0.7,
     },
     card: {
-        width: 140,
-        height: 200,
+        width: 200,
+        height: 250,
         borderRadius: 15,
+        marginLeft: 20,
         padding: 15,
-        marginRight: 15,
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
     },
     cardImage: {
-        position: 'absolute',
-        top: 10,
         width: '100%',
         height: 120,
+        borderRadius: 10,
     },
     cardTitle: {
-        fontWeight: '700',
-        fontSize: 16,
-        color: '#fff',
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
     },
     cardSubtitle: {
-        color: '#fff',
-        fontSize: 12,
+        color: 'white',
+        opacity: 0.8,
+    },
+    plusCard: {
+        width: 200,
+        height: 250,
+        borderRadius: 15,
+        marginLeft: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    plusIcon: {
+        fontSize: 40,
+        fontWeight: 'bold',
     },
     cardSmall: {
-        width: 140,
-        height: 160,
+        width: 150,
+        height: 200,
         borderRadius: 15,
+        marginLeft: 20,
         padding: 15,
-        marginRight: 15,
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
     },
     cardSmallImage: {
-        position: 'absolute',
-        top: 10,
         width: '100%',
         height: 100,
+        borderRadius: 10,
     },
     cardSmallTitle: {
-        fontWeight: '700',
+        color: 'white',
         fontSize: 16,
-        color: '#fff',
+        fontWeight: 'bold',
+        marginTop: 10,
     },
 });

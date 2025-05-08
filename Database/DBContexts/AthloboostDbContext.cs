@@ -7,7 +7,6 @@ namespace DBContexts
     {
         internal DbSet<User> Users { get; set; }
         internal DbSet<Workout> Workouts { get; set; }
-        internal DbSet<WorkoutExercise> WorkoutExercises { get; set; }
         internal DbSet<Set> Sets { get; set; }
         internal DbSet<Measurement> Measurements { get; set; }
         internal DbSet<Meal> Meals { get; set; }
@@ -43,11 +42,6 @@ namespace DBContexts
                 .HasForeignKey<Meal>(m => m.FoodId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<WorkoutExercise>()
-                .HasOne(we => we.Exercise)
-                .WithOne()
-                .HasForeignKey<WorkoutExercise>(we => we.ExerciseId)
-                .OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Comment>().HasOne<User>(c => c.User).WithMany();
             base.OnModelCreating(modelBuilder);
         }

@@ -1,57 +1,146 @@
-import React, { useState } from 'react';
-import { View, Text, Image, Modal, TextInput, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, Modal, TextInput, StyleSheet, TouchableOpacity, ScrollView, StatusBar, FlatList, Alert, ActivityIndicator } from 'react-native';
 import { ProgressBar } from 'react-native-paper';
 import Slider from '@react-native-community/slider';
-import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { ThemedView } from "@/components/ThemedView";
 import { ThemedText } from "@/components/ThemedText";
 import { Picker } from '@react-native-picker/picker';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import { API_URL } from '@/config';
+import { getUserId } from '@/utils/auth';
+import moment from 'moment';
 
-const ProfileHeader = () => {
+interface Food {
+    id: number;
+    name: string;
+    calories: number;
+    carbs: number;
+    fats: number;
+    proteins: number;
+}
+
+interface Meal {
+    id: number;
+    date: string;
+    type: number;
+    weight: number;
+    food: Food;
+}
+
+interface ProfileData {
+    name: string;
+    weight: number;
+    goalWeight: number;
+    waterIntake: number;
+    waterGoal: number;
+    dailyCalorieGoal: number;
+}
+
+const STATUS_BAR_HEIGHT = 44; // Default iOS status bar height
+
+const ProfileHeader = ({ name }: { name: string }) => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
+
     return (
         <View style={styles.profileHeader}>
             <Image
                 source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
-                style={styles.profilePic}
+                style={[styles.profilePic, { borderColor: colors.primary }]}
             />
             <View style={styles.profileInfo}>
-                <ThemedText type={'subtitle'}>MAXIMUS IRON</ThemedText>
-                <ThemedText type={'default'} style={styles.membershipDate}>Elite Member since January 2021</ThemedText>
+                <ThemedText type={'subtitle'}>{name}</ThemedText>
+                <ThemedText type={'default'} style={styles.membershipDate}>
+                    {t('nutrition.eliteMember')} {moment().format('MMMM YYYY')}
+                </ThemedText>
             </View>
         </View>
     );
 };
 
-const EditProfileModal = ({ isVisible, closeModal, saveChanges }) => {
-    const [name, setName] = useState("MAXIMUS IRON");
-    const [weight, setWeight] = useState("94.5");
-    const [goalWeight, setGoalWeight] = useState("88");
+const EditProfileModal = ({ isVisible, closeModal, saveChanges, initialData }: { 
+    isVisible: boolean; 
+    closeModal: () => void; 
+    saveChanges: (data: Partial<ProfileData>) => void;
+    initialData: ProfileData;
+}) => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
+    const [weight, setWeight] = useState(initialData.weight.toString());
+    const [goalWeight, setGoalWeight] = useState(initialData.goalWeight.toString());
+    const [waterGoal, setWaterGoal] = useState(initialData.waterGoal.toString());
+    const [dailyCalorieGoal, setDailyCalorieGoal] = useState(initialData.dailyCalorieGoal.toString());
+
+    const handleSave = async () => {
+        try {
+            const userId = await getUserId();
+            const response = await fetch(`${API_URL}/user`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: userId,
+                    weight: parseFloat(weight),
+                    goalWeight: parseFloat(goalWeight),
+                    waterGoal: parseFloat(waterGoal),
+                    dailyCalorieGoal: parseInt(dailyCalorieGoal)
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to update profile');
+            
+            saveChanges({
+                weight: parseFloat(weight),
+                goalWeight: parseFloat(goalWeight),
+                waterGoal: parseFloat(waterGoal),
+                dailyCalorieGoal: parseInt(dailyCalorieGoal)
+            });
+            closeModal();
+        } catch (error) {
+            Alert.alert(t('common.error'), t('nutrition.updateError'));
+        }
+    };
 
     return (
         <Modal visible={isVisible} transparent={true} animationType="slide">
-            <View style={styles.modalBackground}>
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Stats</Text>
+            <View style={[styles.modalBackground, { backgroundColor: colors.modalBackground }]}>
+                <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
+                    <ThemedText type={'subtitle'} style={styles.modalTitle}>{t('nutrition.stats')}</ThemedText>
                     <TextInput
                         value={weight}
                         onChangeText={setWeight}
-                        placeholder="Weight (kg)"
+                        placeholder={t('nutrition.weight')}
                         keyboardType="numeric"
-                        style={styles.input}
+                        style={[styles.input, { borderColor: colors.border }]}
                     />
                     <TextInput
                         value={goalWeight}
                         onChangeText={setGoalWeight}
-                        placeholder="Goal Weight (kg)"
+                        placeholder={t('nutrition.goalWeight')}
                         keyboardType="numeric"
-                        style={styles.input}
+                        style={[styles.input, { borderColor: colors.border }]}
+                    />
+                    <TextInput
+                        value={waterGoal}
+                        onChangeText={setWaterGoal}
+                        placeholder={t('nutrition.waterGoal')}
+                        keyboardType="numeric"
+                        style={[styles.input, { borderColor: colors.border }]}
+                    />
+                    <TextInput
+                        value={dailyCalorieGoal}
+                        onChangeText={setDailyCalorieGoal}
+                        placeholder={t('nutrition.dailyCalorieGoal')}
+                        keyboardType="numeric"
+                        style={[styles.input, { borderColor: colors.border }]}
                     />
                     <View style={styles.modalActions}>
-                        <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-                            <Text style={styles.modalButtonText}>Cancel</Text>
+                        <TouchableOpacity onPress={closeModal} style={[styles.modalButton, { backgroundColor: colors.button }]}>
+                            <ThemedText type={'default'}>{t('common.cancel')}</ThemedText>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => saveChanges({ name, weight, goalWeight })} style={styles.modalButtonPrimary}>
-                            <Text style={styles.modalButtonTextPrimary}>Save</Text>
+                        <TouchableOpacity onPress={handleSave} style={[styles.modalButtonPrimary, { backgroundColor: colors.primary }]}>
+                            <ThemedText type={'default'} style={{ color: '#fff' }}>{t('common.save')}</ThemedText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -60,14 +149,20 @@ const EditProfileModal = ({ isVisible, closeModal, saveChanges }) => {
     );
 };
 
-const AddFoodModal = ({ visible, closeModal, addFood }) => {
+const AddFoodModal = ({ visible, closeModal, addFood }: {
+    visible: boolean;
+    closeModal: () => void;
+    addFood: (food: { meal: string; name: string; calories: number }) => void;
+}) => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
     const [type, setType] = useState('Choose a meal type');
     const [foodName, setFoodName] = useState('');
     const [calories, setCalories] = useState('');
     const [typeModalVisible, setTypeModalVisible] = useState(false);
 
     const handleAdd = () => {
-        if (foodName && calories && !isNaN(calories)) {
+        if (foodName && calories && !isNaN(parseInt(calories))) {
             addFood({ meal: type, name: foodName, calories: parseInt(calories) });
             setFoodName('');
             setCalories('');
@@ -78,12 +173,15 @@ const AddFoodModal = ({ visible, closeModal, addFood }) => {
 
     return (
         <Modal visible={visible} transparent animationType="slide">
-            <View style={styles.modalBackground}>
-                <View style={styles.modalContainer}>
-                    <Text style={styles.modalTitle}>Add Food</Text>
-                    <TouchableOpacity style={styles.selectBox} onPress={() => setTypeModalVisible(true)}>
-                        <Text style={styles.selectText}>{type}</Text>
-                        <Ionicons name="chevron-up" size={20} color="#aaa" />
+            <View style={[styles.modalBackground, { backgroundColor: colors.modalBackground }]}>
+                <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
+                    <ThemedText type={'subtitle'} style={styles.modalTitle}>{t('nutrition.addFood')}</ThemedText>
+                    <TouchableOpacity 
+                        style={[styles.selectBox, { borderColor: colors.border }]} 
+                        onPress={() => setTypeModalVisible(true)}
+                    >
+                        <ThemedText type={'default'}>{type}</ThemedText>
+                        <Ionicons name="chevron-up" size={20} color={colors.text} />
                     </TouchableOpacity>
 
                     <Modal
@@ -92,49 +190,48 @@ const AddFoodModal = ({ visible, closeModal, addFood }) => {
                         visible={typeModalVisible}
                         onRequestClose={() => setTypeModalVisible(false)}
                     >
-                        <View style={styles.modalContainerType}>
-                            <View style={styles.pickerWrapper}>
+                        <View style={[styles.modalContainerType, { backgroundColor: colors.modalBackground }]}>
+                            <View style={[styles.pickerWrapper, { backgroundColor: colors.card }]}>
                                 <TouchableOpacity onPress={() => {
                                     setTypeModalVisible(false);
                                     setType('Breakfast');
                                 }} style={styles.modalCloseButton}>
-                                    <Text style={styles.modalCloseText}>Done</Text>
+                                    <ThemedText type={'default'} style={{ color: colors.primary }}>{t('common.done')}</ThemedText>
                                 </TouchableOpacity>
                                 <Picker
                                     selectedValue={type}
                                     onValueChange={(itemValue) => setType(itemValue)}
-                                    style={styles.picker}
-                                    dropdownIconColor="#fff"
+                                    style={[styles.picker, { color: colors.text }]}
                                 >
-                                    <Picker.Item label="Breakfast" value="Breakfast" />
-                                    <Picker.Item label="Brunch" value="Brunch" />
-                                    <Picker.Item label="Lunch" value="Lunch" />
-                                    <Picker.Item label="Dinner" value="Dinner" />
-                                    <Picker.Item label="Snack" value="Snack" />
+                                    <Picker.Item label={t('nutrition.breakfast')} value="Breakfast" />
+                                    <Picker.Item label={t('nutrition.brunch')} value="Brunch" />
+                                    <Picker.Item label={t('nutrition.lunch')} value="Lunch" />
+                                    <Picker.Item label={t('nutrition.dinner')} value="Dinner" />
+                                    <Picker.Item label={t('nutrition.snack')} value="Snack" />
                                 </Picker>
-
                             </View>
                         </View>
                     </Modal>
+
                     <TextInput
                         value={foodName}
                         onChangeText={setFoodName}
-                        placeholder="Food Name"
-                        style={styles.input}
+                        placeholder={t('nutrition.foodName')}
+                        style={[styles.input, { borderColor: colors.border }]}
                     />
                     <TextInput
                         value={calories}
                         onChangeText={setCalories}
-                        placeholder="Calories"
+                        placeholder={t('nutrition.calories')}
                         keyboardType="numeric"
-                        style={styles.input}
+                        style={[styles.input, { borderColor: colors.border }]}
                     />
                     <View style={styles.modalActions}>
-                        <TouchableOpacity onPress={closeModal} style={styles.modalButton}>
-                            <Text style={styles.modalButtonText}>Cancel</Text>
+                        <TouchableOpacity onPress={closeModal} style={[styles.modalButton, { backgroundColor: colors.button }]}>
+                            <ThemedText type={'default'}>{t('common.cancel')}</ThemedText>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={handleAdd} style={styles.modalButtonPrimary}>
-                            <Text style={styles.modalButtonTextPrimary}>Add</Text>
+                        <TouchableOpacity onPress={handleAdd} style={[styles.modalButtonPrimary, { backgroundColor: colors.primary }]}>
+                            <ThemedText type={'default'} style={{ color: '#fff' }}>{t('common.add')}</ThemedText>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -143,99 +240,335 @@ const AddFoodModal = ({ visible, closeModal, addFood }) => {
     );
 };
 
+const CalendarStrip = ({ selectedDate, onDateSelect }: { selectedDate: Date; onDateSelect: (date: Date) => void }) => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
+    const dates = Array.from({ length: 7 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        return date;
+    }).reverse();
+
+    return (
+        <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            style={styles.calendarStrip}
+        >
+            {dates.map((date) => {
+                const isSelected = moment(date).isSame(selectedDate, 'day');
+                return (
+                    <TouchableOpacity
+                        key={date.toISOString()}
+                        style={[
+                            styles.calendarDay,
+                            { backgroundColor: isSelected ? colors.primary : colors.card }
+                        ]}
+                        onPress={() => onDateSelect(date)}
+                    >
+                        <ThemedText 
+                            type={'default'} 
+                            style={[
+                                styles.calendarDayText,
+                                { color: isSelected ? '#fff' : colors.text }
+                            ]}
+                        >
+                            {moment(date).format('ddd')}
+                        </ThemedText>
+                        <ThemedText 
+                            type={'subtitle'} 
+                            style={[
+                                styles.calendarDateText,
+                                { color: isSelected ? '#fff' : colors.text }
+                            ]}
+                        >
+                            {moment(date).format('D')}
+                        </ThemedText>
+                    </TouchableOpacity>
+                );
+            })}
+        </ScrollView>
+    );
+};
+
 const NutritionPage = () => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalVisible, setModalVisible] = useState(false);
     const [isFoodModalVisible, setFoodModalVisible] = useState(false);
     const [deleteMode, setDeleteMode] = useState(false);
-
-    const [profile, setProfile] = useState({
-        weight: "94.5",
-        goalWeight: "88",
+    const [loading, setLoading] = useState(true);
+    const [profile, setProfile] = useState<ProfileData>({
+        name: '',
+        weight: 0,
+        goalWeight: 0,
+        waterIntake: 0,
+        waterGoal: 2000,
+        dailyCalorieGoal: 2000
     });
+    const [meals, setMeals] = useState<Meal[]>([]);
 
-    const [drankGlasses, setDrankGlasses] = useState(0);
-    const [foods, setFoods] = useState({
-        Breakfast: [
-            { name: '6 Egg whites + 2 whole eggs', calories: 320 },
-            { name: 'Oatmeal + Protein powder', calories: 450 },
-            { name: '6 Egg whites + 2 whole eggs', calories: 320 },
-            { name: 'Oatmeal + Protein powder', calories: 450 },
-        ],
-    });
+    useEffect(() => {
+        loadProfileData();
+        loadMeals();
+    }, []);
+
+    useEffect(() => {
+        loadMeals();
+    }, [selectedDate]);
+
+    const loadProfileData = async () => {
+        try {
+            const userId = await getUserId();
+            const response = await fetch(`${API_URL}/user`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userId })
+            });
+
+            if (!response.ok) throw new Error('Failed to load profile');
+            
+            const userData = await response.json();
+            setProfile({
+                name: userData.userName,
+                weight: userData.weight,
+                goalWeight: userData.goalWeight,
+                waterIntake: userData.waterIntake || 0,
+                waterGoal: userData.waterGoal || 2000,
+                dailyCalorieGoal: userData.dailyCalorieGoal || 2000
+            });
+        } catch (error) {
+            Alert.alert(t('common.error'), t('nutrition.loadError'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const loadMeals = async () => {
+        try {
+            const userId = await getUserId();
+            const startDate = moment(selectedDate).startOf('day').toISOString();
+            const endDate = moment(selectedDate).endOf('day').toISOString();
+
+            const response = await fetch(`${API_URL}/user/meals`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    email: userId,
+                    startDate,
+                    endDate
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to load meals');
+            }
+            
+            const mealsData = await response.json();
+            setMeals(mealsData);
+        } catch (error) {
+            console.error('Load meals error:', error);
+            Alert.alert(t('common.error'), t('nutrition.loadError'));
+        }
+    };
 
     const toggleModal = () => setModalVisible(!isModalVisible);
     const toggleFoodModal = () => setFoodModalVisible(!isFoodModalVisible);
     const toggleDeleteMode = () => setDeleteMode(!deleteMode);
 
-    const saveProfileChanges = (newProfile) => {
-        setProfile(newProfile);
+    const saveProfileChanges = async (newProfile: Partial<ProfileData>) => {
+        setProfile(prev => ({ ...prev, ...newProfile }));
         toggleModal();
     };
 
-    const addFood = ({ meal, name, calories }) => {
-        setFoods(prev => ({
+    const handleWaterChange = async (value: number) => {
+        try {
+            const userId = await getUserId();
+            const response = await fetch(`${API_URL}/user`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: userId,
+                    waterIntake: value
+                })
+            });
+
+            if (!response.ok) throw new Error('Failed to update water intake');
+            
+            setProfile(prev => ({
             ...prev,
-            [meal]: [...(prev[meal] || []), { name, calories }],
-        }));
+                waterIntake: value
+            }));
+        } catch (error) {
+            Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
+        }
     };
 
-    const deleteFood = (meal, index) => {
-        const updated = [...foods[meal]];
-        updated.splice(index, 1);
-        setFoods(prev => ({ ...prev, [meal]: updated }));
+    const getMealTypeNumber = (mealType: string): number => {
+        switch (mealType) {
+            case 'Breakfast': return 0;
+            case 'Brunch': return 1;
+            case 'Lunch': return 2;
+            case 'Dinner': return 3;
+            case 'Snack': return 4;
+            default: return 0;
+        }
     };
 
-    const totalCalories = Object.values(foods).flat().reduce((acc, food) => acc + food.calories, 0);
-    const dailyGoal = 3240;
-    const progress = Math.min(totalCalories / dailyGoal, 1);
+    const addFood = async ({ meal, name, calories }: { meal: string; name: string; calories: number }) => {
+        try {
+            const userId = await getUserId();
+            const mealType = getMealTypeNumber(meal);
+            
+            const response = await fetch(`${API_URL}/user`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: userId,
+                    meals: [{
+                        date: new Date().toISOString(),
+                        type: mealType,
+                        weight: 100,
+                        food: {
+                            name: name,
+                            calories: calories,
+                            carbs: 0,
+                            fats: 0,
+                            proteins: 0
+                        }
+                    }]
+                })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to add food');
+            }
+            
+            await loadMeals();
+            toggleFoodModal();
+        } catch (error) {
+            console.error('Add food error:', error);
+            Alert.alert(t('common.error'), t('nutrition.addFoodError'));
+        }
+    };
+
+    const getMealTypeString = (type: number): string => {
+        switch (type) {
+            case 0: return t('nutrition.breakfast');
+            case 1: return t('nutrition.brunch');
+            case 2: return t('nutrition.lunch');
+            case 3: return t('nutrition.dinner');
+            case 4: return t('nutrition.snack');
+            default: return t('nutrition.breakfast');
+        }
+    };
+
+    const totalCalories = meals.reduce((acc, meal) => acc + meal.food.calories, 0);
+    const progress = Math.min(totalCalories / profile.dailyCalorieGoal, 1);
+    const waterProgress = Math.min(profile.waterIntake / profile.waterGoal, 1);
+
+    const deleteFood = async (mealId: number) => {
+        try {
+            const userId = await getUserId();
+            const response = await fetch(`${API_URL}/user/meals/${mealId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: userId })
+            });
+
+            if (!response.ok) throw new Error('Failed to delete meal');
+            
+            await loadMeals();
+        } catch (error) {
+            Alert.alert(t('common.error'), t('nutrition.deleteError'));
+        }
+    };
+
+    const groupMealsByType = (meals: Meal[]): Record<string, Meal[]> => {
+        return meals.reduce((acc, meal) => {
+            const type = getMealTypeString(meal.type);
+            if (!acc[type]) acc[type] = [];
+            acc[type].push(meal);
+            return acc;
+        }, {} as Record<string, Meal[]>);
+    };
+
+    if (loading) {
+        return (
+            <ThemedView type={'default'} style={styles.container}>
+                <ActivityIndicator size="large" color={colors.primary} />
+            </ThemedView>
+        );
+    }
 
     return (
         <ThemedView type={'default'} style={styles.container}>
-            <ProfileHeader />
+            <View style={{ height: STATUS_BAR_HEIGHT }} />
+            <ProfileHeader name={profile.name} />
+            <CalendarStrip 
+                selectedDate={selectedDate}
+                onDateSelect={setSelectedDate}
+            />
             <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 80}}>
-                <View style={styles.card}>
-                    <TouchableOpacity style={styles.editButton} onPress={toggleModal}>
-                        <MaterialCommunityIcons name="pencil" size={12} color="#4FC3F7" />
+                <View style={[styles.card, { backgroundColor: colors.card }]}>
+                    <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.button }]} onPress={toggleModal}>
+                        <MaterialCommunityIcons name="pencil" size={12} color={colors.primary} />
                     </TouchableOpacity>
-                    <Text style={styles.sectionTitle}>Stats</Text>
+                    <ThemedText type={'subtitle'}>{t('nutrition.stats')}</ThemedText>
                     <View style={styles.statsRow}>
                         <View>
-                            <Text style={styles.statLabel}>Current</Text>
-                            <Text style={styles.statValue}>{profile.weight} kg</Text>
-                            <Text style={styles.statChange}>↓ 2.3 kg</Text>
+                            <ThemedText type={'default'} style={styles.statLabel}>{t('nutrition.current')}</ThemedText>
+                            <ThemedText type={'subtitle'}>{profile.weight} kg</ThemedText>
+                            <ThemedText type={'default'} style={[styles.statChange, { color: colors.success }]}>
+                                ↓ {Math.abs(profile.weight - profile.goalWeight).toFixed(1)} kg
+                            </ThemedText>
                         </View>
                         <View>
-                            <Text style={styles.statLabel}>Goal</Text>
-                            <Text style={styles.statValue}>{profile.goalWeight} kg</Text>
-                            <Text style={styles.statChange}>6.5 kg to go</Text>
+                            <ThemedText type={'default'} style={styles.statLabel}>{t('nutrition.goal')}</ThemedText>
+                            <ThemedText type={'subtitle'}>{profile.goalWeight} kg</ThemedText>
+                            <ThemedText type={'default'} style={[styles.statChange, { color: colors.success }]}>
+                                {Math.abs(profile.weight - profile.goalWeight).toFixed(1)} kg {t('nutrition.toGo')}
+                            </ThemedText>
                         </View>
                     </View>
                 </View>
 
-                <View style={styles.card}>
+                <View style={[styles.card, { backgroundColor: colors.card }]}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={styles.sectionTitle}>Nutrition Plan</Text>
+                        <ThemedText type={'subtitle'}>{t('nutrition.nutritionPlan')}</ThemedText>
                         <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={toggleDeleteMode} style={{ marginRight: 10 }}>
-                                <MaterialCommunityIcons name="delete-outline" size={20} color={deleteMode ? "red" : "#4FC3F7"} />
+                                <MaterialCommunityIcons 
+                                    name="delete-outline" 
+                                    size={20} 
+                                    color={deleteMode ? colors.error : colors.primary} 
+                                />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={toggleFoodModal}>
-                                <MaterialCommunityIcons name="plus-circle-outline" size={20} color="#4FC3F7" />
+                                <MaterialCommunityIcons name="plus-circle-outline" size={20} color={colors.primary} />
                             </TouchableOpacity>
                         </View>
                     </View>
 
-                    {Object.entries(foods).map(([meal, items]) => (
-                        <View key={meal} style={styles.meal}>
-                            <Text style={styles.mealTitle}>{meal}</Text>
-                            {items.map((item, idx) => (
+                    {Object.entries(groupMealsByType(meals)).map(([mealType, items]) => (
+                        <View key={mealType} style={styles.meal}>
+                            <ThemedText type={'subtitle'}>{mealType}</ThemedText>
+                            {items.map((meal, idx) => (
                                 <View key={idx} style={styles.mealItem}>
-                                    <Text>{item.name}</Text>
+                                    <ThemedText type={'default'}>{meal.food.name}</ThemedText>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text>{item.calories} kcal</Text>
+                                        <ThemedText type={'default'}>{meal.food.calories} kcal</ThemedText>
                                         {deleteMode && (
-                                            <TouchableOpacity onPress={() => deleteFood(meal, idx)}>
-                                                <MaterialCommunityIcons name="trash-can-outline" size={18} color="red" style={{ marginLeft: 8 }} />
+                                            <TouchableOpacity onPress={() => deleteFood(meal.id)}>
+                                                <MaterialCommunityIcons 
+                                                    name="trash-can-outline" 
+                                                    size={18} 
+                                                    color={colors.error} 
+                                                    style={{ marginLeft: 8 }} 
+                                                />
                                             </TouchableOpacity>
                                         )}
                                     </View>
@@ -245,41 +578,57 @@ const NutritionPage = () => {
                     ))}
                 </View>
 
-                <View style={styles.card}>
-                    <Text style={styles.sectionTitle}>Daily Nutrition</Text>
-                    <ProgressBar progress={progress} color="#4FC3F7" style={styles.progressBar} />
-                    <Text style={styles.progressLabel}>{totalCalories} / {dailyGoal} kcal</Text>
+                <View style={[styles.card, { backgroundColor: colors.card }]}>
+                    <ThemedText type={'subtitle'}>{t('nutrition.dailyNutrition')}</ThemedText>
+                    <ProgressBar progress={progress} color={colors.primary} style={styles.progressBar} />
+                    <ThemedText type={'default'} style={styles.progressLabel}>
+                        {totalCalories} / {profile.dailyCalorieGoal} kcal
+                    </ThemedText>
                 </View>
 
-                <View style={styles.card}>
-                    <Text style={styles.sectionTitle}>Water Intake</Text>
+                <View style={[styles.card, { backgroundColor: colors.card }]}>
+                    <ThemedText type={'subtitle'}>{t('nutrition.waterIntake')}</ThemedText>
                     <View style={styles.glassesContainer}>
                         {Array.from({ length: 8 }).map((_, index) => (
                             <MaterialCommunityIcons
                                 key={index}
-                                name={index < drankGlasses ? "cup-water" : "cup-outline"}
+                                name={index < Math.floor(profile.waterIntake / 250) ? "cup-water" : "cup-outline"}
                                 size={28}
-                                color={index < drankGlasses ? "#4FC3F7" : "#B0BEC5"}
+                                color={index < Math.floor(profile.waterIntake / 250) ? '#ff0019' : colors.text}
                                 style={styles.glass}
                             />
                         ))}
                     </View>
+                    <View style={styles.sliderContainer}>
                     <Slider
-                        style={{ width: '100%', height: 40 }}
+                            style={styles.slider}
                         minimumValue={0}
-                        maximumValue={8}
-                        step={1}
-                        minimumTrackTintColor="#4FC3F7"
-                        maximumTrackTintColor="#E0E0E0"
-                        thumbTintColor="#4FC3F7"
-                        value={drankGlasses}
-                        onValueChange={setDrankGlasses}
-                    />
-                    <Text style={styles.waterLabel}>{drankGlasses} / 8 glasses</Text>
+                            maximumValue={profile.waterGoal}
+                            step={50}
+                            value={profile.waterIntake}
+                            onValueChange={handleWaterChange}
+                            minimumTrackTintColor="#ff0019"
+                            maximumTrackTintColor={colors.border}
+                            thumbTintColor="#ff0019"
+                        />
+                        <ThemedText type={'default'} style={styles.waterLabel}>
+                            {profile.waterIntake} / {profile.waterGoal} ml
+                        </ThemedText>
+                    </View>
+                    <ProgressBar progress={waterProgress} color="#ff0019" style={styles.progressBar} />
                 </View>
 
-                <EditProfileModal isVisible={isModalVisible} closeModal={toggleModal} saveChanges={saveProfileChanges} />
-                <AddFoodModal visible={isFoodModalVisible} closeModal={toggleFoodModal} addFood={addFood} />
+                <EditProfileModal 
+                    isVisible={isModalVisible} 
+                    closeModal={toggleModal} 
+                    saveChanges={saveProfileChanges}
+                    initialData={profile}
+                />
+                <AddFoodModal 
+                    visible={isFoodModalVisible} 
+                    closeModal={toggleFoodModal} 
+                    addFood={addFood} 
+                />
             </ScrollView>
         </ThemedView>
     );
@@ -288,7 +637,7 @@ const NutritionPage = () => {
 const styles = StyleSheet.create({
     container: { padding: 20, height: '100%' },
     profileHeader: {
-        marginTop: StatusBar.currentHeight + 40,
+        marginTop: STATUS_BAR_HEIGHT + 40,
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 20,
@@ -405,6 +754,36 @@ const styles = StyleSheet.create({
         color: '#007aff',
         fontSize: 18,
         fontWeight: '600',
+    },
+    sliderContainer: {
+        marginVertical: 10,
+        paddingHorizontal: 10,
+    },
+    slider: {
+        width: '100%',
+        height: 40,
+    },
+    calendarStrip: {
+        flexDirection: 'row',
+        paddingVertical: 10,
+        marginBottom: 10,
+    },
+    calendarDay: {
+        width: 60,
+        height: 70,
+        borderRadius: 10,
+        marginHorizontal: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 5,
+    },
+    calendarDayText: {
+        fontSize: 12,
+        marginBottom: 4,
+    },
+    calendarDateText: {
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 });
 

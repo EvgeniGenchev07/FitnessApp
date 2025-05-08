@@ -15,8 +15,9 @@ namespace Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        public DateTime Date { get; set; }
         [Required]
-        public List<WorkoutExercise> WorkoutExercises { get; set; }
+        public string Title { get; set; }
+        [Required]
+        public List<Exercise> Exercises { get; set; }
     }
 }

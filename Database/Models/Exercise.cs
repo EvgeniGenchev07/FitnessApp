@@ -15,7 +15,10 @@ namespace Models
         [RegularExpression(@"[A-Za-z ]{4,50}")]
         public string Name { get; set; }
         [Required]
-        public List<MuscleGroups> MuscleGroups { get; set; }
+        public int EstimatedTime { get; set; }
+        [Required]
+        public List<Set> Sets { get; set; }
+
     }
 
 }

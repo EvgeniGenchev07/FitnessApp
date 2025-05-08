@@ -1,292 +1,404 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import {
     View,
     Text,
-    TextInput,
-    TouchableOpacity,
     StyleSheet,
+    TouchableOpacity,
     Image,
+    TextInput,
     ScrollView,
-    Pressable,
-    Animated,
+    Alert,
+    ActivityIndicator,
+    KeyboardAvoidingView,
+    Platform,
+    Modal,
 } from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import * as Haptics from 'expo-haptics';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from '@/components/ThemedText';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import { API_URL } from '@/config';
+import { getUserId } from '@/utils/auth';
+import { StatusBar } from 'expo-status-bar';
+import { router } from 'expo-router';
 
-export default function CreatePostScreen() {
-    const [content, setContent] = useState('');
-    const [images, setImages] = useState([]);
-    const [deleteIndex, setDeleteIndex] = useState(null);
-    const [fadeAnim] = useState(new Animated.Value(0));
-    const [isImageSelected, setIsImageSelected] = useState(false);
-    const [isGallery, setIsGallery] = useState(false); // To toggle between Camera and Gallery
-    const [cameraPermission, setCameraPermission] = useState(null);
+const CreatePostScreen = () => {
+    const { t } = useLanguage();
+    const { colors } = useTheme();
+    const [loading, setLoading] = useState(false);
+    const [image, setImage] = useState<string | null>(null);
+    const [caption, setCaption] = useState('');
+    const [location, setLocation] = useState('');
+    const [tags, setTags] = useState<string[]>([]);
+    const [currentTag, setCurrentTag] = useState('');
+    const [showImageOptions, setShowImageOptions] = useState(false);
+    const captionInputRef = useRef<TextInput>(null);
 
-    const user = {
-        name: 'Jordan Fit',
-        avatar: 'https://i.pravatar.cc/100?img=2',
-    };
+    const pickImage = async () => {
+        try {
+            const result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
 
-    useEffect(() => {
-        // Request camera permission and open camera by default when the page loads
-        const requestCameraPermission = async () => {
-            const { status } = await ImagePicker.requestCameraPermissionsAsync();
-            setCameraPermission(status === 'granted');
-            if (status === 'granted') {
-                takePhoto(); // Open the camera once permission is granted
+            if (!result.canceled && result.assets[0].uri) {
+                setImage(result.assets[0].uri);
+                setShowImageOptions(false);
             }
-        };
-
-        requestCameraPermission();
-    }, []);
-
-    // Pick images from the gallery
-    const pickImages = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaType.Images,
-            allowsMultipleSelection: true,
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            const newImages = result.assets.map((asset) => asset.uri);
-            setImages(newImages); // Set selected images
-            setIsImageSelected(true); // Enable caption and post button
+        } catch (error) {
+            Alert.alert(t('common.error'), t('createPost.imageError'));
         }
     };
 
-    // Take a photo using the camera
     const takePhoto = async () => {
-        const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            quality: 1,
-        });
+        try {
+            const { status } = await ImagePicker.requestCameraPermissionsAsync();
+            if (status !== 'granted') {
+                Alert.alert(t('common.error'), t('createPost.cameraPermissionError'));
+                return;
+            }
 
-        if (!result.canceled) {
-            setImages([result.assets[0].uri]); // Set captured image
-            setIsImageSelected(true); // Enable caption and post button
+            const result = await ImagePicker.launchCameraAsync({
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 0.8,
+            });
+
+            if (!result.canceled && result.assets[0].uri) {
+                setImage(result.assets[0].uri);
+                setShowImageOptions(false);
+            }
+        } catch (error) {
+            Alert.alert(t('common.error'), t('createPost.cameraError'));
         }
     };
 
-    // Handle deleting an image
-    const handleDeleteImage = (index) => {
-        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-        setImages((prev) => prev.filter((_, i) => i !== index));
-        setDeleteIndex(null);
+    const removeImage = () => {
+        setImage(null);
     };
 
-    // Show the delete button when an image is long-pressed
-    const handleLongPress = (index) => {
-        setDeleteIndex(index);
-        // Fade-in effect for delete button
-        Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 300,
-            useNativeDriver: true,
-        }).start();
+    const addTag = () => {
+        if (currentTag.trim() && !tags.includes(currentTag.trim())) {
+            setTags([...tags, currentTag.trim()]);
+            setCurrentTag('');
+        }
     };
+
+    const removeTag = (tagToRemove: string) => {
+        setTags(tags.filter(tag => tag !== tagToRemove));
+    };
+
+    const handlePost = async () => {
+        if (!image) {
+            Alert.alert(t('common.error'), t('createPost.noImagesError'));
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const userId = await getUserId();
+            const formData = new FormData();
+            
+            formData.append('image', {
+                uri: image,
+                type: 'image/jpeg',
+                name: 'image.jpg',
+            } as any);
+
+            formData.append('caption', caption);
+            formData.append('location', location);
+            formData.append('tags', JSON.stringify(tags));
+            formData.append('email', userId);
+
+            const response = await fetch(`${API_URL}/posts`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create post');
+            }
+
+            Alert.alert(t('common.success'), t('createPost.successMessage'));
+            setImage(null);
+            setCaption('');
+            setLocation('');
+            setTags([]);
+        } catch (error) {
+            Alert.alert(t('common.error'), t('createPost.postError'));
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const ImageOptionsModal = () => (
+        <Modal
+            visible={showImageOptions}
+            transparent
+            animationType="fade"
+            onRequestClose={() => setShowImageOptions(false)}
+        >
+            <TouchableOpacity
+                style={styles.modalOverlay}
+                activeOpacity={1}
+                onPress={() => setShowImageOptions(false)}
+            >
+                <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
+                    <TouchableOpacity
+                        style={[styles.optionButton, { borderBottomColor: colors.border }]}
+                        onPress={pickImage}
+                    >
+                        <Ionicons name="images" size={24} color={colors.primary} />
+                        <ThemedText type={'default'} style={styles.optionText}>
+                            {t('createPost.chooseFromGallery')}
+                        </ThemedText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.optionButton}
+                        onPress={takePhoto}
+                    >
+                        <Ionicons name="camera" size={24} color={colors.primary} />
+                        <ThemedText type={'default'} style={styles.optionText}>
+                            {t('createPost.takePhoto')}
+                        </ThemedText>
+                    </TouchableOpacity>
+                </View>
+            </TouchableOpacity>
+        </Modal>
+    );
 
     return (
-        <Pressable style={{ flex: 1 }} onPress={() => setDeleteIndex(null)}>
-            <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
-                {/* Header */}
+        <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+        >
+            <ThemedView type={'default'} style={styles.container}>
                 <View style={styles.header}>
-                    <Image source={{ uri: user.avatar }} style={styles.avatar} />
-                    <Text style={styles.username}>{user.name}</Text>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setImage(null);
+                            setCaption('');
+                            setLocation('');
+                            setTags([]);
+                            router.back();
+                        }}
+                        style={[styles.headerButton, { backgroundColor: colors.button }]}
+                    >
+                        <ThemedText type={'default'}>{t('common.cancel')}</ThemedText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={handlePost}
+                        disabled={loading || !image}
+                        style={[
+                            styles.headerButton,
+                            styles.postButton,
+                            { backgroundColor: image ? colors.primary : colors.button }
+                        ]}
+                    >
+                        {loading ? (
+                            <ActivityIndicator color="#fff" size="small" />
+                        ) : (
+                            <ThemedText type={'default'} style={{ color: '#fff' }}>
+                                {t('createPost.post')}
+                            </ThemedText>
+                        )}
+                    </TouchableOpacity>
                 </View>
 
-                {/* Camera or Gallery View */}
-                {!isImageSelected ? (
-                    <View style={styles.imageSelectionContainer}>
-                        {isGallery ? (
-                            <TouchableOpacity
-                                style={styles.imageButton}
-                                onPress={pickImages}
-                            >
-                                <Feather name="image" size={24} color="#fff" />
-                                <Text style={styles.imageButtonText}>Choose from Gallery</Text>
-                            </TouchableOpacity>
+                <ScrollView style={styles.content}>
+                    <View style={styles.imageSection}>
+                        {image ? (
+                            <View style={styles.imageContainer}>
+                                <Image source={{ uri: image }} style={styles.image} />
+                                <TouchableOpacity
+                                    style={[styles.removeImage, { backgroundColor: colors.error }]}
+                                    onPress={removeImage}
+                                >
+                                    <Ionicons name="close" size={20} color="#fff" />
+                                </TouchableOpacity>
+                            </View>
                         ) : (
-                            <>
-                                <TouchableOpacity
-                                    style={styles.imageButton}
-                                    onPress={takePhoto}
-                                >
-                                    <Ionicons name="camera" size={24} color="#fff" />
-                                    <Text style={styles.imageButtonText}>Take Photo</Text>
-                                </TouchableOpacity>
-
-                                {/* Switch to Gallery Button */}
-                                <TouchableOpacity
-                                    style={styles.switchToGalleryButton}
-                                    onPress={() => setIsGallery(true)} // Switch to gallery
-                                >
-                                    <Feather name="image" size={24} color="#fff" />
-                                </TouchableOpacity>
-                            </>
+                            <TouchableOpacity
+                                style={[styles.placeholderContainer, { backgroundColor: colors.card }]}
+                                onPress={() => setShowImageOptions(true)}
+                            >
+                                <MaterialCommunityIcons
+                                    name="image-plus"
+                                    size={50}
+                                    color={colors.text}
+                                />
+                                <ThemedText type={'default'} style={styles.placeholderText}>
+                                    {t('createPost.addImage')}
+                                </ThemedText>
+                            </TouchableOpacity>
                         )}
                     </View>
-                ) : (
-                    <View style={styles.selectedImagesContainer}>
-                        {/* Display Selected Images */}
-                        {images.map((uri, idx) => (
-                            <View key={idx} style={styles.imageWrapper}>
-                                <TouchableOpacity onLongPress={() => handleLongPress(idx)}>
-                                    <Image source={{ uri }} style={styles.image} />
-                                </TouchableOpacity>
 
-                                {deleteIndex === idx && (
-                                    <Animated.View
-                                        style={[styles.deleteButton, { opacity: fadeAnim }]}
-                                    >
-                                        <TouchableOpacity
-                                            style={styles.deleteButtonContent}
-                                            onPress={() => handleDeleteImage(idx)}
-                                        >
-                                            <Ionicons name="close-circle" size={24} color="#fff" />
-                                        </TouchableOpacity>
-                                    </Animated.View>
-                                )}
-                            </View>
-                        ))}
-                    </View>
-                )}
-
-                {/* Caption Input (only visible after selecting images) */}
-                {isImageSelected && (
-                    <>
+                    <View style={styles.inputSection}>
                         <TextInput
-                            placeholder="Write a caption..."
-                            placeholderTextColor="#888"
+                            ref={captionInputRef}
+                            style={[styles.captionInput, { color: colors.text }]}
+                            placeholder={t('createPost.writeCaption')}
+                            placeholderTextColor={colors.text + '80'}
                             multiline
-                            style={styles.input}
-                            value={content}
-                            onChangeText={setContent}
+                            value={caption}
+                            onChangeText={setCaption}
                         />
 
-                        {/* Post Button */}
-                        <TouchableOpacity style={styles.postButton}>
-                            <Text style={styles.postButtonText}>Post</Text>
-                        </TouchableOpacity>
-                    </>
-                )}
-            </ScrollView>
-        </Pressable>
+
+                    </View>
+                </ScrollView>
+                <ImageOptionsModal />
+            </ThemedView>
+        </KeyboardAvoidingView>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fafafa',
-        paddingHorizontal: 20,
-        paddingTop: 20,
     },
     header: {
+        marginTop: StatusBar.currentHeight||40,
         flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 30,
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0,0,0,0.1)',
     },
-    avatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginRight: 15,
+    headerButton: {
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 20,
     },
-    username: {
-        fontSize: 18,
-        fontWeight: '700',
-        color: '#333',
-    },
-    imageSelectionContainer: {
+    postButton: {
+        minWidth: 80,
         alignItems: 'center',
-        marginBottom: 20,
     },
-    imageButton: {
-        backgroundColor: '#000',
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderRadius: 25,
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
+    content: {
+        flex: 1,
     },
-    imageButtonText: {
-        color: '#fff',
-        fontSize: 16,
-        marginLeft: 10,
+    imageSection: {
+        padding: 16,
     },
-    switchToGalleryButton: {
-        position: 'absolute',
-        left: 20,
-        bottom: 20,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        padding: 10,
-        borderRadius: 50,
-    },
-    selectedImagesContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 10,
-        justifyContent: 'center',
-        marginBottom: 30,
-    },
-    imageWrapper: {
+    imageContainer: {
         position: 'relative',
-        width: '48%',
-        height: 120,
-        marginBottom: 10,
+        width: '100%',
+        aspectRatio: 4/3,
     },
     image: {
         width: '100%',
         height: '100%',
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#ddd',
+        borderRadius: 10,
     },
-    deleteButton: {
+    removeImage: {
         position: 'absolute',
-        top: 5,
-        right: 5,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        borderRadius: 20,
-        padding: 5,
-        zIndex: 10,
+        top: 10,
+        right: 10,
+        width: 30,
+        height: 30,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
-    deleteButtonContent: {
-        backgroundColor: '#ff3b30',
-        padding: 4,
-        borderRadius: 50,
+    placeholderContainer: {
+        width: '100%',
+        aspectRatio: 4/3,
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderStyle: 'dashed',
+        borderColor: 'rgba(0,0,0,0.1)',
+    },
+    placeholderText: {
+        marginTop: 8,
+        opacity: 0.7,
+    },
+    inputSection: {
+        padding: 16,
+    },
+    captionInput: {
+        fontSize: 16,
+        minHeight: 100,
+        textAlignVertical: 'top',
+        marginBottom: 16,
+    },
+    locationInput: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 10,
+        backgroundColor: 'rgba(0,0,0,0.05)',
     },
     input: {
-        backgroundColor: '#fff',
-        borderRadius: 15,
-        padding: 15,
+        flex: 1,
+        marginLeft: 8,
         fontSize: 16,
-        color: '#333',
-        minHeight: 120,
-        textAlignVertical: 'top',
-        shadowColor: '#000',
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
-        marginBottom: 25,
     },
-    postButton: {
-        marginTop: 40,
-        backgroundColor: '#000',
-        paddingVertical: 14,
-        borderRadius: 16,
+    tagsSection: {
+        marginBottom: 16,
+    },
+    tagsInput: {
+        flexDirection: 'row',
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-        elevation: 3,
+        marginBottom: 8,
     },
-    postButtonText: {
+    addTagButton: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 8,
+    },
+    tagsList: {
+        flexDirection: 'row',
+        marginTop: 8,
+    },
+    tag: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+        marginRight: 8,
+    },
+    tagText: {
         color: '#fff',
-        fontWeight: '600',
+        marginRight: 4,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '80%',
+        borderRadius: 15,
+        overflow: 'hidden',
+    },
+    optionButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 16,
+        borderBottomWidth: 1,
+    },
+    optionText: {
+        marginLeft: 12,
         fontSize: 16,
     },
 });
+
+export default CreatePostScreen; 
