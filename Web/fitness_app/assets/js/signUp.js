@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.3:5000'; 
+const apiUrl = 'http://192.168.56.1:5000'; 
 // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
@@ -53,7 +53,7 @@ const apiUrl = 'http://192.168.100.3:5000';
         };
 
         try {
-            const response = await fetch(`${apiUrl}/user`, {
+            const response = await fetch(`${apiUrl}/user/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -80,18 +80,16 @@ const apiUrl = 'http://192.168.100.3:5000';
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
     
-        // Format data as URL-encoded form (not JSON)
-        const formData = new URLSearchParams();
-        formData.append('email', email);
-        formData.append('password', password);
-    
         try {
             const response = await fetch(`${apiUrl}/user/login`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Required for C#
+                    'Content-Type': 'application/json', // Changed to JSON
                 },
-                body: formData
+                body: JSON.stringify({ // Convert to JSON
+                    email: email,
+                    password: password
+                })
             });
     
             if (response.ok) {
@@ -111,47 +109,41 @@ const apiUrl = 'http://192.168.100.3:5000';
             console.error(error);
         }
     }
-    
-    async function handleForgotPassword(event) {
-        event.preventDefault(); // Prevent the default form submission
-    
-        const email = document.getElementById('forgot-email').value;
-    
-        // Ensure the email field is not empty
-        if (!email) {
-            alert('Please enter your email address.');
-            return;
-        }
-    
-        const formData = new URLSearchParams();
-        formData.append('email', email);
-    
-        try {
-            // Send the request to the API endpoint for forgot password
-            const response = await fetch(`${apiUrl}/user/forgot-password`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Form data encoding
-                },
-                body: formData
+    //Forgot password
+    document.addEventListener('DOMContentLoaded', function () {
+        emailjs.init("zd7S-Qg4R-j6V3sQ0");
+      
+        const form = document.getElementById('reset-password-form');
+      
+        form.addEventListener('submit', async function (event) {
+          event.preventDefault();
+      
+          const email = document.getElementById('forgot-email').value;
+      
+          try {
+            const response = await fetch(`${apiUrl}/user/check-email`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: email })
             });
-    
+      
             if (response.ok) {
-                // If response is successful, show success message and redirect to login
-                alert('If an account with that email exists, we have sent you instructions to reset your password.');
-                showLogin();
+              emailjs.sendForm('service_237qqkq', 'template_pkounmf', form)
+                .then(() => {
+                  alert('Изпратихме имейл с инструкции за възстановяване на паролата.');
+                }, (error) => {
+                  alert('Възникна грешка при изпращане на имейл: ' + JSON.stringify(error));
+                });
             } else {
-                // If error occurs, show the error message
-                const error = await response.text();
-                alert(`Error: ${error}`);
+              alert('Такъв имейл не съществува в системата.');
             }
-        } catch (error) {
-            // Catch any network or server errors
-            alert('There was an error while trying to reset your password.');
-            console.error(error);
-        }
-    }
-    
+          } catch (err) {
+            console.error('Грешка при свързване с API:', err);
+            alert('Грешка при връзка със сървъра.');
+          }
+        });
+      });
+      
     // Initialize event listeners when DOM loads
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('loginForm').addEventListener('submit', handleLogin);

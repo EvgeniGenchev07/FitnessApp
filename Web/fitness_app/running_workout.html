@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness App - Workout Timer</title>
+    <style>
+        :root {
+            --primary-red: #e74c3c;
+            --dark-red: #c0392b;
+            --black: #222222;
+            --dark-gray: #333333;
+            --medium-gray: #555555;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .workout-container {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .workout-header {
+            background: linear-gradient(to right, var(--black), var(--dark-red));
+            color: var(--white);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-red);
+        }
+        
+        .timer-page {
+            background-color: var(--black);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .exercise-display {
+            margin: 20px 0;
+        }
+        
+        .current-exercise {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .exercise-gif-container {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--dark-gray);
+        }
+        
+        .exercise-gif {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        
+        .chronometer {
+            font-size: 3.5rem;
+            color: var(--primary-red);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .timer-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .start-btn {
+            background-color: var(--primary-red);
+            color: var(--white);
+        }
+        
+        .pause-btn {
+            background-color: var(--medium-gray);
+            color: var(--white);
+        }
+        
+        .next-btn {
+            background-color: var(--dark-red);
+            color: var(--white);
+        }
+        
+        .reset-btn {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+        
+        .exercise-progress {
+            color: var(--light-gray);
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .completion-message {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .current-exercise {
+                font-size: 1.4rem;
+            }
+            
+            .chronometer {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-gif-container {
+                height: 200px;
+            }
+            
+            .timer-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="workout-container">
+        <div class="workout-header">
+            <h1>Workout Chronometer</h1>
+        </div>
+        
+        <div class="timer-page">
+            <div class="exercise-display">
+                <div class="current-exercise" id="currentExercise">Press START to begin</div>
+                <div class="exercise-gif-container">
+                    <img id="exerciseGif" class="exercise-gif" src="" alt="Exercise demonstration will appear when workout starts">
+                </div>
+            </div>
+            
+            <div class="chronometer" id="chronometer">00:00:00</div>
+            
+            <div class="exercise-progress" id="exerciseProgress">
+                Ready when you are!
+            </div>
+            
+            <div class="timer-controls">
+                <button class="timer-btn start-btn" id="startBtn">START</button>
+                <button class="timer-btn pause-btn" id="pauseBtn" disabled>PAUSE</button>
+                <button class="timer-btn next-btn" id="nextBtn" disabled>NEXT</button>
+                <button class="timer-btn reset-btn" id="resetBtn" disabled>RESET</button>
+            </div>
+            
+            <div class="completion-message" id="completionMessage">
+                Workout Complete! Great Job! 💪
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Workout data with GIF URLs
+        const workoutRoutine = [
+            { 
+                name: "Side Plank Left", 
+                gif: "assets/ig/ok.gif",
+                duration: 30
+            },
+            { 
+                name: "Jumping Jacks", 
+                gif: "https://www.verywellfit.com/thmb/1I8FdPAtVYl1YlwX8Q0JZ7J9W5M=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Jumping-Jacks-633a5b094c9e4c849c5d1e2d7c9a9a9e.gif",
+                duration: 45
+            },
+            { 
+                name: "Mountain Climber", 
+                gif: "https://www.verywellfit.com/thmb/1I8FdPAtVYl1YlwX8Q0JZ7J9W5M=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Mountain-Climber-633a5b094c9e4c849c5d1e2d7c9a9a9e.gif",
+                duration: 40
+            }
+        ];
+        
+        // Timer variables
+        let totalSeconds = 0;
+        let chronometer;
+        let currentExerciseIndex = 0;
+        let isRunning = false;
+        
+        // DOM elements
+        const currentExerciseEl = document.getElementById('currentExercise');
+        const exerciseGif = document.getElementById('exerciseGif');
+        const chronometerEl = document.getElementById('chronometer');
+        const exerciseProgress = document.getElementById('exerciseProgress');
+        const startBtn = document.getElementById('startBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const completionMessage = document.getElementById('completionMessage');
+        
+        // Initialize the workout
+        function initWorkout() {
+            currentExerciseIndex = 0;
+            totalSeconds = 0;
+            updateChronometer();
+            
+            // Reset UI state
+            completionMessage.style.display = 'none';
+            exerciseProgress.style.display = 'block';
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            nextBtn.disabled = true;
+            resetBtn.disabled = true;
+            
+            // Show initial state
+            currentExerciseEl.textContent = "Press START to begin";
+            exerciseGif.src = "";
+            exerciseGif.alt = "Exercise demonstration will appear when workout starts";
+            exerciseProgress.textContent = "Ready when you are!";
+        }
+        
+        // Start the workout
+        function startWorkout() {
+            if (!isRunning) {
+                isRunning = true;
+                chronometer = setInterval(updateTimer, 1000);
+                
+                // Immediately show first exercise when starting
+                currentExerciseIndex = 0;
+                updateExerciseDisplay();
+                
+                startBtn.disabled = true;
+                pauseBtn.disabled = false;
+                nextBtn.disabled = false;
+                resetBtn.disabled = false;
+            }
+        }
+        
+        // Pause the workout
+        function pauseWorkout() {
+            if (isRunning) {
+                clearInterval(chronometer);
+                isRunning = false;
+                
+                startBtn.disabled = false;
+                pauseBtn.disabled = true;
+            }
+        }
+        
+        // Reset the workout
+        function resetWorkout() {
+            clearInterval(chronometer);
+            isRunning = false;
+            initWorkout();
+        }
+        
+        // Move to next exercise
+        function nextExercise() {
+            if (currentExerciseIndex < workoutRoutine.length - 1) {
+                currentExerciseIndex++;
+                updateExerciseDisplay();
+            } else {
+                completeWorkout();
+            }
+        }
+        
+        // Update timer every second
+        function updateTimer() {
+            totalSeconds++;
+            updateChronometer();
+        }
+        
+        // Update exercise display
+        function updateExerciseDisplay() {
+            const exercise = workoutRoutine[currentExerciseIndex];
+            currentExerciseEl.textContent = exercise.name;
+            exerciseGif.src = exercise.gif;
+            exerciseGif.alt = exercise.name + " demonstration";
+            exerciseProgress.textContent = `Exercise ${currentExerciseIndex + 1} of ${workoutRoutine.length}`;
+            
+            // Disable next button if it's the last exercise
+            nextBtn.disabled = currentExerciseIndex >= workoutRoutine.length - 1;
+        }
+        
+        // Update chronometer display
+        function updateChronometer() {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+            
+            chronometerEl.textContent = 
+                `${hours.toString().padStart(2, '0')}:` +
+                `${minutes.toString().padStart(2, '0')}:` +
+                `${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        // Complete the workout
+        function completeWorkout() {
+            clearInterval(chronometer);
+            isRunning = false;
+            
+            currentExerciseEl.textContent = "Workout Complete";
+            exerciseGif.src = "";
+            exerciseGif.alt = "Workout complete";
+            exerciseProgress.style.display = 'none';
+            completionMessage.style.display = 'block';
+            
+            startBtn.disabled = true;
+            pauseBtn.disabled = true;
+            nextBtn.disabled = true;
+            resetBtn.disabled = false;
+        }
+        
+        // Event listeners
+        startBtn.addEventListener('click', startWorkout);
+        pauseBtn.addEventListener('click', pauseWorkout);
+        nextBtn.addEventListener('click', nextExercise);
+        resetBtn.addEventListener('click', resetWorkout);
+        
+        // Initialize when page loads
+        initWorkout();
+    </script>
+</body>
+</html>

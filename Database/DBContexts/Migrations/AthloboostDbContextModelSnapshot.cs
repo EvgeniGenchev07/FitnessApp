@@ -262,6 +262,11 @@ namespace DBContexts.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bio")
+
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("BirthDate")
+
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreationDate")

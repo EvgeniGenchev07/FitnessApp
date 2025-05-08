@@ -3548,36 +3548,42 @@
     ]
   },
   "packageFolders": {
-    "/home/evgeni/.nuget/packages/": {}
+    "C:\\Users\\ivan_\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/evgeni/FitnessApp/Database/WebApi/WebApi.csproj",
+      "projectUniqueName": "C:\\html\\FitnessApp\\Database\\WebApi\\WebApi.csproj",
       "projectName": "WebApi",
-      "projectPath": "/home/evgeni/FitnessApp/Database/WebApi/WebApi.csproj",
-      "packagesPath": "/home/evgeni/.nuget/packages/",
-      "outputPath": "/home/evgeni/FitnessApp/Database/WebApi/obj/",
+      "projectPath": "C:\\html\\FitnessApp\\Database\\WebApi\\WebApi.csproj",
+      "packagesPath": "C:\\Users\\ivan_\\.nuget\\packages\\",
+      "outputPath": "C:\\html\\FitnessApp\\Database\\WebApi\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/evgeni/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ivan_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
       ],
       "sources": {
-        "/usr/lib64/dotnet/library-packs": {},
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "/home/evgeni/FitnessApp/Database/DBContexts/DBContexts.csproj": {
-              "projectPath": "/home/evgeni/FitnessApp/Database/DBContexts/DBContexts.csproj"
+            "C:\\html\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj": {
+              "projectPath": "C:\\html\\FitnessApp\\Database\\DBContexts\\DBContexts.csproj"
             },
-            "/home/evgeni/FitnessApp/Database/Models/Models.csproj": {
-              "projectPath": "/home/evgeni/FitnessApp/Database/Models/Models.csproj"
+            "C:\\html\\FitnessApp\\Database\\Models\\Models.csproj": {
+              "projectPath": "C:\\html\\FitnessApp\\Database\\Models\\Models.csproj"
             }
           }
         }
@@ -3592,7 +3598,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -3636,7 +3642,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib64/dotnet/sdk/9.0.105/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
