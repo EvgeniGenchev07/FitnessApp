@@ -65,7 +65,6 @@ async function GetProfile() {
         const data = await SecureStore.getItemAsync('user');
         const res = await HttpGetProfile(data);
         if (!res || res.status !== Status.OK) {
-            console.log(res);
             await Updates.reloadAsync();
         } else {
             return res.data;
@@ -92,13 +91,20 @@ async function PatchProfile(data) {
     }
 }
 async function LocalSaveProfile(){
-    const data = await GetProfile();
-    await asyncStorage.setItem('workouts',JSON.stringify( data.workouts));
-    await asyncStorage.setItem('profile',JSON.stringify( {userName:data.userName ,photo:data.photo,bio:data.bio,likes:data.likes,followers:data.followers,following:data.following}));
-    await asyncStorage.setItem('posts',JSON.stringify( data.posts));
-    await asyncStorage.setItem('meals',JSON.stringify( data.meals));
-    await asyncStorage.setItem('schedule',JSON.stringify( data.schedule));
-
+    const data = await GetProfile()
+    console.log(data);
+    await asyncStorage.setItem('workouts', JSON.stringify(data.workouts));
+    await asyncStorage.setItem('profile', JSON.stringify({
+        userName: data.userName,
+        photo: data.photo,
+        bio: data.bio,
+        likes: data.likes,
+        followers: data.followers,
+        following: data.following
+    }));
+    await asyncStorage.setItem('posts', JSON.stringify(data.posts));
+    await asyncStorage.setItem('meals', JSON.stringify(data.meals));
+    await asyncStorage.setItem('schedule', JSON.stringify(data.schedule));
 }
 async function SaveWorkout(workout) {
     try {
@@ -120,43 +126,59 @@ async function SaveWorkout(workout) {
             }))
         };
 
-        // Get existing workouts
         let workouts = await AsyncStorage.getItem('workouts');
-        console.log('Current workouts in storage:', workouts);
         workouts = workouts ? JSON.parse(workouts) : [];
-        console.log('Parsed workouts:', workouts);
 
         // If workout has an ID, update existing workout, otherwise add new
         const existingIndex = workouts.findIndex(w => w.id === processedWorkout.id);
         if (existingIndex !== -1) {
-            console.log('Updating existing workout at index:', existingIndex);
             workouts[existingIndex] = processedWorkout;
         } else {
-            console.log('Adding new workout');
             processedWorkout.id = generateId(); // Generate new ID for new workouts
             workouts.push(processedWorkout);
         }
-
-        console.log('Updated workouts array:', JSON.stringify(workouts, null, 2));
-
-        // Save to AsyncStorage
+        console.log(processedWorkout);
         await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
-        console.log('Saved to AsyncStorage');
-
-        // Update on server
         const user = await SecureStore.getItemAsync('user');
         const dataToSend = {
             email: user,
-            workouts: workouts
+            workout: processedWorkout
         };
-        console.log('Sending to server:', JSON.stringify(dataToSend, null, 2));
         const res = await HttpPatchProfile(dataToSend);
         
         if (!res || res.status !== Status.OK) {
             console.error('Server update failed:', res);
             return Status.ServerError;
         }
-        console.log('Server update successful');
+        return Status.OK;
+    } catch (error) {
+        console.error('Error saving workout:', error);
+        return Status.ServerError;
+    }
+}
+async function DeleteWorkout(workoutId) {
+    try {
+        let workouts = await AsyncStorage.getItem('workouts');
+        workouts = workouts ? JSON.parse(workouts) : [];
+        console.log('\n\n\n');
+        console.log(workouts);
+        const index = workouts.findIndex(w => w.id === workoutId);
+        if (index !== -1) {
+            workouts.splice(index, 1);
+        }
+        console.log(workouts);
+        await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+        const user = await SecureStore.getItemAsync('user');
+        const dataToSend = {
+            email: user,
+            rmWorkout: workoutId,
+        };
+        const res = await HttpPatchProfile(dataToSend);
+
+        if (!res || res.status !== Status.OK) {
+            console.error('Server update failed:', res);
+            return Status.ServerError;
+        }
         return Status.OK;
     } catch (error) {
         console.error('Error saving workout:', error);
@@ -179,3 +201,5 @@ const _LocalSaveProfile = LocalSaveProfile;
 export {_LocalSaveProfile as LocalSaveProfile};
 const _SaveWorkout = SaveWorkout;
 export {_SaveWorkout as SaveWorkout};
+const _DeleteWorkout = DeleteWorkout;
+export {_DeleteWorkout as DeleteWorkout};

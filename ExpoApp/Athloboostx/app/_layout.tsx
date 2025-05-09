@@ -23,11 +23,16 @@ export default function RootLayout() {
         if (loaded) {
             const res = IsLoggedIn();
             if(res){
-                LocalSaveProfile();
-                router.push('/(tabs)');
+                LocalSaveProfile().then(()=> {
+                        router.push('/(tabs)');
+                        SplashScreen.hideAsync();
+                    }
+                );
             }
-            else router.push('/login');
-            SplashScreen.hideAsync();
+            else {
+                router.push('/login');
+                SplashScreen.hideAsync();
+            }
         }
     }, [loaded]);
 

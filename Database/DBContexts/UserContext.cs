@@ -27,6 +27,8 @@ public class UserContext : IDatabase<User, string>
         if (useNavigationalProperties)
             query = query
                 .Include(u => u.Workouts)
+                .ThenInclude(w=>w.Exercises)
+                .ThenInclude(e=>e.Sets)
                 .Include(u => u.Meals)
                 .Include(u => u.Measurements)
                 .Include(u => u.Schedule)
@@ -34,7 +36,8 @@ public class UserContext : IDatabase<User, string>
                 .Include(u => u.Exercises)
                 .Include(u => u.Followers)
                 .Include(u => u.Following)
-                .Include(u => u.Posts);
+                .Include(u => u.Posts)
+                .ThenInclude(p => p.Comments);
                 
         if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
         User user = await query.FirstOrDefaultAsync(u => u.Email == key);

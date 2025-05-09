@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect,useCallback, useState} from 'react';
 import {
     View,
     StyleSheet,
@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import {ThemedText} from "@/components/ThemedText";
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import {GetProfile} from "@/serviceLayer/managerHandler";
 import {LinearGradient} from 'expo-linear-gradient';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -96,6 +96,11 @@ export default function HomeScreen() {
     useEffect(() => {
         loadUserData();
     }, []);
+    useFocusEffect(
+        useCallback(() => {
+            loadUserData();
+        }, [])
+    );
 
     const loadUserData = async () => {
         try {
@@ -111,7 +116,6 @@ export default function HomeScreen() {
                 schedule = JSON.parse(schedule);
             //@ts-ignore
             setUserData({...profile,workouts: workouts,schedule:schedule});
-            console.log(userData);
         } catch (error) {
             console.error('Error loading user data:', error);
         } finally {

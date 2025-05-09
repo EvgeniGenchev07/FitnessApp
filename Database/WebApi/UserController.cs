@@ -15,11 +15,13 @@ namespace WebApi
     {
         private readonly IDatabase<User, string> _userContext;
         private readonly UserLogin _userLoginContext;
+        private readonly AthloboostDbContext _dbContext;
 
-        public UserController(UserContext context, UserLogin userLogin)
+        public UserController(UserContext context, UserLogin userLogin, AthloboostDbContext dbContext)
         {
             _userContext = context;
             _userLoginContext = userLogin;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -47,6 +49,7 @@ namespace WebApi
                 User user = await _userContext.ReadAsync(data["email"].ToString(), true, true);
                 if (user == null) return NotFound(Error.UserNotFound);
                 user.Password = "";
+                Console.WriteLine(JsonConvert.SerializeObject(user));
                 return Ok(user);
             }
             catch (Exception ex)
@@ -122,11 +125,9 @@ namespace WebApi
         {
             try
             {
-                Console.WriteLine(data["email"]);
-                User user = await _userContext.ReadAsync(data["email"].ToString(),true);
+                User user = await _userContext.ReadAsync(data["email"].ToString(),true,false);
                 
                 if (user == null) return NotFound("User not found");
-                bool useNavigationalProperties = false;
                 foreach (var pair in data)
                 {
                     switch (pair.Key)
@@ -151,30 +152,63 @@ namespace WebApi
                             break;
                         case "meals":
                             user.Meals = JsonConvert.DeserializeObject<List<Meal>>(pair.Value.ToString());
-                            useNavigationalProperties = true;
                             break;
                         case "schedule":
                             user.Schedule = JsonConvert.DeserializeObject<Schedule>(pair.Value.ToString());
-                            useNavigationalProperties = true;
                             break;
-                        case "workouts":
-                            var workouts = JsonConvert.DeserializeObject<List<Workout>>(pair.Value.ToString());
-                            if (workouts != null)
+                        case "workout":
+                            Workout workout = JsonConvert.DeserializeObject<Workout>(pair.Value.ToString());
+                            Workout workoutDb = user.Workouts.FirstOrDefault(w=>w.Id == workout.Id);
+                            if (workoutDb != null)
                             {
-                                user.Workouts.Clear();
-                                user.Workouts.AddRange(workouts);
+                                workoutDb.Title = workout.Title;
+                                workoutDb.Exercises = workout.Exercises.Select(e => new Exercise
+                                {
+                                    Name = e.Name,
+                                    EstimatedTime = e.EstimatedTime,
+                                    Sets = e.Sets.Select(s => new Set
+                                    {
+                                        Reps = s.Reps,
+                                        Weight = s.Weight,
+                                        RestTime = s.RestTime
+                                    }).ToList()
+                                }).ToList();
                             }
-                            useNavigationalProperties = true;
+                            else
+                            {
+                                user.Workouts.Add(new Workout
+                                {
+                                    Title = workout.Title,
+                                    Exercises = workout.Exercises.Select(e => new Exercise
+                                    {
+                                        Name = e.Name,
+                                        EstimatedTime = e.EstimatedTime,
+                                        Sets = e.Sets.Select(s => new Set
+                                        {
+                                            Reps = s.Reps,
+                                            Weight = s.Weight,
+                                            RestTime = s.RestTime
+                                        }).ToList()
+                                    }).ToList()
+                                });
+                            }
+
+                            break;
+                        case "rmWorkout":
+                            int workoutId = Convert.ToInt32(pair.Value.ToString());
+                            Workout rmWorkoutDb = user.Workouts.FirstOrDefault(w => w.Id == workoutId);
+                            if (rmWorkoutDb != null)
+                            {
+                                user.Workouts.Remove(rmWorkoutDb);
+                            }
                             break;
                         case "measurements":
                             user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(pair.Value.ToString());
-                            useNavigationalProperties = true;
                             break;
                     }
                 }
-                
-                await _userContext.UpdateAsync(user,useNavigationalProperties);
-                return Ok();
+                var res = await _dbContext.SaveChangesAsync();
+                return Ok(res);
             }
             catch (Exception ex)
             {

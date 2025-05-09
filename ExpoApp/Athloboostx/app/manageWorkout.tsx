@@ -16,7 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import {SaveWorkout} from "@/serviceLayer/managerHandler";
+import {SaveWorkout,DeleteWorkout} from "@/serviceLayer/managerHandler";
 import Status from "@/serviceLayer/status";
 
 const { width } = Dimensions.get('window');
@@ -93,7 +93,19 @@ export default function ManageWorkoutScreen() {
             exercises: [...prev.exercises, newExercise]
         }));
     };
-
+    const handleDeleteWorkout= async () => {
+        try {
+            const res = await DeleteWorkout(workout.id);
+            if(!res || res !== Status.OK){
+                Alert.alert("Something went wrong!");
+            }else{
+                router.push('/(tabs)');
+            }
+        }
+        catch (err){
+            Alert.alert('Something went wrong.');
+        }
+    };
     const handleEditExercise = (exerciseId: number) => {
         const exercise = workout.exercises.find(ex => ex.id === exerciseId);
         if (!exercise) return;
@@ -111,7 +123,6 @@ export default function ManageWorkoutScreen() {
 
     const handleSave = async () => {
         try {
-            console.log(JSON.stringify(workout, null, 2)); // Pretty print for debugging
             const res = await SaveWorkout(workout);
             if(!res || res !== Status.OK){
                 Alert.alert("Something went wrong!");
@@ -151,7 +162,7 @@ export default function ManageWorkoutScreen() {
     );
 
     const renderFooter = () => (
-        isEditing ? (
+        isEditing ? (<View>
             <TouchableOpacity style={styles.addButton} onPress={handleAddExercise}>
                 <LinearGradient
                     colors={['#007AFF', '#0055FF']}
@@ -161,6 +172,16 @@ export default function ManageWorkoutScreen() {
                     <Text style={styles.addButtonText}>Add Exercise</Text>
                 </LinearGradient>
             </TouchableOpacity>
+            <TouchableOpacity style={styles.removeButton} onPress={handleDeleteWorkout}>
+                <LinearGradient
+                    colors={['#ff0055', '#fd2055']}
+                    style={styles.removeButtonGradient}
+                >
+                    <Ionicons name="trash-outline" size={24} color="#fff" />
+                    <Text style={styles.removeButtonText}>Delete Workout</Text>
+                </LinearGradient>
+            </TouchableOpacity>
+            </View>
         ) : null
     );
 
@@ -230,7 +251,7 @@ export default function ManageWorkoutScreen() {
                     <BlurView intensity={80} style={StyleSheet.absoluteFill} />
                     <View style={styles.headerContent}>
                         <TouchableOpacity 
-                            onPress={() => router.back()} 
+                            onPress={() => router.push('/(tabs)')}
                             style={styles.backButton}
                         >
                             <Ionicons name="chevron-back" size={24} color="#fff" />
@@ -426,6 +447,24 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     addButtonText: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: '600',
+        marginLeft: 8,
+    },
+    removeButton: {
+        marginHorizontal: 20,
+        marginBottom: 16,
+        borderRadius: 16,
+        overflow: 'hidden',
+    },
+    removeButtonGradient: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 16,
+    },
+    removeButtonText: {
         color: '#fff',
         fontSize: 18,
         fontWeight: '600',

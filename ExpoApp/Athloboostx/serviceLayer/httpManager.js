@@ -124,21 +124,16 @@ async function UpdateProfile(data){
         isRunning = true;
         let responseMessage = "";
         try {
-            console.log('Sending to server:', JSON.stringify(data, null, 2));
             const res = await fetch(`${url}user/`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email: data.email,
-                    workouts: JSON.stringify(data.workouts)
-                })
+                body: JSON.stringify(data)
             });
             
             const responseData = await res.json();
-            console.log('Server response:', responseData);
-            
+
             if (res.ok) {
                 responseMessage = { status: Status.OK };
             } else {
