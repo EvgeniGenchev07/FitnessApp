@@ -135,14 +135,14 @@ namespace WebApi
                         case "newEmail":
                             user.Email = pair.Value.ToString();
                             break;
-                        case "username":
+                        case "userName":
                             user.UserName = pair.Value.ToString();
                             break;
                         case "bio":
                             user.Bio = pair.Value.ToString();
                             break;
                         case "photo":
-                            user.Photo = Convert.FromBase64String(pair.Value.ToString());
+                            if(pair.Value.ToString() != "[]") user.Photo = Convert.FromBase64String(pair.Value.ToString());
                             break;
                         case "password":
                             user.Password = pair.Value.ToString();

@@ -7,6 +7,7 @@ import * as Updates from 'expo-updates';
 import {Alert} from "react-native";
 import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {setTheUsername} from "whatwg-url-without-unicode";
 async function Login(email, password) {
     const formErrors = ValidateLogin(email, password);
     if (Object.keys(formErrors).length !== 0) {
@@ -137,7 +138,6 @@ async function SaveWorkout(workout) {
             processedWorkout.id = generateId(); // Generate new ID for new workouts
             workouts.push(processedWorkout);
         }
-        console.log(processedWorkout);
         await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
         const user = await SecureStore.getItemAsync('user');
         const dataToSend = {
@@ -160,13 +160,10 @@ async function DeleteWorkout(workoutId) {
     try {
         let workouts = await AsyncStorage.getItem('workouts');
         workouts = workouts ? JSON.parse(workouts) : [];
-        console.log('\n\n\n');
-        console.log(workouts);
         const index = workouts.findIndex(w => w.id === workoutId);
         if (index !== -1) {
             workouts.splice(index, 1);
         }
-        console.log(workouts);
         await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
         const user = await SecureStore.getItemAsync('user');
         const dataToSend = {
@@ -182,6 +179,35 @@ async function DeleteWorkout(workoutId) {
         return Status.OK;
     } catch (error) {
         console.error('Error saving workout:', error);
+        return Status.ServerError;
+    }
+}
+async function UpdateUserProfileData(newUserData) {
+    try {
+
+        let userData = await AsyncStorage.getItem('profile');
+        userData = userData ? JSON.parse(userData) : {};
+        userData.userName = newUserData.userName;
+        userData.bio = newUserData.bio;
+        userData.photo = newUserData.photo;
+        await AsyncStorage.setItem('profile', JSON.stringify(userData));
+        const user = await SecureStore.getItemAsync('user');
+        const dataToSend = {
+            email: user,
+            userName: userData.userName,
+            bio: userData.bio,
+            photo: userData.photo,
+        };
+        console.log(dataToSend);
+        const res = await HttpPatchProfile(dataToSend);
+
+        if (!res || res.status !== Status.OK) {
+            console.error('Server update failed:', res);
+            return Status.ServerError;
+        }
+        return Status.OK;
+    } catch (error) {
+        console.error('Error saving profile data:', error);
         return Status.ServerError;
     }
 }
@@ -203,3 +229,5 @@ const _SaveWorkout = SaveWorkout;
 export {_SaveWorkout as SaveWorkout};
 const _DeleteWorkout = DeleteWorkout;
 export {_DeleteWorkout as DeleteWorkout};
+const _UpdateUserProfileData = UpdateUserProfileData;
+export {_UpdateUserProfileData as UpdateUserProfile};

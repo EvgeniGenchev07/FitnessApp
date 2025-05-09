@@ -1,19 +1,32 @@
-import React, { useState } from 'react';
+import React, {useCallback, useState} from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import {ThemedButton} from "@/components/ThemedButton";
-import {PatchProfile} from "@/serviceLayer/managerHandler"; // To allow image picking
+import {UpdateUserProfile} from "@/serviceLayer/managerHandler"; // To allow image picking
 import * as FileSystem from 'expo-file-system';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Status from "@/serviceLayer/status";
 export default function EditProfileScreen() {
     const [name, setName] = useState('John Doe');
     const [bio, setBio] = useState('This is my bio...');
     const [profileImage, setProfileImage] = useState(
-        require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg') // Default image
+        require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg')
+    );
+    useFocusEffect(
+        useCallback(() =>{
+            AsyncStorage.getItem('profile').then(res=> {
+                const profile = JSON.parse(res);
+                console.log(profile);
+                setProfileImage(profile.photo||require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
+                setName(profile.userName);
+                setBio(profile.bio);
+            })
+        }, [])
     );
     const [imageArray,setImageArray] = useState([]);
     const pickImage = async () => {
@@ -25,10 +38,8 @@ export default function EditProfileScreen() {
             quality: 0.1,
         });
 
-        // Check if result is not cancelled and is an object with 'uri'
         if (result && !result.canceled && result.assets.length == 1) {
             const uri = result.assets[0].uri;
-            console.log(uri);
             setProfileImage({ uri });
             const base64String = await FileSystem.readAsStringAsync(uri, {
                 encoding: FileSystem.EncodingType.Base64,
@@ -36,22 +47,11 @@ export default function EditProfileScreen() {
             setImageArray(base64String);
         }
     };
-    const uriToBase64 = async (uri) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.onloadend = () => {
-                resolve(fileReader.result);
-            };
-            fileReader.onerror = reject;
-            fetch(uri)
-                .then((response) => response.blob())
-                .then((blob) => fileReader.readAsDataURL(blob));
-        });
-    };
 
     const handleSave = async () => {
-        const res = await PatchProfile(imageArray,name,bio);
-        router.back();
+        const res = await UpdateUserProfile({photo:imageArray,userName:name,bio:bio});
+        if(!res||res!==Status.OK) Alert.alert('Something went wrong!');
+        else router.back();
     };
 
     return (

@@ -209,7 +209,7 @@ export default function HomeScreen() {
                             >
                                 <ThemedText style={styles.cardTitle}>{workout.title}</ThemedText>
                                 <ThemedText style={styles.cardSubtitle}>
-                                    {t('home.exercises', { count: workout?.exercises?.length })}
+                                    {t('home.exercises',{ count: workout?.exercises?.length||0 })}
                                 </ThemedText>
                             </LinearGradient>
                         </TouchableOpacity>
@@ -246,10 +246,10 @@ export default function HomeScreen() {
                                 colors={[workout.bgColor, `${workout.bgColor}80`]}
                                 style={styles.cardSmall}
                             >
-                                <Image 
-                                    source={workout.image ? { uri: workout.image } : require('../../assets/images/app-icon.png')} 
-                                    style={styles.cardSmallImage} 
-                                    resizeMode="contain" 
+                                <Image
+                                    source={workout.image ? { uri: workout.image } : require('../../assets/images/app-icon.png')}
+                                    style={styles.cardSmallImage}
+                                    resizeMode="contain"
                                 />
                                 <ThemedText style={styles.cardSmallTitle}>{workout.title}</ThemedText>
                             </LinearGradient>

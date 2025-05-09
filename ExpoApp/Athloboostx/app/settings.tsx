@@ -30,25 +30,6 @@ const SettingsScreen = () => {
     const { theme, setTheme, colors } = useTheme();
     const colorScheme = useColorScheme();
     
-    const [emailNotifications, setEmailNotifications] = useState(true);
-    const [pushNotifications, setPushNotifications] = useState(false);
-    const [userData, setUserData] = useState<any>(null);
-
-    useEffect(() => {
-        loadUserData();
-    }, []);
-
-    const loadUserData = async () => {
-        try {
-            const data = await SecureStore.getItemAsync('user');
-            if (data) {
-                setUserData(JSON.parse(data));
-            }
-        } catch (error) {
-            console.error('Error loading user data:', error);
-        }
-    };
-
     const handleThemeChange = async (value: boolean) => {
         await setTheme(value ? 'dark' : 'light');
     };

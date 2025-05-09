@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, {useCallback, useEffect, useLayoutEffect, useState} from 'react';
 import {
     View,
     Text,
@@ -16,12 +16,14 @@ import { ThemedButton } from '@/components/ThemedButton';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import {router} from "expo-router";
+import {router, useFocusEffect} from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Buffer } from 'buffer';
 import {GetProfile} from "@/serviceLayer/managerHandler"; // dummy or real post data
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Post {
     title: string;
@@ -51,32 +53,36 @@ export default function ProfileScreen() {
     const [following, setFollowing] = useState(0);
     const [likes, setLikes] = useState(0);
     const [posts, setPosts] = useState<Post[]>([]);
-
+    const loadUser = async () => {
+        const user_data = await asyncStorage.getItem('profile');
+        const user = JSON.parse(user_data);
+        setUserData(user);
+        if(user?.photo){
+            const imageUri = convertToImage(user.photo);
+            setImage({uri:imageUri});
+        }
+        setUsername(user.userName);
+        setDescription(user.bio);
+        setFollowers(user.followers.length);
+        setFollowing(user.following.length);
+        let totalLikes = 0;
+        const posts_data = await asyncStorage.getItem('posts');
+        const posts = JSON.parse(posts_data);
+        for (let post of posts || [])
+        {
+            totalLikes += post.likes;
+        }
+        setLikes(totalLikes);
+        if(posts) setPosts(posts);
+    };
     useEffect(() => {
-        const loadUser = async () => {
-                const user = await GetProfile();
-                setUserData(user);
-                if(user.photo){
-                    const imageUri = convertToImage(user.photo);
-                    setImage({uri:imageUri});
-                }
-                console.log(user.userName);
-                console.log(user.bio);
-                setUsername(user.userName);
-                setDescription(user.bio);
-                setFollowers(user.followers.length);
-                setFollowing(user.following.length);
-                let totalLikes = 0;
-                for (let post of user.posts || [])
-                {
-                    totalLikes += post.likes;
-                }
-                setLikes(totalLikes);
-                if(user.posts) setPosts(user.posts);
-        };
-
         loadUser();
     }, []);
+    useFocusEffect(
+        useCallback(() =>{
+            loadUser();
+        }, [])
+    );
     const renderPost = ({ item }: { item: Post }) => (
         <View style={[styles.postItem, { borderColor: colors.border }]}>
             <ThemedText style={styles.postText}>{item.title}</ThemedText>
@@ -144,16 +150,16 @@ export default function ProfileScreen() {
                 </View>
 
                 <View style={styles.container_buttons}>
-                    <ThemedButton type={'default'} style={styles.follow_button}>
-                        <ThemedText type={'button'}>{t('profile.follow')}</ThemedText>
+                    <ThemedButton type={'default'} style={styles.follow_button} onPress={()=>router.push("/editProfile")}>
+                        <ThemedText type={'button'}>{t('profile.editProfile')}</ThemedText>
                     </ThemedButton>
-                    <ThemedButton type={'icon'} style={{ marginLeft: 10 }}>
+                    {/*<ThemedButton type={'icon'} style={{ marginLeft: 10 }}>
                         <Ionicons
                             style={[styles.icon_social, { color: colors.borderColor }]}
                             name="share-social"
                             size={24}
                         />
-                    </ThemedButton>
+                    </ThemedButton>*/}
                 </View>
             </View>
 
@@ -178,7 +184,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingTop: StatusBar.currentHeight + 50,
+        paddingTop: 50,
     },
     headerContainer: {
         position: 'relative',
