@@ -42,7 +42,6 @@ namespace DBContexts
                 .HasForeignKey<Meal>(m => m.FoodId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            modelBuilder.Entity<Comment>().HasOne<User>(c => c.User).WithMany();
             base.OnModelCreating(modelBuilder);
         }
 

@@ -23,6 +23,9 @@ namespace DBContexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Description")
                         .HasColumnType("TEXT");
 
@@ -32,14 +35,12 @@ namespace DBContexts.Migrations
                     b.Property<int?>("PostId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -199,15 +200,18 @@ namespace DBContexts.Migrations
                     b.Property<int>("Likes")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Url")
+                    b.Property<byte[]>("Photo")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserID")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserID");
 
                     b.ToTable("Posts");
                 });
@@ -262,11 +266,6 @@ namespace DBContexts.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Bio")
-
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("BirthDate")
-
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreationDate")
@@ -363,12 +362,6 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.Post", null)
                         .WithMany("Comments")
                         .HasForeignKey("PostId");
-
-                    b.HasOne("Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Exercise", b =>
@@ -413,11 +406,11 @@ namespace DBContexts.Migrations
 
             modelBuilder.Entity("Models.Post", b =>
                 {
-                    b.HasOne("Models.User", "User")
+                    b.HasOne("Models.User", null)
                         .WithMany("Posts")
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Models.Schedule", b =>

@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.56.1:5000';
+const apiUrl = 'http://192.168.100.6:5000';
 let selectedPhotoFile = null;
 // Image preview functionality
         document.getElementById('photo-upload').addEventListener('change', function(e) {
