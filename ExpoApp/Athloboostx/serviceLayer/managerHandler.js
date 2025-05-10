@@ -8,6 +8,8 @@ import {Alert} from "react-native";
 import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {setTheUsername} from "whatwg-url-without-unicode";
+import {API_URL} from "@/config";
+import {getUserId} from "@/utils/auth";
 async function Login(email, password) {
     const formErrors = ValidateLogin(email, password);
     if (Object.keys(formErrors).length !== 0) {
@@ -198,7 +200,6 @@ async function UpdateUserProfileData(newUserData) {
             bio: userData.bio,
             photo: userData.photo,
         };
-        console.log(dataToSend);
         const res = await HttpPatchProfile(dataToSend);
 
         if (!res || res.status !== Status.OK) {
@@ -210,6 +211,37 @@ async function UpdateUserProfileData(newUserData) {
         console.error('Error saving profile data:', error);
         return Status.ServerError;
     }
+}
+async function CreatePost(post)
+{
+    try{
+        const user = await SecureStore.getItemAsync('user');
+        const dataToSend = {
+            email: user,
+            post: post
+        };
+        const generateId = () => Math.floor(Math.random() * 2147483647);
+
+        let posts = await AsyncStorage.getItem('posts');
+        posts = workouts ? JSON.parse(posts) : [];
+        const existingIndex = posts.findIndex(w => w.id === post.id);
+        if (existingIndex !== -1) {
+            posts[existingIndex] = post;
+        } else {
+            post.id = generateId();
+            posts.push(post);
+        }
+        await AsyncStorage.setItem('workouts', JSON.stringify(posts));
+    const res = await HttpPatchProfile(dataToSend);
+    if (!res || res.status !== Status.OK) {
+        console.error('Server update failed:', res);
+        return Status.ServerError;
+    }
+    return Status.OK;
+} catch (error) {
+    console.error('Error saving profile data:', error);
+    return Status.ServerError;
+}
 }
 const _Login = Login;
 export {_Login as Login};
@@ -231,3 +263,5 @@ const _DeleteWorkout = DeleteWorkout;
 export {_DeleteWorkout as DeleteWorkout};
 const _UpdateUserProfileData = UpdateUserProfileData;
 export {_UpdateUserProfileData as UpdateUserProfile};
+const _CreatePost = CreatePost;
+export {_CreatePost as CreatePost};

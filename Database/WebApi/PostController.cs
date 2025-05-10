@@ -22,7 +22,6 @@ public class PostsController : ControllerBase
     [RequestSizeLimit(MaxFileSize)]
     public async Task<IActionResult> CreatePost([FromForm] string title,
                                              [FromForm] string description,
-                                             [FromForm] int userID,
                                              [FromForm] IFormFile photo)
     {
         try
@@ -31,7 +30,6 @@ public class PostsController : ControllerBase
             {
                 Title = title,
                 Description = description,
-                UserID = userID,
                 Created = DateTime.UtcNow,
                 Likes = 0
             };

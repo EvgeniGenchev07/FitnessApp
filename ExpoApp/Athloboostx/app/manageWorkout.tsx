@@ -47,7 +47,7 @@ export default function ManageWorkoutScreen() {
     const workoutData = params.workout ? JSON.parse(decodeURIComponent(params.workout as string)) as Workout : null;
     
     const generateId = () => Math.floor(Math.random() * 2147483647); // Max int32 value
-    
+
     const [workout, setWorkout] = useState<Workout>(() => {
         if (workoutData) {
             return {
@@ -60,22 +60,17 @@ export default function ManageWorkoutScreen() {
                 })) || [],
             };
         }
-        
+
         return {
             id: 0,
             title: '',
             exercises: [],
         };
     });
-    
+
     const [isEditing, setIsEditing] = useState(isNew);
     const scrollY = new Animated.Value(0);
 
-    const headerOpacity = scrollY.interpolate({
-        inputRange: [0, HEADER_HEIGHT],
-        outputRange: [0, 1],
-        extrapolate: 'clamp',
-    });
 
     const handleDragEnd = ({ data }: { data: Exercise[] }) => {
         setWorkout(prev => ({ ...prev, exercises: data }));

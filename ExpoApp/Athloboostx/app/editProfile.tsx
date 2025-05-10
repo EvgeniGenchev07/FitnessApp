@@ -20,15 +20,19 @@ export default function EditProfileScreen() {
     useFocusEffect(
         useCallback(() =>{
             AsyncStorage.getItem('profile').then(res=> {
-                const profile = JSON.parse(res);
-                console.log(profile);
-                setProfileImage(profile.photo||require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
-                setName(profile.userName);
-                setBio(profile.bio);
+                if (res != null) {
+                    const profile = JSON.parse(res);
+                    setProfileImage(profile.photo||require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
+                    setName(profile.userName);
+                    setBio(profile.bio);
+                } else{
+                    Alert.alert("Cannot find profile data!");
+                }
+
             })
         }, [])
     );
-    const [imageArray,setImageArray] = useState([]);
+    const [imageArray,setImageArray] = useState('');
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             allowsEditing: true,
@@ -38,7 +42,7 @@ export default function EditProfileScreen() {
             quality: 0.1,
         });
 
-        if (result && !result.canceled && result.assets.length == 1) {
+        if (result && !result.canceled) {
             const uri = result.assets[0].uri;
             setProfileImage({ uri });
             const base64String = await FileSystem.readAsStringAsync(uri, {

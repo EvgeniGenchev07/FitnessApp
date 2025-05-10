@@ -212,6 +212,24 @@ namespace WebApi
                                 user.Workouts.Remove(rmWorkoutDb);
                             }
                             break;
+                        case "post":
+                            Post post = JsonConvert.DeserializeObject<Post>(pair.Value.ToString());
+                            Post postDb = user.Posts.FirstOrDefault(p=>p.Id == post.Id);
+                            if (postDb != null)
+                            {
+                                postDb.Description = post.Description;
+                                postDb.Photo = post.Photo;
+                            }
+                            else
+                            {
+                                user.Posts.Add(new Post
+                                {
+                                    Description = post.Description,
+                                    Photo = post.Photo,
+                                    Created = DateTime.Now,
+                                });
+                            }
+                            break;
                         case "measurements":
                             user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(pair.Value.ToString());
                             break;

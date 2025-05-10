@@ -23,6 +23,9 @@ import { API_URL } from '@/config';
 import { getUserId } from '@/utils/auth';
 import { StatusBar } from 'expo-status-bar';
 import { router } from 'expo-router';
+import * as FileSystem from "expo-file-system";
+import {CreatePost} from "@/serviceLayer/managerHandler";
+import Status from "@/serviceLayer/status";
 
 const CreatePostScreen = () => {
     const { t } = useLanguage();
@@ -30,24 +33,25 @@ const CreatePostScreen = () => {
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [caption, setCaption] = useState('');
-    const [location, setLocation] = useState('');
-    const [tags, setTags] = useState<string[]>([]);
-    const [currentTag, setCurrentTag] = useState('');
     const [showImageOptions, setShowImageOptions] = useState(false);
     const captionInputRef = useRef<TextInput>(null);
-
+    const [photoArray, setPhotoArray] = useState('');
     const pickImage = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                mediaTypes: 'images',
                 allowsEditing: true,
                 aspect: [4, 3],
                 quality: 0.8,
             });
-
-            if (!result.canceled && result.assets[0].uri) {
-                setImage(result.assets[0].uri);
+            if (result && !result.canceled) {
+                const uri = result.assets[0].uri;
+                setImage(uri);
                 setShowImageOptions(false);
+                const base64String = await FileSystem.readAsStringAsync(uri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+                setPhotoArray(base64String);
             }
         } catch (error) {
             Alert.alert(t('common.error'), t('createPost.imageError'));
@@ -65,12 +69,17 @@ const CreatePostScreen = () => {
             const result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality: 0.8,
+                quality: 0.5,
             });
 
-            if (!result.canceled && result.assets[0].uri) {
-                setImage(result.assets[0].uri);
+            if (result && !result.canceled) {
+                const uri = result.assets[0].uri;
+                setImage(uri);
                 setShowImageOptions(false);
+                const base64String = await FileSystem.readAsStringAsync(uri, {
+                    encoding: FileSystem.EncodingType.Base64,
+                });
+                setPhotoArray(base64String);
             }
         } catch (error) {
             Alert.alert(t('common.error'), t('createPost.cameraError'));
@@ -81,56 +90,16 @@ const CreatePostScreen = () => {
         setImage(null);
     };
 
-    const addTag = () => {
-        if (currentTag.trim() && !tags.includes(currentTag.trim())) {
-            setTags([...tags, currentTag.trim()]);
-            setCurrentTag('');
-        }
-    };
-
-    const removeTag = (tagToRemove: string) => {
-        setTags(tags.filter(tag => tag !== tagToRemove));
-    };
-
     const handlePost = async () => {
-        if (!image) {
-            Alert.alert(t('common.error'), t('createPost.noImagesError'));
-            return;
-        }
-
         setLoading(true);
         try {
-            const userId = await getUserId();
-            const formData = new FormData();
-            
-            formData.append('image', {
-                uri: image,
-                type: 'image/jpeg',
-                name: 'image.jpg',
-            } as any);
-
-            formData.append('caption', caption);
-            formData.append('location', location);
-            formData.append('tags', JSON.stringify(tags));
-            formData.append('email', userId);
-
-            const response = await fetch(`${API_URL}/posts`, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to create post');
+            const res = await CreatePost({photo:photoArray, description:caption});
+            if(res!==Status.OK){
+                Alert.alert(t('common.error'), t('createPost.cameraPermissionError'));
+            }else {
+                setImage(null);
+                setCaption('');
             }
-
-            Alert.alert(t('common.success'), t('createPost.successMessage'));
-            setImage(null);
-            setCaption('');
-            setLocation('');
-            setTags([]);
         } catch (error) {
             Alert.alert(t('common.error'), t('createPost.postError'));
         } finally {
@@ -177,7 +146,7 @@ const CreatePostScreen = () => {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1 }}
+            style={[{ flex: 1 },{backgroundColor: colors.background }]}
         >
             <ThemedView type={'default'} style={styles.container}>
                 <View style={styles.header}>
@@ -185,8 +154,6 @@ const CreatePostScreen = () => {
                         onPress={() => {
                             setImage(null);
                             setCaption('');
-                            setLocation('');
-                            setTags([]);
                             router.back();
                         }}
                         style={[styles.headerButton, { backgroundColor: colors.button }]}
@@ -195,7 +162,7 @@ const CreatePostScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={handlePost}
-                        disabled={loading || !image}
+                        disabled={loading}
                         style={[
                             styles.headerButton,
                             styles.postButton,
@@ -266,7 +233,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     header: {
-        marginTop: StatusBar.currentHeight||40,
+        marginTop: 40,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',

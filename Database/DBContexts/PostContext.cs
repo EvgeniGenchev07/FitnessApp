@@ -45,7 +45,6 @@ public class PostContext : IDatabase<Post, int>
         postFromDb.Title = entity.Title;
         postFromDb.Likes = entity.Likes;
         postFromDb.Created = entity.Created;
-        postFromDb.UserID = entity.UserID; // Update the UserID
 
         if (navigationalProperties && entity.Comments != null)
         {
