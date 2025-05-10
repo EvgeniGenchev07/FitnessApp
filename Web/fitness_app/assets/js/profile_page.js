@@ -52,89 +52,66 @@ document.getElementById('settingsDropdown').addEventListener('click', function(e
 
 // Function to load profile data from session storage
 function loadProfileData() {
-    // Get user data from session storage
     const userData = JSON.parse(sessionStorage.getItem('user'));
-    
+
     if (userData) {
-        // Update profile header
         const profileAvatar = document.querySelector('.profile-avatar');
         const profileName = document.querySelector('.profile-name');
         const profileStats = document.querySelectorAll('.profile-stats span');
         const profileBio = document.querySelector('.profile-bio');
         const profilePostsContainer = document.querySelector('.profile-posts');
-        
-        // Set profile image (convert byte array to URL if available)
+
+        // 🔥 Оправено зареждане на аватар
         if (userData.photo) {
-            // Convert byte array to base64 image
-            const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(userData.photo)));
-            profileAvatar.src = `data:image/jpeg;base64,${base64String}`;
+            profileAvatar.src = `data:image/jpeg;base64,${userData.photo}`;
         } else {
             profileAvatar.src = 'assets/img/index/avatar.jpg';
         }
         profileAvatar.alt = userData.userName;
-        
-        // Set username
-        profileName.textContent = userData.userName;
-        
-        // Set stats - using actual counts from session data
-        profileStats[0].textContent = userData.posts?.length || '0'; // Posts count
-        profileStats[1].textContent = userData.followers?.length || '0'; // Followers count
-        profileStats[2].textContent = userData.following?.length || '0'; // Following count
-        
-        // Set bio if available
-        if (userData.bio) {
-            profileBio.innerHTML = userData.bio.replace(/\n/g, '<br>');
-        } else {
-            profileBio.innerHTML = 'AthloBoostX Warrior';
-        }
 
-        // Load posts if available
+        profileName.textContent = userData.userName;
+        profileStats[0].textContent = userData.posts?.length || '0';
+        profileStats[1].textContent = userData.followers?.length || '0';
+        profileStats[2].textContent = userData.following?.length || '0';
+
+        profileBio.innerHTML = userData.bio ? userData.bio.replace(/\n/g, '<br>') : 'AthloBoostX Warrior';
+
         if (userData.posts && userData.posts.length > 0) {
-            profilePostsContainer.innerHTML = ''; // Clear any placeholder content
-            
+            profilePostsContainer.innerHTML = '';
+
             userData.posts.forEach(post => {
                 const postItem = document.createElement('div');
                 postItem.className = 'post-item';
-                
-                // Assuming post has an image property
+
+                const img = document.createElement('img');
                 if (post.image) {
-                    const img = document.createElement('img');
-                    // Convert byte array to base64 if needed
-                    const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(post.image)));
-                    img.src = `data:image/jpeg;base64,${base64String}`;
-                    img.alt = 'Post';
-                    postItem.appendChild(img);
+                    img.src = `data:image/jpeg;base64,${post.image}`; // 🔥 Тук също base64
                 } else {
-                    // Default placeholder if no image
-                    const img = document.createElement('img');
                     img.src = 'post-placeholder.jpg';
-                    img.alt = 'Post';
-                    postItem.appendChild(img);
                 }
-                
-                // Add hover overlay with likes and comments if available
+                img.alt = 'Post';
+                postItem.appendChild(img);
+
                 const postHover = document.createElement('div');
                 postHover.className = 'post-hover';
-                
+
                 const likesSpan = document.createElement('span');
-                    likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
-                    
+                likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
+
                 const commentsSpan = document.createElement('span');
-                    commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
-                    
+                commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
+
                 postHover.appendChild(likesSpan);
                 postHover.appendChild(commentsSpan);
                 postItem.appendChild(postHover);
-                
+
                 profilePostsContainer.appendChild(postItem);
             });
         } else {
-            // No posts - you could show a message or leave empty
-            profilePostsContainer.innerHTML = 
+            profilePostsContainer.innerHTML =
                 '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">No posts yet</p>';
         }
     } else {
-        // If no data in session storage, use defaults or show message
         console.log('No user data found in session storage');
     }
 }

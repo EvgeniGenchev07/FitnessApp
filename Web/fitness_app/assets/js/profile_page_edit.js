@@ -30,14 +30,8 @@ let selectedPhotoFile = null;
             const memberSinceDisplay = document.querySelector('.member-since');
         
             // Set profile image (handle byte array or default)
-            if (user.photo && Array.isArray(user.photo)) {
-                try {
-                    const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(user.photo)));
-                    avatarPreview.src = `data:image/jpeg;base64,${base64String}`;
-                } catch (e) {
-                    console.error('Error processing profile photo:', e);
-                    avatarPreview.src = 'assets/img/index/avatar.jpg';
-                }
+            if (user.photo) {
+                avatarPreview.src = `data:image/jpeg;base64,${user.photo}`;
             } else {
                 avatarPreview.src = 'assets/img/index/avatar.jpg';
             }

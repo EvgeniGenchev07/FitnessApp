@@ -70,8 +70,6 @@ namespace WebApi
                 if (response.Item1 == (byte)Error.Ok)
                 {
                     var user = response.Item2;
-
-                    // Създаваме response object с правилно форматираната снимка
                     var userResponse = new
                     {
                         user.UserName,
@@ -84,8 +82,7 @@ namespace WebApi
                         user.X,
                         user.Instagram,
                         user.CreationDate,
-                        // Добавете всички необходими полета
-                        Password = "" // Нулираме паролата за сигурност
+                        Password = ""
                     };
 
                     return Ok(userResponse);
