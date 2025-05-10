@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace WebApi
 {
@@ -57,33 +58,45 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
-        
+
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> GetUser([FromBody] Dictionary<string,object> data)
+        public async Task<IActionResult> GetUser([FromBody] Dictionary<string, object> data)
         {
             try
             {
-                
-                Tuple<byte,User> response = await _userLoginContext.Login(data["email"].ToString(), data["password"].ToString());
+                Tuple<byte, User> response = await _userLoginContext.Login(data["email"].ToString(), data["password"].ToString());
+
                 if (response.Item1 == (byte)Error.Ok)
                 {
-                    return Ok(response.Item2);
+                    var user = response.Item2;
+
+                    // Създаваме response object с правилно форматираната снимка
+                    var userResponse = new
+                    {
+                        user.UserName,
+                        user.Email,
+                        user.Bio,
+                        Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
+                        user.Height,
+                        user.Weight,
+                        user.Facebook,
+                        user.X,
+                        user.Instagram,
+                        user.CreationDate,
+                        // Добавете всички необходими полета
+                        Password = "" // Нулираме паролата за сигурност
+                    };
+
+                    return Ok(userResponse);
                 }
                 return NotFound(response.Item1);
-             /*   if (user == null) return NotFound("User not found");
-                if (user.Password != password) return Unauthorized();
-                user.Password = "";
-                return Ok(user);*/
             }
             catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
-
         }
-        
-        
 
         [HttpPost]
         [Route("register")]
@@ -215,6 +228,91 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
+        [Route("js")]
+        [HttpPatch]
+        public async Task<IActionResult> PutUserWithJs([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                User user = await _userContext.ReadAsync(data["email"].ToString(), true);
+
+                if (user == null) return NotFound("User not found");
+
+                bool useNavigationalProperties = false;
+
+                foreach (var pair in data)
+                {
+                    object value = pair.Value;
+                    if (value is JsonElement jsonElement)
+                    {
+                        value = jsonElement.ValueKind switch
+                        {
+                            JsonValueKind.String => jsonElement.GetString(),
+                            JsonValueKind.Number => jsonElement.GetDecimal(),
+                            JsonValueKind.True => true,
+                            JsonValueKind.False => false,
+                            JsonValueKind.Null => null,
+                            _ => value
+                        };
+                    }
+
+                    switch (pair.Key)
+                    {
+                        case "newEmail":
+                            user.Email = value?.ToString();
+                            break;
+                        case "username":
+                            user.UserName = value?.ToString();
+                            break;
+                        case "bio":
+                            user.Bio = value?.ToString();
+                            break;
+                        case "photo":
+                            user.Photo = Convert.FromBase64String(value?.ToString());
+                            break;
+                        case "password":
+                            user.Password = value?.ToString();
+                            break;
+                        case "height":
+                            if (value != null)
+                                user.Height = Convert.ToByte(value);
+                            break;
+                        case "meals":
+                            user.Meals = JsonConvert.DeserializeObject<List<Meal>>(value?.ToString());
+                            useNavigationalProperties = true;
+                            break;
+                        case "schedule":
+                            user.Schedule = JsonConvert.DeserializeObject<Schedule>(value?.ToString());
+                            useNavigationalProperties = true;
+                            break;
+                        case "workouts":
+                            user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(value?.ToString());
+                            useNavigationalProperties = true;
+                            break;
+                        case "measurements":
+                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(value?.ToString());
+                            useNavigationalProperties = true;
+                            break;
+                        case "weight":
+                            if (value != null && value != DBNull.Value && !string.IsNullOrEmpty(value.ToString()))
+                                user.Weight = Convert.ToDouble(value);
+                            break;
+
+                        case "weightGoal":
+                            if (value != null)
+                                user.WeightGoal = Convert.ToDouble(value);
+                            break;
+                    }
+                }
+
+                await _userContext.UpdateAsync(user, useNavigationalProperties);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
         [HttpDelete("{email}")] 
         public async Task<IActionResult> DeleteUser( string email)
@@ -229,7 +327,22 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost]
+        [Route("check-email")]
+        public async Task<IActionResult> CheckEmail([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+                string email = data["email"].ToString();
+                User user = await _userContext.ReadAsync(email, true, false);
+                if (user == null) return NotFound("User not found");
+                return Ok("User exists");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-       
     }
 }

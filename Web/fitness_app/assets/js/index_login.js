@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const userData = JSON.parse(sessionStorage.getItem('user'));
-    const language = navigator.language || navigator.userLanguage; // Detect device language
+    
+    // Detect language from URL path - only check for _en.html
+    const currentPath = window.location.pathname;
+    const isEnglish = currentPath.includes('_en.html');
+    // If URL contains _en.html -> English, otherwise Bulgarian
 
     if (userData) {
         const logoDiv = document.querySelector('.logo');
@@ -23,9 +27,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 welcomeText.textContent = userData.userName;
                 welcomeDiv.appendChild(welcomeText);
 
-                // Create arrow span (pointing right when closed)
+                // Create arrow span
                 const arrowSpan = document.createElement('span');
-                arrowSpan.innerHTML = '&#x25B6;'; // Right-pointing triangle ▶
+                arrowSpan.innerHTML = '&#x25B6;';
                 arrowSpan.style.display = 'inline-block';
                 arrowSpan.style.transition = 'transform 0.3s ease';
                 welcomeDiv.appendChild(arrowSpan);
@@ -41,26 +45,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 dropdownMenu.style.padding = '10px';
                 dropdownMenu.style.zIndex = '1000';
 
-                // Create Profile link
+                // Profile link
                 const profileLink = document.createElement('a');
-                profileLink.href = (language.startsWith('bg')) ? 'profile_page_bg.html' : 'profile_page.html';
+                profileLink.href = isEnglish ? 'profile_page.html' : 'profile_page_bg.html';
                 profileLink.style.display = 'block';
                 profileLink.style.padding = '5px 0';
                 profileLink.style.color = '#333';
                 profileLink.style.textDecoration = 'none';
-                profileLink.textContent = (language.startsWith('bg')) ? 'Профил' : 'Profile';
+                profileLink.textContent = isEnglish ? 'Profile' : 'Профил';
 
-                // Create Logout link
+                // Logout link
                 const logoutLink = document.createElement('a');
-                logoutLink.href = "logout.html";
+                logoutLink.href = "#";
                 logoutLink.style.display = 'block';
                 logoutLink.style.padding = '5px 0';
                 logoutLink.style.color = '#333';
                 logoutLink.style.textDecoration = 'none';
-                logoutLink.textContent = (language.startsWith('bg')) ? 'Изход' : 'Logout';
+                logoutLink.textContent = isEnglish ? 'Logout' : 'Изход';
 
-                logoutLink.addEventListener('click', function () {
+                logoutLink.addEventListener('click', function (e) {
+                    e.preventDefault();
                     sessionStorage.removeItem('user');
+                    window.location.href = isEnglish ? 'index_en.html' : 'index.html';
                 });
 
                 dropdownMenu.appendChild(profileLink);
@@ -70,27 +76,39 @@ document.addEventListener('DOMContentLoaded', function () {
                     e.stopPropagation();
                     const isOpen = dropdownMenu.style.display === 'block';
                     dropdownMenu.style.display = isOpen ? 'none' : 'block';
-                    arrowSpan.innerHTML = isOpen ? '&#x25B6;' : '&#x25BC;'; // Switch between ▶ and ▼
+                    arrowSpan.innerHTML = isOpen ? '&#x25B6;' : '&#x25BC;';
                 });
 
-                // Close dropdown when clicking outside
                 document.addEventListener('click', function () {
                     dropdownMenu.style.display = 'none';
-                    arrowSpan.innerHTML = '&#x25B6;'; // Reset to ▶
+                    arrowSpan.innerHTML = '&#x25B6;';
                 });
 
                 welcomeDiv.appendChild(dropdownMenu);
                 logoDiv.appendChild(welcomeDiv);
             } else { // Desktop
                 const newLink = document.createElement('a');
-                newLink.href = (language.startsWith('bg')) ? 'profile_page_bg.html' : 'profile_page.html';
+                newLink.href = isEnglish ? 'profile_page.html' : 'profile_page_bg.html';
+
+                let avatarSrc = 'assets/img/index/avatar.jpg';
+                if (userData.photo && Array.isArray(userData.photo)) {
+                    try {
+                        const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(userData.photo)));
+                        avatarSrc = `data:image/jpeg;base64,${base64String}`;
+                    } catch (e) {
+                        console.error('Error processing avatar image:', e);
+                    }
+                } else if (userData.avatarUrl) {
+                    avatarSrc = userData.avatarUrl;
+                }
 
                 const avatarImg = document.createElement('img');
-                avatarImg.src = userData.avatarUrl || 'assets/img/index/avatar.jpg';
+                avatarImg.src = avatarSrc;
                 avatarImg.alt = 'User Avatar';
                 avatarImg.style.width = '50px';
                 avatarImg.style.height = '50px';
                 avatarImg.style.borderRadius = '50%';
+                avatarImg.style.objectFit = 'cover';
 
                 newLink.appendChild(avatarImg);
                 logoDiv.appendChild(newLink);

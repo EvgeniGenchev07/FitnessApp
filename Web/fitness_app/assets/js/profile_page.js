@@ -1,5 +1,35 @@
-  // Settings Dropdown Functionality
-  function toggleSettings(event) {
+// Navigation functions with URL-based language detection
+function getLanguageFromUrl() {
+    const currentUrl = window.location.pathname;
+    if (currentUrl.includes('_bg.html')) {
+        return 'bg';
+    }
+    return 'en'; // Default to English
+}
+
+function navigateToDashboard() {
+    const language = getLanguageFromUrl();
+    window.location.href = language === 'bg' ? 'dashboard_bg.html' : 'dashboard.html';
+}
+
+function navigateToEditPage() {
+    const language = getLanguageFromUrl();
+    window.location.href = language === 'bg' ? 'profile_page_edit_bg.html' : 'profile_page_edit.html';
+}
+
+function navigateToMainPage() {
+    const language = getLanguageFromUrl();
+    window.location.href = language === 'bg' ? 'index.html' : 'index_en.html';
+}
+
+function logout() {
+    sessionStorage.removeItem('user');
+    const language = getLanguageFromUrl();
+    window.location.href = language === 'bg' ? 'index.html' : 'index_en.html';
+}
+
+// Settings Dropdown Functionality
+function toggleSettings(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('settingsDropdown');
     dropdown.classList.toggle('active');
@@ -19,15 +49,6 @@ document.addEventListener('click', function(event) {
 document.getElementById('settingsDropdown').addEventListener('click', function(event) {
     event.stopPropagation();
 });
-
-// Modal Functions (Placeholder)
-function showEditProfileModal() {
-    alert('Edit Profile clicked');
-}
-
-function showDeletePostModal() {
-    alert('Delete Post clicked');
-}
 
 // Function to load profile data from session storage
 function loadProfileData() {
@@ -96,11 +117,11 @@ function loadProfileData() {
                 postHover.className = 'post-hover';
                 
                 const likesSpan = document.createElement('span');
-                likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
-                
+                    likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
+                    
                 const commentsSpan = document.createElement('span');
-                commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
-                
+                    commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
+                    
                 postHover.appendChild(likesSpan);
                 postHover.appendChild(commentsSpan);
                 postItem.appendChild(postHover);
@@ -110,63 +131,13 @@ function loadProfileData() {
         } else {
             // No posts - you could show a message or leave empty
             profilePostsContainer.innerHTML = 
-            '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">No posts yet</p>';
+                '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">No posts yet</p>';
         }
     } else {
         // If no data in session storage, use defaults or show message
         console.log('No user data found in session storage');
-}
-}
-function showDeletePostModal() {
-    alert('Delete Post modal would appear here');
-    // In a real implementation, you would show a modal here
-}
-//Logout
-function logout() {
-    sessionStorage.removeItem('user');
-    const language=navigator.language;
-    if(language.startsWith("bg"))
-    {
-        window.location.href="index.html"
-    }
-    else{
-        window.location.href="index_en.html"
     }
 }
-//Redirect to dashboard
-function navigateToDashboard()
-{
-    const language=navigator.language;
-    if(language.startsWith("bg"))
-    {
-        window.location.href="dashboard_bg.html"
-    }
-    else{
-        window.location.href="dashboard.html"
-    }
-}
-//Redirext to edit page
-function navigateToEditPage()
-{
-    const language=navigator.language;
-    if(language.startsWith("bg"))
-        {
-            window.location.href="profile_page_edit_bg.html"
-        }
-        else{
-            window.location.href="profile_page_edit.html"
-        }
-}
-function navigateToMainPage()
-{
-    const language=navigator.language;
-    if(language.startsWith("bg"))
-        {
-            window.location.href="index.html"
-        }
-        else{
-            window.location.href="index_en.html"
-        }
-}
+
 // Load profile data when page loads
 document.addEventListener('DOMContentLoaded', loadProfileData);

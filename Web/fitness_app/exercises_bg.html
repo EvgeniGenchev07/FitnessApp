@@ -1,0 +1,133 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AthloBoostX</title>
+    <link rel="stylesheet" href="assets/css/exercises.css">
+</head>
+<body>
+    <!-- Back Button -->
+    <button class="back-btn" onclick="backToMainPage()">Назад</button>
+
+    <div class="header">
+        <h1>Тренировъчни програми</h1>
+        <p>Изберете подходяща тренировка</p>
+    </div>
+    
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="individual">Индивидуални тренировки</button>
+        <button class="tab-btn" data-tab="group">Групови тренировки</button>
+    </div>
+    
+    <!-- Individual Exercises Tab -->
+    <div id="individual" class="tab-content active">
+        <div class="container">
+            <!-- Arms Card -->
+            <div class="workout-card arms-card">
+                <div class="card-header">
+                    <div class="card-title">Ръце</div>
+                    <div class="card-level">Лесно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Chest Card -->
+            <div class="workout-card chest-card">
+                <div class="card-header">
+                    <div class="card-title">Гърди</div>
+                    <div class="card-level">Средно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Abs Card -->
+            <div class="workout-card abs-card">
+                <div class="card-header">
+                    <div class="card-title">Abs</div>
+                    <div class="card-level">Трудно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Legs Card -->
+            <div class="workout-card legs-card">
+                <div class="card-header">
+                    <div class="card-title">Крака</div>
+                    <div class="card-level">Средно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Full Body Card -->
+            <div class="workout-card fullbody-card">
+                <div class="card-header">
+                    <div class="card-title">Цялото тяло</div>
+                    <div class="card-level">Трудно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Group Exercises Tab -->
+    <div id="group" class="tab-content">
+        <div class="container">
+            <!-- Group Training Card -->
+            <div class="workout-card group-card">
+                <div class="card-header">
+                    <div class="card-title">Групова тренировка</div>
+                    <div class="card-level">Средно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- HIIT Card -->
+            <div class="workout-card hiit-card">
+                <div class="card-header">
+                    <div class="card-title">HIIT</div>
+                    <div class="card-level">Трудно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Yoga Card -->
+            <div class="workout-card yoga-card">
+                <div class="card-header">
+                    <div class="card-title">Йога</div>
+                    <div class="card-level">Лесно</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Начало</button>
+                </div>
+            </div>
+            
+            <!-- Partner Card -->
+            <div class="workout-card fullbody-card">
+                <div class="card-header">
+                    <div class="card-title">Partner Workout</div>
+                    <div class="card-level">Medium</div>
+                </div>
+                <div class="card-footer">
+                    <button class="start-btn">Start</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/exercises.js"></script>
+</body>
+</html>

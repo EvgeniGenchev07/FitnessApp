@@ -74,41 +74,44 @@ const apiUrl = 'http://192.168.100.6:5000';
     }
 
     //login
-    async function handleLogin(event) {
-        event.preventDefault();
-    
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
-    
-        try {
-            const response = await fetch(`${apiUrl}/user/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json', // Changed to JSON
-                },
-                body: JSON.stringify({ // Convert to JSON
-                    email: email,
-                    password: password
-                })
-            });
-    
-            if (response.ok) {
-                const userData = await response.json();
-                alert('Успешен вход!');
-                sessionStorage.setItem('user', JSON.stringify(userData));
-                const userLanguage = navigator.language || navigator.userLanguage;
-                const isBulgarian = userLanguage.startsWith('bg');
-                const page = isBulgarian ? 'index.html' : 'index_en.html';
-                window.location.href = `../fitness_app/${page}`; 
+    async function login(email, password) {
+    try {
+        const response = await fetch(`${apiUrl}/user/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        if (response.ok) {
+            const userData = await response.json();
+            
+            // Конвертиране на base64 снимка към формат за показване
+            if (userData.Photo) {
+                userData.photoUrl = `data:image/jpeg;base64,${userData.Photo}`;
             } else {
-                const error = await response.text();
-                alert(`Грешка при вход: ${error}`)
+                userData.photoUrl = 'assets/img/index/avatar.jpg';
             }
-        } catch (error) {
-            alert('Грешка при връзка със сървъра.');
-            console.error(error);
+            
+            // Запазване на потребителските данни
+            sessionStorage.setItem('user', JSON.stringify(userData));
+            const currentPath = window.location.pathname;
+                    const isBulgarian = currentPath.includes('_bg.html');
+                const page = isBulgarian ? 'index.html' : 'index_en.html';
+                window.location.href = `../fitness_app/${page}`;
+        } else {
+            const error = await response.text();
+            throw new Error(error || 'Login failed');
         }
+    } catch (error) {
+        console.error('Login error:', error);
+        throw error;
     }
+}
     //Forgot password
     document.addEventListener('DOMContentLoaded', function () {
         emailjs.init("zd7S-Qg4R-j6V3sQ0");

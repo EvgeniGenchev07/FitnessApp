@@ -254,3 +254,21 @@ body {
         font-size: 14px;
     }
 }
+/* Ensure tab container starts at top */
+.tab-container {
+    position: relative;
+    top: -1px; /* Adjust if you have a fixed header */
+    margin-top: 0;
+    padding-top: 0;
+}
+
+/* For mobile specifically */
+@media (max-width: 768px) {
+    .tab-content {
+        scroll-margin-top: 60px; /* Adjust based on your header height */
+    }
+    
+    html {
+        scroll-behavior: smooth;
+    }
+}

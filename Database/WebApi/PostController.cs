@@ -86,7 +86,7 @@ public class PostsController : ControllerBase
                 return NotFound();
             }
 
-            return File(post.Photo, "image/jpeg"); // Adjust content type based on your needs
+            return File(post.Photo, "image/jpeg"); 
         }
         catch (Exception ex)
         {

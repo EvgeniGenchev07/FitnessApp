@@ -118,11 +118,10 @@ let selectedPhotoFile = null;
                     patchData.photo = base64String;
                 }
         
-                const response = await fetch(`${apiUrl}/user`, {
+                const response = await fetch(`${apiUrl}/user/js`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${user.token || ''}`
                     },
                     body: JSON.stringify(patchData)
                 });
