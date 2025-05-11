@@ -61,7 +61,6 @@ function loadProfileData() {
         const profileBio = document.querySelector('.profile-bio');
         const profilePostsContainer = document.querySelector('.profile-posts');
 
-        // 🔥 Оправено зареждане на аватар
         if (userData.photo) {
             profileAvatar.src = `data:image/jpeg;base64,${userData.photo}`;
         } else {
@@ -85,7 +84,7 @@ function loadProfileData() {
 
                 const img = document.createElement('img');
                 if (post.image) {
-                    img.src = `data:image/jpeg;base64,${post.image}`; // 🔥 Тук също base64
+                    img.src = `data:image/jpeg;base64,${post.image}`; 
                 } else {
                     img.src = 'post-placeholder.jpg';
                 }

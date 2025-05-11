@@ -12,5 +12,7 @@ public class Post
     public DateTime Created { get; set; }
     public int Likes { get; set; }
     public byte[] Photo { get; set; }
+    public string PhotoMimeType { get; set; } 
     public List<Comment> Comments { get; set; }
+    public User User { get; set; }
 }

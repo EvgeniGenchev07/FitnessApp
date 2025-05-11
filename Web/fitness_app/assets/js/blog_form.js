@@ -1,138 +1,136 @@
-const apiUrl = 'http://192.168.100.6:5000'; // Your API base URL
+const apiUrl = 'http://192.168.100.6:5000';
 let selectedPhotoFile = null;
 
-$(document).ready(function() {
-    // Check if user is logged in
+
+$(document).ready(function () {
     const userData = JSON.parse(sessionStorage.getItem('user'));
     const blogFormSection = $('.blog-form-container');
-    
-    // Check if current page is Bulgarian version
     const isBulgarian = window.location.pathname.includes('blog_form_bg.html');
-    
-    if (!userData) {
-        // Hide the form and show authentication message
+
+    if (!userData) return showAuthRequired();
+
+    $('#image').on('change', handleImageSelect);
+    $('.close-preview').on('click', resetImagePreview);
+    $('#blogForm').on('submit', handleFormSubmit);
+
+    function showAuthRequired() {
         blogFormSection.hide();
-        
-        const messages = {
+        const msg = {
             title: isBulgarian ? 'Изисква се регистрация' : 'Authentication Required',
             text: isBulgarian ? 'Трябва да влезете в профила си, за да публикувате статии' : 'You need to be signed in to create blog posts',
             signUp: isBulgarian ? 'Регистрация/Вход' : 'Sign Up/In',
         };
-        
-        const warningMessage = `
+        const html = `
             <div class="container">
                 <div class="auth-required-message">
-                    <div class="auth-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h2>${messages.title}</h2>
-                    <p>${messages.text}</p>
+                    <div class="auth-icon"><i class="fas fa-lock"></i></div>
+                    <h2>${msg.title}</h2>
+                    <p>${msg.text}</p>
                     <div class="auth-buttons">
-                        <a href="${isBulgarian ? 'signUp_bg.html' : 'signUp.html'}" class="btn">${messages.signUp}</a>
+                        <a href="${isBulgarian ? 'signUp_bg.html' : 'signUp.html'}" class="btn">${msg.signUp}</a>
                     </div>
                 </div>
-            </div>
-        `;
-        
-        blogFormSection.after(warningMessage);
-        return;
+            </div>`;
+        blogFormSection.after(html);
     }
 
-    // Image preview functionality
-    $('#image').on('change', function(e) {
+    function handleImageSelect(e) {
         const file = e.target.files[0];
         if (!file) return;
-        
         selectedPhotoFile = file;
-        
+
         const reader = new FileReader();
-        reader.onload = function(event) {
+        reader.onload = function (event) {
             $('#imagePreview').attr('src', event.target.result).show();
             $('.close-preview').show();
         };
         reader.readAsDataURL(file);
-    });
+    }
 
-    // Remove image preview
-    $('.close-preview').on('click', function() {
+    function resetImagePreview() {
         $('#imagePreview').hide().attr('src', '');
         $('.close-preview').hide();
         $('#image').val('');
         selectedPhotoFile = null;
-    });
+    }
 
-    // Form submission handler
-    $('#blogForm').on('submit', async function(e) {
+    async function handleFormSubmit(e) {
         e.preventDefault();
-        
         const submitBtn = $('.blog-form-btn');
-        submitBtn.prop('disabled', true);
-        submitBtn.text(isBulgarian ? 'Изпращане...' : 'Submitting...');
-    
+        submitBtn.prop('disabled', true).text(isBulgarian ? 'Изпращане...' : 'Submitting...');
+
         try {
             const formData = new FormData();
-            formData.append('Title', $('#title').val());
-            formData.append('Description', $('#content').val());
-            formData.append('UserID', userData.id);
-            
-            if (selectedPhotoFile) {
-                formData.append('Photo', selectedPhotoFile);
-            }
-    
+            formData.append('title', $('#title').val());
+            formData.append('description', $('#content').val());
+            formData.append('userId', userData.id);
+            if (selectedPhotoFile) formData.append('photo', selectedPhotoFile);
+
             const response = await fetch(`${apiUrl}/posts`, {
                 method: 'POST',
                 body: formData,
-                // Don't set Content-Type header - let the browser set it automatically
-                // with the correct boundary for FormData
             });
-    
+
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.message || 
-                    (isBulgarian ? 'Грешка при изпращане' : 'Submission failed'));
+                throw new Error(errorData.message || (isBulgarian ? 'Грешка при изпращане' : 'Submission failed'));
             }
-    
-            // Show success message
-            showMessage(
-                isBulgarian ? 'Успешно публикувано!' : 'Successfully published!',
-                'success'
-            );
-            
-            // Redirect after 2 seconds
+
+            const createdPost = await response.json(); // Get back the post data
+            await updateSessionWithNewPost(createdPost);
+
+            showMessage(isBulgarian ? 'Успешно публикувано!' : 'Successfully published!', 'success');
+
             setTimeout(() => {
                 window.location.href = isBulgarian ? 'blog_bg.html' : 'blog.html';
             }, 2000);
-            
-        } catch (error) {
-            showMessage(error.message, 'error');
+        } catch (err) {
+            showMessage(err.message, 'error');
         } finally {
-            submitBtn.prop('disabled', false);
-            submitBtn.text(isBulgarian ? 'Публикувай' : 'Publish');
+            submitBtn.prop('disabled', false).text(isBulgarian ? 'Публикувай' : 'Publish');
         }
-    });
-    
-    // Display messages to user
+    }
+
     function showMessage(message, type = 'error') {
-        // Remove any existing messages
         $('.form-message').remove();
-        
-        const messageElement = $(`
+        const el = $(`
             <div class="form-message alert alert-${type}">
                 <i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i>
                 ${message}
-            </div>
-        `);
-        
-        // Insert after the form title
-        $('.blog-form-title').after(messageElement);
-        
-        // Auto-hide after 5 seconds (only for errors)
+            </div>`);
+        $('.blog-form-title').after(el);
+
         if (type === 'error') {
-            setTimeout(() => {
-                messageElement.fadeOut(500, function() {
-                    $(this).remove();
-                });
-            }, 5000);
+            setTimeout(() => el.fadeOut(500, () => el.remove()), 5000);
         }
+    }
+
+    async function updateSessionWithNewPost(post) {
+        if (!userData.posts) userData.posts = [];
+
+        let imageBase64 = null;
+        if (selectedPhotoFile) {
+            imageBase64 = await toBase64(selectedPhotoFile);
+        }
+
+        userData.posts.push({
+            id: post.id,
+            title: post.title,
+            description: post.description,
+            image: imageBase64,
+            likes: [],
+            comments: []
+        });
+
+        sessionStorage.setItem('user', JSON.stringify(userData));
+    }
+
+    function toBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+        });
     }
 });

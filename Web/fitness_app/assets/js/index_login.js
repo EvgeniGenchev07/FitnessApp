@@ -10,10 +10,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         logoDiv.innerHTML = '';
 
-        const base64String = userData.photo.trim().replace(/^data:image\/[a-z]+;base64,/, '');
-        const avatarSrc = userData.photo
-                ? `data:image/png;base64,${base64String}`
-                : defaultAvatar;
+       const base64String = userData.photo.trim().replace(/^data:image\/[a-z]+;base64,/, '');
+       const mimeType = userData.photoMimeType || 'image/jpeg';
+       const avatarSrc = userData.photo
+    ? `data:${mimeType};base64,${base64String}`
+    : defaultAvatar;
         if (window.innerWidth <= 768) {
             // 📱 Mobile view
             const welcomeDiv = document.createElement('div');

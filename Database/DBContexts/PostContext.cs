@@ -24,8 +24,8 @@ public class PostContext : IDatabase<Post, int>
 
         if (useNavigationalProperties)
         {
-            query = query.Include(p => p.Comments);
-            // No User navigation property to include
+            query = query.Include(p => p.Comments)
+                         .Include(p => p.User);
         }
 
         if (isReadOnly)
@@ -38,23 +38,32 @@ public class PostContext : IDatabase<Post, int>
 
     public async Task UpdateAsync(Post entity, bool navigationalProperties)
     {
-        Post postFromDb = await ReadAsync(entity.Id, navigationalProperties, false);
-        if (postFromDb == null) return;
+        var existingPost = await ReadAsync(entity.Id, navigationalProperties, false);
+        if (existingPost == null) return;
 
-        postFromDb.Description = entity.Description;
-        postFromDb.Title = entity.Title;
-        postFromDb.Likes = entity.Likes;
-        postFromDb.Created = entity.Created;
-
-        if (navigationalProperties && entity.Comments != null)
-        {
-            postFromDb.Comments.Clear();
-            postFromDb.Comments = entity.Comments;
-        }
+        existingPost.Description = entity.Description;
+        existingPost.Title = entity.Title;
+        existingPost.Likes = entity.Likes;
+        existingPost.Created = entity.Created;
 
         if (entity.Photo != null)
         {
-            postFromDb.Photo = entity.Photo;
+            existingPost.Photo = entity.Photo;
+            existingPost.PhotoMimeType = entity.PhotoMimeType;
+        }
+
+        if (navigationalProperties)
+        {
+            if (entity.Comments != null)
+            {
+                _dbContext.Comments.RemoveRange(existingPost.Comments ?? []);
+                existingPost.Comments = entity.Comments;
+            }
+
+            if (entity.User != null)
+            {
+                existingPost.User = entity.User;
+            }
         }
 
         try
@@ -63,28 +72,21 @@ public class PostContext : IDatabase<Post, int>
         }
         catch (DbUpdateConcurrencyException)
         {
-            // If we get a concurrency exception, reload the entity and try again
-            _dbContext.Entry(postFromDb).State = EntityState.Detached;
-            postFromDb = await ReadAsync(entity.Id, navigationalProperties, false);
-            if (postFromDb != null)
-            {
-                await UpdateAsync(entity, navigationalProperties);
-            }
+            await _dbContext.Entry(existingPost).ReloadAsync();
+            await _dbContext.SaveChangesAsync();
         }
     }
 
     public async Task DeleteAsync(int key)
     {
-        Post post = await ReadAsync(key, true, false);
+        var post = await ReadAsync(key, true);
 
         if (post != null)
         {
-            // Remove all comments associated with this post
-            _dbContext.Comments.RemoveRange(post.Comments);
+            if (post.Comments != null)
+                _dbContext.Comments.RemoveRange(post.Comments);
 
-            // Remove the post itself
             _dbContext.Posts.Remove(post);
-
             await _dbContext.SaveChangesAsync();
         }
     }
