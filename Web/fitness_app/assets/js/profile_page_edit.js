@@ -1,6 +1,7 @@
 const apiUrl = 'http://192.168.100.6:5000';
 let selectedPhotoFile = null;
-
+const currentPath = window.location.pathname;
+const isEnglish = currentPath.includes('_en.html');
 // Image preview functionality
 document.getElementById('photo-upload').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -53,9 +54,19 @@ function loadProfileData() {
     if (user.creationDate) {
         const creationDate = new Date(user.creationDate);
         const options = { year: 'numeric', month: 'long' };
-        memberSinceDisplay.textContent = `Member since: ${creationDate.toLocaleDateString('en-US', options)}`;
+        if(isEnglish){
+            memberSinceDisplay.textContent = `Member since: ${creationDate.toLocaleDateString('en-US', options)}`;
+        }
+        else{
+            memberSinceDisplay.textContent = `Член от: ${creationDate.toLocaleDateString('bg-BG', options)}`;
+        }
     } else {
-        memberSinceDisplay.textContent = 'New member';
+        if(isEnglish){
+           memberSinceDisplay.textContent = 'New member'; 
+        }
+        else{
+            memberSinceDisplay.textContent = 'Нов член';
+        }
     }
 }
 
@@ -67,7 +78,13 @@ document.querySelector('.edit-form').addEventListener('submit', async function(e
 
     const saveBtn = document.querySelector('.save-btn');
     saveBtn.disabled = true;
-    saveBtn.textContent = 'Запазване...';
+    if(isEnglish)
+    {
+        saveBtn.textContent = 'Saving...';
+    }
+    else{
+            saveBtn.textContent = 'Запазване...';
+    }
 
     try {
         const user = JSON.parse(sessionStorage.getItem('user')) || {};
