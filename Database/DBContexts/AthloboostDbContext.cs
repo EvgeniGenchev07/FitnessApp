@@ -36,12 +36,6 @@ namespace DBContexts
                     .IsUnique();
             });
 
-            modelBuilder.Entity<Meal>()
-                .HasOne(m => m.Food)
-                .WithOne()
-                .HasForeignKey<Meal>(m => m.FoodId)
-                .OnDelete(DeleteBehavior.SetNull);
-
             base.OnModelCreating(modelBuilder);
         }
 

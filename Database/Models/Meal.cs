@@ -17,13 +17,7 @@ namespace Models
         public int Id { get; set; }
         [Required]
         public DateTime Date { get; set; }
-        public byte Type { get; set; }
         [Required]
-        [Range(1, 4000)]
-        public ushort Weight { get; set; }  
-        [Required]
-        public Food Food { get; set; }
-        [ForeignKey("FoodId")]
-        public int FoodId { get; set; }
+        public List<Food> Foods { get; set; }
     }
 }

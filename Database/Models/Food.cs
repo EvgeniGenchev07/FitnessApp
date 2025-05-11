@@ -15,20 +15,17 @@ namespace Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        [Required]
         [MaxLength(30)]
         [RegularExpression(@"[a-zA-Z ]{3,30}")]
         public string Name { get; set; }
         [Required]
         [Range(0, 800)]
+        public string Type{ get; set; }
         public ushort Calories { get; set; }
-        [Required]
         [Range(0,100)]
         public ushort Carbs { get; set; }
-        [Required]
         [Range(0,100)]
         public ushort Fats { get; set; }
-        [Required]
         [Range(0,100)]
         public ushort Proteins { get; set; }
     }

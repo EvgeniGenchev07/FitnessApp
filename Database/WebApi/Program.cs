@@ -19,7 +19,6 @@ builder.Services.AddScoped<ExerciseContext>();
 builder.Services.AddScoped<WorkoutContext>();
 builder.Services.AddScoped<SetContext>();
 builder.Services.AddScoped<ScheduleContext>();
-builder.Services.AddScoped<MealContext>();
 builder.Services.AddScoped<FoodContext>();
 builder.Services.AddScoped<MeasurementContext>();
 builder.Services.AddScoped<PostContext>();
