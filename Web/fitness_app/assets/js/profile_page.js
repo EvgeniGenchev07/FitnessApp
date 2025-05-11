@@ -84,7 +84,7 @@ function loadProfileData() {
 
                 const img = document.createElement('img');
                 if (post.image) {
-                    img.src = `data:image/jpeg;base64,${post.image}`; // 🔥 Тук също base64
+                    img.src = `data:image/jpeg;base64,${post.image}`; 
                 } else {
                     img.src = 'post-placeholder.jpg';
                 }

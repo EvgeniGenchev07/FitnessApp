@@ -73,10 +73,10 @@ $(document).ready(function() {
         const formData = new FormData();
         formData.append('title', $('#title').val());
         formData.append('description', $('#content').val());
-        formData.append('userId', userData.id); // 👈 трябва да е точно както в контролера
+        formData.append('userId', userData.id); 
 
         if (selectedPhotoFile) {
-            formData.append('photo', selectedPhotoFile); // 👈 трябва да съвпада с [FromForm] IFormFile photo
+            formData.append('photo', selectedPhotoFile); 
         }
 
         const response = await fetch(`${apiUrl}/posts`, {

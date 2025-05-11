@@ -105,9 +105,24 @@ namespace WebApi
                         user.Facebook,
                         user.X,
                         user.Instagram,
+                        user.WeightGoal,
+                        user.Followers,
+                        user.Following,
                         user.CreationDate,
-                        Password = ""
-                    };
+                        Password = "",
+                        Posts = user.Posts?.Select(p => new {
+                            p.Id,
+                            p.Title,
+                            p.Description,
+                            p.Created,
+                            Image = p.Photo != null ? Convert.ToBase64String(p.Photo) : null,
+                            Comments = p.Comments?.Select(c => new {
+                                c.Id,
+                                c.Description,
+                                c.CreatedAt,
+                            })
+                        })
+                    };// работи така,но трябва да ги довърша и за другите трябва ъпдейт на локалната сесия в js
 
                     return Ok(userResponse);
                 }
