@@ -3,6 +3,7 @@ using System;
 using DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContexts.Migrations
 {
     [DbContext(typeof(AthloboostDbContext))]
-    partial class AthloboostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250511072655_Update_v11")]
+    partial class Update_v11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -202,9 +205,6 @@ namespace DBContexts.Migrations
 
                     b.Property<byte[]>("Photo")
                         .HasColumnType("BLOB");
-
-                    b.Property<string>("PhotoMimeType")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
@@ -412,11 +412,9 @@ namespace DBContexts.Migrations
 
             modelBuilder.Entity("Models.Post", b =>
                 {
-                    b.HasOne("Models.User", "User")
+                    b.HasOne("Models.User", null)
                         .WithMany("Posts")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Schedule", b =>

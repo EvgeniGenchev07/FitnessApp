@@ -5,7 +5,7 @@ namespace DBContexts
 {
     public class AthloboostDbContext : DbContext
     {
-        internal DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }
         internal DbSet<Workout> Workouts { get; set; }
         internal DbSet<Set> Sets { get; set; }
         internal DbSet<Measurement> Measurements { get; set; }

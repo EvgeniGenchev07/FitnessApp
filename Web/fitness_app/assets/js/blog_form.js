@@ -62,54 +62,50 @@ $(document).ready(function() {
     });
 
     // Form submission handler
-    $('#blogForm').on('submit', async function(e) {
-        e.preventDefault();
-        
-        const submitBtn = $('.blog-form-btn');
-        submitBtn.prop('disabled', true);
-        submitBtn.text(isBulgarian ? 'Изпращане...' : 'Submitting...');
+   $('#blogForm').on('submit', async function(e) {
+    e.preventDefault();
     
-        try {
-            const formData = new FormData();
-            formData.append('Title', $('#title').val());
-            formData.append('Description', $('#content').val());
-            formData.append('UserID', userData.id);
-            
-            if (selectedPhotoFile) {
-                formData.append('Photo', selectedPhotoFile);
-            }
-    
-            const response = await fetch(`${apiUrl}/posts`, {
-                method: 'POST',
-                body: formData,
-                // Don't set Content-Type header - let the browser set it automatically
-                // with the correct boundary for FormData
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 
-                    (isBulgarian ? 'Грешка при изпращане' : 'Submission failed'));
-            }
-    
-            // Show success message
-            showMessage(
-                isBulgarian ? 'Успешно публикувано!' : 'Successfully published!',
-                'success'
-            );
-            
-            // Redirect after 2 seconds
-            setTimeout(() => {
-                window.location.href = isBulgarian ? 'blog_bg.html' : 'blog.html';
-            }, 2000);
-            
-        } catch (error) {
-            showMessage(error.message, 'error');
-        } finally {
-            submitBtn.prop('disabled', false);
-            submitBtn.text(isBulgarian ? 'Публикувай' : 'Publish');
+    const submitBtn = $('.blog-form-btn');
+    submitBtn.prop('disabled', true);
+    submitBtn.text(isBulgarian ? 'Изпращане...' : 'Submitting...');
+
+    try {
+        const formData = new FormData();
+        formData.append('title', $('#title').val());
+        formData.append('description', $('#content').val());
+        formData.append('userId', userData.id); // 👈 трябва да е точно както в контролера
+
+        if (selectedPhotoFile) {
+            formData.append('photo', selectedPhotoFile); // 👈 трябва да съвпада с [FromForm] IFormFile photo
         }
-    });
+
+        const response = await fetch(`${apiUrl}/posts`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 
+                (isBulgarian ? 'Грешка при изпращане' : 'Submission failed'));
+        }
+
+        showMessage(
+            isBulgarian ? 'Успешно публикувано!' : 'Successfully published!',
+            'success'
+        );
+
+        setTimeout(() => {
+            window.location.href = isBulgarian ? 'blog_bg.html' : 'blog.html';
+        }, 2000);
+
+    } catch (error) {
+        showMessage(error.message, 'error');
+    } finally {
+        submitBtn.prop('disabled', false);
+        submitBtn.text(isBulgarian ? 'Публикувай' : 'Publish');
+    }
+});
     
     // Display messages to user
     function showMessage(message, type = 'error') {

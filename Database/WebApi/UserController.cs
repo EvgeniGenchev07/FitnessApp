@@ -58,10 +58,33 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
-
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> GetUser([FromBody] Dictionary<string, object> data)
+        {
+            try
+            {
+
+                Tuple<byte, User> response = await _userLoginContext.Login(data["email"].ToString(), data["password"].ToString());
+                if (response.Item1 == (byte)Error.Ok)
+                {
+                    return Ok(response.Item2);
+                }
+                return NotFound(response.Item1);
+                /*   if (user == null) return NotFound("User not found");
+                   if (user.Password != password) return Unauthorized();
+                   user.Password = "";
+                   return Ok(user);*/
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+
+        }
+        [HttpPost]
+        [Route("login/js")]
+        public async Task<IActionResult> GetUserJs([FromBody] Dictionary<string, object> data)
         {
             try
             {
@@ -72,6 +95,7 @@ namespace WebApi
                     var user = response.Item2;
                     var userResponse = new
                     {
+                        user.Id,
                         user.UserName,
                         user.Email,
                         user.Bio,
@@ -311,6 +335,9 @@ namespace WebApi
                         case "weight":
                             if (value != null && value != DBNull.Value && !string.IsNullOrEmpty(value.ToString()))
                                 user.Weight = Convert.ToDouble(value);
+                            break;
+                        case "photoMimeType":
+                            user.PhotoMimeType = value?.ToString();
                             break;
 
                         case "weightGoal":

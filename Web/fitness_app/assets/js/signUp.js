@@ -81,7 +81,7 @@ const apiUrl = 'http://192.168.100.6:5000';
         const password = document.getElementById('login-password').value;
     
         try {
-            const response = await fetch(`${apiUrl}/user/login`, {
+            const response = await fetch(`${apiUrl}/user/login/js`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json', 
