@@ -131,9 +131,7 @@ async function UpdateProfile(data){
                 },
                 body: JSON.stringify(data)
             });
-            
             const responseData = await res.json();
-
             if (res.ok) {
                 responseMessage = { status: Status.OK };
             } else {

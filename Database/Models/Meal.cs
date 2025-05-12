@@ -19,5 +19,12 @@ namespace Models
         public DateTime Date { get; set; }
         [Required]
         public List<Food> Foods { get; set; }
+        public int WaterIntake{get;set;}
+        public int WaterGoal{get;set;}
+        public int DailyCalorieGoal{get;set;}
+        [Precision(2,5)]
+        public double Weight { get; set; }
+        [Precision(2,5)]
+        public double WeightGoal { get; set; }
     }
 }

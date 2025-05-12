@@ -22,7 +22,14 @@ export default function EditProfileScreen() {
             AsyncStorage.getItem('profile').then(res=> {
                 if (res != null) {
                     const profile = JSON.parse(res);
-                    setProfileImage(profile.photo||require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
+                    if(profile?.photo){
+                        const imageUri = convertToImage(profile.photo);
+                        setProfileImage({uri:imageUri});
+                        setImageArray(profile.photo);
+                    }
+                    else{
+                        setProfileImage(require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg'));
+                    }
                     setName(profile.userName);
                     setBio(profile.bio);
                 } else{
@@ -51,7 +58,30 @@ export default function EditProfileScreen() {
             setImageArray(base64String);
         }
     };
-
+    const convertToImage = (photo: any) => {
+        if (!photo) {
+            return null;
+        }
+        try {
+            // If photo is already a base64 string, just add the data URL prefix
+            if (typeof photo === 'string') {
+                if (photo.startsWith('data:image')) {
+                    return photo;
+                }
+                return `data:image/jpeg;base64,${photo}`;
+            }
+            // If photo is a byte array, convert it
+            if (Array.isArray(photo)) {
+                const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
+                const base64String = btoa(binaryString);
+                return `data:image/jpeg;base64,${base64String}`;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error converting photo:', error);
+            return null;
+        }
+    };
     const handleSave = async () => {
         const res = await UpdateUserProfile({photo:imageArray,userName:name,bio:bio});
         if(!res||res!==Status.OK) Alert.alert('Something went wrong!');

@@ -15,15 +15,10 @@ import { ThemedView } from '@/components/ThemedView';
 import { ThemedButton } from '@/components/ThemedButton';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
 import {router, useFocusEffect} from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import { Buffer } from 'buffer';
-import {GetProfile} from "@/serviceLayer/managerHandler"; // dummy or real post data
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface Post {
     title: string;

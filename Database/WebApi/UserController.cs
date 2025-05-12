@@ -101,11 +101,9 @@ namespace WebApi
                         user.Bio,
                         Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
                         user.Height,
-                        user.Weight,
                         user.Facebook,
                         user.X,
                         user.Instagram,
-                        user.WeightGoal,
                         user.Followers,
                         user.Following,
                         user.CreationDate,
@@ -175,10 +173,11 @@ namespace WebApi
             try
             {
                 User user = await _userContext.ReadAsync(data["email"].ToString(),true,false);
-                
+                Console.WriteLine(data.ContainsKey("photo"));
                 if (user == null) return NotFound("User not found");
                 foreach (var pair in data)
                 {
+                    Console.WriteLine($"{pair.Key}: {pair.Value}");
                     switch (pair.Key)
                     {
                         case "newEmail":
@@ -188,7 +187,7 @@ namespace WebApi
                             user.UserName = pair.Value.ToString();
                             break;
                         case "bio":
-                            user.Bio = pair.Value.ToString();
+                            if(pair.Value is not null) user.Bio = pair.Value.ToString();
                             break;
                         case "photo":
                             if(pair.Value.ToString() != "[]") user.Photo = Convert.FromBase64String(pair.Value.ToString());
@@ -348,16 +347,12 @@ namespace WebApi
                             useNavigationalProperties = true;
                             break;
                         case "weight":
-                            if (value != null && value != DBNull.Value && !string.IsNullOrEmpty(value.ToString()))
-                                user.Weight = Convert.ToDouble(value);
                             break;
                         case "photoMimeType":
                             user.PhotoMimeType = value?.ToString();
                             break;
 
                         case "weightGoal":
-                            if (value != null)
-                                user.WeightGoal = Convert.ToDouble(value);
                             break;
                     }
                 }

@@ -8,13 +8,17 @@ import { ThemedText } from "@/components/ThemedText";
 import { Picker } from '@react-native-picker/picker';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
-import { API_URL } from '@/config';
-import { getUserId } from '@/utils/auth';
 import moment from 'moment';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
+import { HttpPatchProfile, HttpGetProfile } from '@/serviceLayer/httpManager';
+import Status from '@/serviceLayer/status';
+import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
 
 interface Food {
     id: number;
     name: string;
+    type: string;
     calories: number;
     carbs: number;
     fats: number;
@@ -24,36 +28,52 @@ interface Food {
 interface Meal {
     id: number;
     date: string;
-    type: number;
+    foods: Food[];
+    waterIntake: number;
+    waterGoal: number;
     weight: number;
-    food: Food;
+    goalWeight: number;
+    dailyCalorieGoal: number;
+}
+
+interface User {
+    userName: string;
+    photo: string;
+    photoMimeType: string;
+    date: string;
+    meals: Meal[];
+}
+
+interface ApiResponse<T> {
+    status: Status;
+    data?: T;
+    error?: string;
 }
 
 interface ProfileData {
-    name: string;
     weight: number;
     goalWeight: number;
-    waterIntake: number;
     waterGoal: number;
     dailyCalorieGoal: number;
+    waterIntake: number;
 }
 
 const STATUS_BAR_HEIGHT = 44; // Default iOS status bar height
 
-const ProfileHeader = ({ name }: { name: string }) => {
+const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; date: string }) => {
     const { t } = useLanguage();
     const { colors } = useTheme();
 
     return (
         <View style={styles.profileHeader}>
             <Image
-                source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+                source={photo ? { uri: photo } : require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg')}
                 style={[styles.profilePic, { borderColor: colors.primary }]}
             />
             <View style={styles.profileInfo}>
                 <ThemedText type={'subtitle'}>{name}</ThemedText>
                 <ThemedText type={'default'} style={styles.membershipDate}>
-                    {t('nutrition.eliteMember')} {moment().format('MMMM YYYY')}
+                    {t('nutrition.eliteMember')} {moment(date).format('MMMM YYYY')}
                 </ThemedText>
             </View>
         </View>
@@ -75,25 +95,25 @@ const EditProfileModal = ({ isVisible, closeModal, saveChanges, initialData }: {
 
     const handleSave = async () => {
         try {
-            const userId = await getUserId();
-            const response = await fetch(`${API_URL}/user`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: userId,
-                    weight: parseFloat(weight),
-                    goalWeight: parseFloat(goalWeight),
-                    waterGoal: parseFloat(waterGoal),
-                    dailyCalorieGoal: parseInt(dailyCalorieGoal)
-                })
-            });
-
-            if (!response.ok) throw new Error('Failed to update profile');
+            const user = await SecureStore.getItemAsync('user');
+            const dataToSend = {
+                email: user,
+                weight: parseFloat(weight),
+                weightGoal: parseFloat(goalWeight),
+                waterGoal: parseInt(waterGoal),
+                dailyCalorieGoal: parseInt(dailyCalorieGoal)
+            };
+            
+            const res = await HttpPatchProfile(dataToSend);
+            if (!res || res.status !== Status.OK) {
+                Alert.alert(t('common.error'), t('nutrition.updateError'));
+                return;
+            }
             
             saveChanges({
                 weight: parseFloat(weight),
                 goalWeight: parseFloat(goalWeight),
-                waterGoal: parseFloat(waterGoal),
+                waterGoal: parseInt(waterGoal),
                 dailyCalorieGoal: parseInt(dailyCalorieGoal)
             });
             closeModal();
@@ -300,14 +320,20 @@ const NutritionPage = () => {
     const [deleteMode, setDeleteMode] = useState(false);
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState<ProfileData>({
-        name: '',
         weight: 0,
         goalWeight: 0,
-        waterIntake: 0,
         waterGoal: 2000,
-        dailyCalorieGoal: 2000
+        dailyCalorieGoal: 2000,
+        waterIntake: 0
     });
     const [meals, setMeals] = useState<Meal[]>([]);
+    const [userInfo, setUserInfo] = useState<User>({
+        userName: '',
+        photo: '',
+        photoMimeType: '',
+        date: '',
+        meals: []
+    });
 
     useEffect(() => {
         loadProfileData();
@@ -320,23 +346,44 @@ const NutritionPage = () => {
 
     const loadProfileData = async () => {
         try {
-            const userId = await getUserId();
-            const response = await fetch(`${API_URL}/user`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: userId })
+            const user = await SecureStore.getItemAsync('user');
+            if (!user) {
+                Alert.alert(t('common.error'), t('nutrition.loadError'));
+                return;
+            }
+
+            const res = await HttpGetProfile(user) as unknown as ApiResponse<User>;
+            if (!res || res.status !== Status.OK || !res.data) {
+                Alert.alert(t('common.error'), t('nutrition.loadError'));
+                return;
+            }
+
+            const userData = res.data;
+            setUserInfo({
+                userName: userData.userName,
+                photo: userData.photo ? `data:${userData.photoMimeType};base64,${userData.photo}` : '',
+                photoMimeType: userData.photoMimeType || 'image/jpeg',
+                date: userData.date || new Date().toISOString(),
+                meals: userData.meals || []
             });
 
-            if (!response.ok) throw new Error('Failed to load profile');
-            
-            const userData = await response.json();
+            const todayMeal = userData.meals?.[0] || {
+                id: 0,
+                date: new Date().toISOString(),
+                foods: [],
+                waterIntake: 0,
+                waterGoal: 2000,
+                dailyCalorieGoal: 2000,
+                weight: 0,
+                goalWeight: 0
+            };
+
             setProfile({
-                name: userData.userName,
-                weight: userData.weight,
-                goalWeight: userData.goalWeight,
-                waterIntake: userData.waterIntake || 0,
-                waterGoal: userData.waterGoal || 2000,
-                dailyCalorieGoal: userData.dailyCalorieGoal || 2000
+                weight: todayMeal.weight || 0,
+                goalWeight: todayMeal.goalWeight || 0,
+                waterGoal: todayMeal.waterGoal || 2000,
+                dailyCalorieGoal: todayMeal.dailyCalorieGoal || 2000,
+                waterIntake: todayMeal.waterIntake || 0
             });
         } catch (error) {
             Alert.alert(t('common.error'), t('nutrition.loadError'));
@@ -347,27 +394,19 @@ const NutritionPage = () => {
 
     const loadMeals = async () => {
         try {
-            const userId = await getUserId();
-            const startDate = moment(selectedDate).startOf('day').toISOString();
-            const endDate = moment(selectedDate).endOf('day').toISOString();
-
-            const response = await fetch(`${API_URL}/user/meals`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    email: userId,
-                    startDate,
-                    endDate
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to load meals');
+            const user = await SecureStore.getItemAsync('user');
+            if (!user) {
+                Alert.alert(t('common.error'), t('nutrition.loadError'));
+                return;
             }
-            
-            const mealsData = await response.json();
-            setMeals(mealsData);
+
+            const res = await HttpGetProfile(user) as unknown as ApiResponse<User>;
+            if (!res || res.status !== Status.OK || !res.data) {
+                Alert.alert(t('common.error'), t('nutrition.loadError'));
+                return;
+            }
+
+            setMeals(res.data.meals || []);
         } catch (error) {
             console.error('Load meals error:', error);
             Alert.alert(t('common.error'), t('nutrition.loadError'));
@@ -385,22 +424,42 @@ const NutritionPage = () => {
 
     const handleWaterChange = async (value: number) => {
         try {
-            const userId = await getUserId();
-            const response = await fetch(`${API_URL}/user`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: userId,
-                    waterIntake: value
-                })
-            });
+            const user = await SecureStore.getItemAsync('user');
+            if (!user) {
+                Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
+                return;
+            }
 
-            if (!response.ok) throw new Error('Failed to update water intake');
-            
-            setProfile(prev => ({
-            ...prev,
-                waterIntake: value
-            }));
+            const currentMeals = [...meals];
+            const todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
+                id: 0,
+                date: selectedDate.toISOString(),
+                foods: [],
+                waterIntake: 0,
+                waterGoal: profile.waterGoal,
+                dailyCalorieGoal: profile.dailyCalorieGoal,
+                weight: profile.weight,
+                goalWeight: profile.goalWeight
+            };
+
+            todayMeal.waterIntake = value;
+            if (!currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'))) {
+                currentMeals.push(todayMeal);
+            }
+
+            const dataToSend = {
+                email: user,
+                meals: JSON.stringify(currentMeals)
+            };
+
+            const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
+            if (!res || res.status !== Status.OK) {
+                Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
+                return;
+            }
+
+            setMeals(currentMeals);
+            setProfile(prev => ({ ...prev, waterIntake: value }));
         } catch (error) {
             Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
         }
@@ -419,35 +478,51 @@ const NutritionPage = () => {
 
     const addFood = async ({ meal, name, calories }: { meal: string; name: string; calories: number }) => {
         try {
-            const userId = await getUserId();
-            const mealType = getMealTypeNumber(meal);
-            
-            const response = await fetch(`${API_URL}/user`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    email: userId,
-                    meals: [{
-                        date: new Date().toISOString(),
-                        type: mealType,
-                        weight: 100,
-                        food: {
-                            name: name,
-                            calories: calories,
-                            carbs: 0,
-                            fats: 0,
-                            proteins: 0
-                        }
-                    }]
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to add food');
+            const user = await SecureStore.getItemAsync('user');
+            if (!user) {
+                Alert.alert(t('common.error'), t('nutrition.addFoodError'));
+                return;
             }
-            
-            await loadMeals();
+
+            const currentMeals = [...meals];
+            const todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
+                id: 0,
+                date: selectedDate.toISOString(),
+                foods: [],
+                waterIntake: profile.waterIntake,
+                waterGoal: profile.waterGoal,
+                dailyCalorieGoal: profile.dailyCalorieGoal,
+                weight: profile.weight,
+                goalWeight: profile.goalWeight
+            };
+
+            const newFood: Food = {
+                id: Math.floor(Math.random() * 2147483647),
+                name,
+                type: meal,
+                calories,
+                carbs: 0,
+                fats: 0,
+                proteins: 0
+            };
+
+            todayMeal.foods.push(newFood);
+            if (!currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'))) {
+                currentMeals.push(todayMeal);
+            }
+
+            const dataToSend = {
+                email: user,
+                meals: JSON.stringify(currentMeals)
+            };
+
+            const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
+            if (!res || res.status !== Status.OK) {
+                Alert.alert(t('common.error'), t('nutrition.addFoodError'));
+                return;
+            }
+
+            setMeals(currentMeals);
             toggleFoodModal();
         } catch (error) {
             console.error('Add food error:', error);
@@ -455,46 +530,54 @@ const NutritionPage = () => {
         }
     };
 
-    const getMealTypeString = (type: number): string => {
-        switch (type) {
-            case 0: return t('nutrition.breakfast');
-            case 1: return t('nutrition.brunch');
-            case 2: return t('nutrition.lunch');
-            case 3: return t('nutrition.dinner');
-            case 4: return t('nutrition.snack');
-            default: return t('nutrition.breakfast');
-        }
-    };
-
-    const totalCalories = meals.reduce((acc, meal) => acc + meal.food.calories, 0);
-    const progress = Math.min(totalCalories / profile.dailyCalorieGoal, 1);
-    const waterProgress = Math.min(profile.waterIntake / profile.waterGoal, 1);
-
     const deleteFood = async (mealId: number) => {
         try {
-            const userId = await getUserId();
-            const response = await fetch(`${API_URL}/user/meals/${mealId}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: userId })
-            });
-
-            if (!response.ok) throw new Error('Failed to delete meal');
+            const user = await SecureStore.getItemAsync('user');
+            if (!user) {
+                Alert.alert(t('common.error'), t('nutrition.deleteError'));
+                return;
+            }
+            const currentMeals = [...meals];
+            const todayMeal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'));
             
-            await loadMeals();
+            if (todayMeal) {
+                todayMeal.foods = todayMeal.foods.filter(f => f.id !== mealId);
+                
+                const dataToSend = {
+                    email: user,
+                    meals: JSON.stringify(currentMeals)
+                };
+
+                const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
+                if (!res || res.status !== Status.OK) {
+                    Alert.alert(t('common.error'), t('nutrition.deleteError'));
+                    return;
+                }
+
+                setMeals(currentMeals);
+            }
         } catch (error) {
             Alert.alert(t('common.error'), t('nutrition.deleteError'));
         }
     };
 
-    const groupMealsByType = (meals: Meal[]): Record<string, Meal[]> => {
-        return meals.reduce((acc, meal) => {
-            const type = getMealTypeString(meal.type);
-            if (!acc[type]) acc[type] = [];
-            acc[type].push(meal);
+    const groupMealsByType = (meals: Meal[]): Record<string, Food[]> => {
+        const todayMeal = meals.find(m => moment(m.date).isSame(selectedDate, 'day'));
+        if (!todayMeal) return {};
+
+        return todayMeal.foods.reduce((acc, food) => {
+            if (!acc[food.type]) acc[food.type] = [];
+            acc[food.type].push(food);
             return acc;
-        }, {} as Record<string, Meal[]>);
+        }, {} as Record<string, Food[]>);
     };
+
+    const totalCalories = meals
+        .find(m => moment(m.date).isSame(selectedDate, 'day'))
+        ?.foods.reduce((acc, food) => acc + food.calories, 0) || 0;
+
+    const progress = Math.min(totalCalories / profile.dailyCalorieGoal, 1);
+    const waterProgress = Math.min(profile.waterIntake / profile.waterGoal, 1);
 
     if (loading) {
         return (
@@ -507,7 +590,7 @@ const NutritionPage = () => {
     return (
         <ThemedView type={'default'} style={styles.container}>
             <View style={{ height: STATUS_BAR_HEIGHT }} />
-            <ProfileHeader name={profile.name} />
+            <ProfileHeader name={userInfo.userName} photo={userInfo.photo} date={userInfo.date} />
             <CalendarStrip 
                 selectedDate={selectedDate}
                 onDateSelect={setSelectedDate}
@@ -553,16 +636,16 @@ const NutritionPage = () => {
                         </View>
                     </View>
 
-                    {Object.entries(groupMealsByType(meals)).map(([mealType, items]) => (
+                    {Object.entries(groupMealsByType(meals)).map(([mealType, foods]) => (
                         <View key={mealType} style={styles.meal}>
                             <ThemedText type={'subtitle'}>{mealType}</ThemedText>
-                            {items.map((meal, idx) => (
+                            {foods.map((food, idx) => (
                                 <View key={idx} style={styles.mealItem}>
-                                    <ThemedText type={'default'}>{meal.food.name}</ThemedText>
+                                    <ThemedText type={'default'}>{food.name}</ThemedText>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <ThemedText type={'default'}>{meal.food.calories} kcal</ThemedText>
+                                        <ThemedText type={'default'}>{food.calories} kcal</ThemedText>
                                         {deleteMode && (
-                                            <TouchableOpacity onPress={() => deleteFood(meal.id)}>
+                                            <TouchableOpacity onPress={() => deleteFood(food.id)}>
                                                 <MaterialCommunityIcons 
                                                     name="trash-can-outline" 
                                                     size={18} 

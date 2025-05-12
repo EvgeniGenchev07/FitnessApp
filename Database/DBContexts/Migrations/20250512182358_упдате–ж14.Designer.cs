@@ -3,6 +3,7 @@ using System;
 using DBContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContexts.Migrations
 {
     [DbContext(typeof(AthloboostDbContext))]
-    partial class AthloboostDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250512182358_упдате–ж14")]
+    partial class упдатеж14
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -103,9 +106,14 @@ namespace DBContexts.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("MealId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Foods");
                 });
@@ -130,14 +138,6 @@ namespace DBContexts.Migrations
 
                     b.Property<int>("WaterIntake")
                         .HasColumnType("INTEGER");
-
-                    b.Property<double>("Weight")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("WeightGoal")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
 
                     b.HasKey("Id");
 
@@ -312,6 +312,14 @@ namespace DBContexts.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<double>("Weight")
+                        .HasPrecision(2, 5)
+                        .HasColumnType("REAL");
+
+                    b.Property<double>("WeightGoal")
+                        .HasPrecision(2, 5)
+                        .HasColumnType("REAL");
+
                     b.Property<string>("X")
                         .HasColumnType("TEXT");
 
@@ -386,6 +394,10 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.Meal", null)
                         .WithMany("Foods")
                         .HasForeignKey("MealId");
+
+                    b.HasOne("Models.User", null)
+                        .WithMany("Foods")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Models.Meal", b =>
@@ -476,6 +488,8 @@ namespace DBContexts.Migrations
             modelBuilder.Entity("Models.User", b =>
                 {
                     b.Navigation("Exercises");
+
+                    b.Navigation("Foods");
 
                     b.Navigation("Meals");
 

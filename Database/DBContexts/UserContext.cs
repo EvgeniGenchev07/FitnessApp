@@ -32,7 +32,6 @@ public class UserContext : IDatabase<User, string>
                 .Include(u => u.Meals)
                 .Include(u => u.Measurements)
                 .Include(u => u.Schedule)
-                .Include(u => u.Foods)
                 .Include(u => u.Exercises)
                 .Include(u => u.Followers)
                 .Include(u => u.Following)
@@ -51,8 +50,6 @@ public class UserContext : IDatabase<User, string>
 
         userFromDb.UserName = entity.UserName;
         userFromDb.Email = entity.Email;
-        userFromDb.Weight = entity.Weight;
-        userFromDb.WeightGoal = entity.WeightGoal;
         userFromDb.Height = entity.Height;
         userFromDb.Password = entity.Password;
         userFromDb.Facebook = entity.Facebook;
@@ -84,11 +81,6 @@ public class UserContext : IDatabase<User, string>
             {
                 userFromDb.Workouts.Clear();
                 userFromDb.Workouts = entity.Workouts;
-            }
-            if (entity.Foods != null)
-            {
-                userFromDb.Foods.Clear();
-                userFromDb.Foods = entity.Foods;
             }
             if (entity.Exercises != null)
             {

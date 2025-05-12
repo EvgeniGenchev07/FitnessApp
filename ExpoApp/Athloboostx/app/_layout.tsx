@@ -6,7 +6,6 @@ import {StatusBar} from 'expo-status-bar';
 import {useEffect} from 'react';
 import 'react-native-reanimated';
 import {IsLoggedIn, LocalSaveProfile} from "@/serviceLayer/managerHandler";
-import {useColorScheme} from '@/hooks/useColorScheme';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

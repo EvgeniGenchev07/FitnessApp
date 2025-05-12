@@ -34,8 +34,6 @@ namespace Models
 
         public List<Meal> Meals { get; set;}
 
-        public List<Food> Foods { get; set; }
-
         public List<Exercise> Exercises { get; set; }
 
         public Schedule Schedule { get; set; }
@@ -52,10 +50,7 @@ namespace Models
         [Url] 
         public string X { get; set; }
         public byte[] Photo { get; set; }
-        [Precision(2,5)]
-        public double Weight { get; set; }
-        [Precision(2,5)]
-        public double WeightGoal { get; set; }
+        
         public List<User> Followers { get; set; }
         public List<User> Following { get; set; }
         public List<Post> Posts { get; set; }

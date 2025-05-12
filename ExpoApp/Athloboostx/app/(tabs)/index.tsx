@@ -12,7 +12,6 @@ import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
 import {ThemedText} from "@/components/ThemedText";
 import {router, useFocusEffect} from "expo-router";
-import {GetProfile} from "@/serviceLayer/managerHandler";
 import {LinearGradient} from 'expo-linear-gradient';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';

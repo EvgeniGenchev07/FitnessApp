@@ -5,7 +5,6 @@ import {
     StyleSheet,
     TextInput,
     TouchableOpacity,
-    ScrollView,
     Platform,
     StatusBar,
     KeyboardAvoidingView,
@@ -15,7 +14,6 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { workoutService } from '@/services/workoutService';
 import { Exercise } from '@/types/workout';
 
 const HEADER_HEIGHT = Platform.OS === 'ios' ? 100 : 80;
@@ -46,20 +44,6 @@ const EditExerciseScreen = () => {
     useEffect(() => {
         setIsLoading(false);
     }, []);
-
-    const fetchExerciseData = async (id: number) => {
-        try {
-            setIsLoading(true);
-            const data = await workoutService.getExercise(id);
-            setExercise(data || defaultExercise);
-            setExercise(defaultExercise);
-        } catch (error) {
-            console.error('Error fetching exercise:', error);
-            setExercise(defaultExercise);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const handleNameChange = (text: string) => {
         setExercise(prev => ({ ...prev, name: text }));
