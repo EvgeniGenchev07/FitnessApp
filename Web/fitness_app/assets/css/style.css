@@ -7927,14 +7927,14 @@ del {
       width: 12.5vh; /* Ensure logo size is consistent */
   }
 }
-@media screen and (min-width: 1024px) and (max-width: 1900px) {
+@media screen and (min-width: 1024px) and (max-width: 5000px) {
   .language-selector {
       margin-top: 0%;
       margin-left: 2%; 
       width: 10%; 
   }
   .logo img {
-      width: 24vh; /* Ensure logo size is consistent */
+      width: 19vh; /* Ensure logo size is consistent */
   }
 }
 .footer-logo img{
@@ -7944,8 +7944,7 @@ del {
   .footer-logo img{
     width:200px;
   }
-}
-//Avatar profile img
+} img
 .avatar-img {
   width: 50px;
   height: 50px;
@@ -7959,3 +7958,4 @@ del {
       width: 35px;
       height: 35px;
   }}
+  

@@ -118,8 +118,25 @@ namespace WebApi
                                 c.Id,
                                 c.Description,
                                 c.CreatedAt,
+                                c.Likes
                             })
-                        })
+                        }),
+                        Workouts = user.Workouts?.Select(w => new
+                        {
+                            w.Id,
+                            w.Title,
+                            Exercises = w.Exercises?.Select(e => new
+                            {
+                                e.Name,
+                                e.EstimatedTime,
+                                Sets = e.Sets?.Select(s => new
+                                {
+                                    s.Reps,
+                                    s.Weight,
+                                    s.RestTime
+                                })
+                            })
+                        }),
                     };// работи така,но трябва да ги довърша и за другите трябва ъпдейт на локалната сесия в js
 
                     return Ok(userResponse);
