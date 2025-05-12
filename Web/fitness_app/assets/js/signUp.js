@@ -1,4 +1,6 @@
-const apiUrl = 'http://192.168.100.6:5000'; 
+const apiUrl = 'http://192.168.56.1:5000';
+const currentPath = window.location.pathname;
+const isBulgarian = currentPath.includes('_bg.html');
 // JavaScript functions to show/hide the forms with zoom-in and fade animation
     function showLogin() {
         hideAllForms();
@@ -63,6 +65,7 @@ const apiUrl = 'http://192.168.100.6:5000';
 
             if (response.ok) {
                 alert('Регистрацията е успешна!');
+                showLogin();
             } else {
                 const errorData = await response.json();
                 alert(`Грешка: ${errorData.message}`);
@@ -128,18 +131,32 @@ const apiUrl = 'http://192.168.100.6:5000';
             });
       
             if (response.ok) {
-              emailjs.sendForm('service_237qqkq', 'template_pkounmf', form)
+                if(isBulgarian){
+                    emailjs.sendForm('service_237qqkq', 'template_fkmgxr9', form)
                 .then(() => {
                   alert('Изпратихме имейл с инструкции за възстановяване на паролата.');
                 }, (error) => {
                   alert('Възникна грешка при изпращане на имейл: ' + JSON.stringify(error));
                 });
+            }
+            else{
+                emailjs.sendForm('service_237qqkq', 'template_pkounmf', form)
+                .then(() => {
+                  alert('We send you an email with instructions.');
+                }, (error) => {
+                  alert('Error ' + JSON.stringify(error));
+                });
+            }
             } else {
-              alert('Такъв имейл не съществува в системата.');
+                if(isBulgarian){
+                    alert('Такъв имейл не съществува в системата.');
+                }
+              else{
+                alert("Such an email does not exist in the system.")
+              }
             }
           } catch (err) {
-            console.error('Грешка при свързване с API:', err);
-            alert('Грешка при връзка със сървъра.');
+            alert('API error/грешка:',err);
           }
         });
       });

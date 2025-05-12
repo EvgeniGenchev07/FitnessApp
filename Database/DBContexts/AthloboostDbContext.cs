@@ -14,7 +14,7 @@ namespace DBContexts
         internal DbSet<Exercise> Exercises { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
         internal DbSet<Comment> Comments { get; set; }
-        internal DbSet<Post> Posts { get; set; }
+        public DbSet<Post> Posts { get; set; }
 
         public AthloboostDbContext() : base()
         {

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 [ApiController]
 [Route("posts/")]
@@ -97,8 +98,7 @@ public class PostsController : ControllerBase
                     {
                         c.Id,
                         c.Description,
-                        c.CreatedAt,
-                        UserId = c.UserID
+                        c.CreatedAt
                     })
                     : null
             });
@@ -191,6 +191,50 @@ public class PostsController : ControllerBase
 
             await _postContext.DeleteAsync(id);
             return NoContent();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    [HttpGet]
+    [EnableCors("Disable cross-origin")]
+    public async Task<IActionResult> GetAllPosts([FromQuery] bool includeComments = false)
+    {
+        try
+        {
+            var postsQuery = _dbContext.Posts
+                .Include(p => p.User)
+                .AsQueryable();
+
+            if (includeComments)
+            {
+                postsQuery = postsQuery.Include(p => p.Comments);
+            }
+
+            var result = await postsQuery
+                .OrderByDescending(p => p.Created) 
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Description,
+                    p.Created,
+                    p.Likes,
+                    p.Photo,
+                    p.PhotoMimeType,
+                    User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
+                    Comments = includeComments ? p.Comments.Select(c => new
+                    {
+                        c.Id,
+                        c.Description,
+                        c.CreatedAt,
+                        UserId = c.UserID
+                    }) : null
+                })
+                .ToListAsync();
+
+            return Ok(result);
         }
         catch (Exception ex)
         {
