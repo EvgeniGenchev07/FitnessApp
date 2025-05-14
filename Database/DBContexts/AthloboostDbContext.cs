@@ -8,7 +8,6 @@ namespace DBContexts
         public DbSet<User> Users { get; set; }
         internal DbSet<Workout> Workouts { get; set; }
         internal DbSet<Set> Sets { get; set; }
-        internal DbSet<Measurement> Measurements { get; set; }
         internal DbSet<Meal> Meals { get; set; }
         internal DbSet<Food> Foods { get; set; }
         internal DbSet<Exercise> Exercises { get; set; }

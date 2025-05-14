@@ -28,8 +28,6 @@ namespace Models
 
         public DateTime CreationDate { get; init; }
 
-        public List<Measurement> Measurements { get; set; }
-
         public List<Workout> Workouts { get; set;}
 
         public List<Meal> Meals { get; set;}
