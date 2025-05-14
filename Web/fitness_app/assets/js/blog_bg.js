@@ -83,15 +83,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="blog_item_img">
                 ${getImageHtml(safePost.photo, safePost.mimeType, safePost.title)}
                 <a href="#" class="blog_item_date">
-                    <h3>${safePost.created.getDate()}</h3>
-                    <p>${config.MONTH_NAMES[safePost.created.getMonth()]}</p>
+                    <h3>${safePost.created.getDate()} ${config.MONTH_NAMES[safePost.created.getMonth()]}/${safePost.created.getFullYear()}</h3>
                 </a>
             </div>
             <div class="blog_details">
                 <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
                     <h2 class="blog-head">${safePost.title}</h2>
                 </a>
-                <p>${safePost.description}</p>
+                <p><a href="post_preview.html">Прочетете повече...</a></p>
                 <ul class="blog-info-link">
                     <li><i class="fa fa-user"></i> ${safePost.username}</li>
                     <li><i class="fa fa-heart"></i> ${safePost.likes} Харесвания</li>

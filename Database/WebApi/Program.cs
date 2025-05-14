@@ -20,7 +20,6 @@ builder.Services.AddScoped<WorkoutContext>();
 builder.Services.AddScoped<SetContext>();
 builder.Services.AddScoped<ScheduleContext>();
 builder.Services.AddScoped<FoodContext>();
-builder.Services.AddScoped<MeasurementContext>();
 builder.Services.AddScoped<PostContext>();
 
 builder.Services.AddCors(options =>

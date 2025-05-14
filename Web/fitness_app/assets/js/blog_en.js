@@ -1,0 +1,206 @@
+document.addEventListener('DOMContentLoaded', function() {
+    // Конфигурация
+    const config = {
+        API_URL: 'http://192.168.56.1:5000/posts',
+        DEFAULT_IMAGE: 'img/default-post-image.jpg',
+        DEFAULT_USER: 'Anonymous',
+        MONTH_NAMES: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
+        POSTS_PER_PAGE: 3
+    };
+
+    const state = {
+        currentPage: 1,
+        allPosts: [],
+        totalPages: 1
+    };
+
+    init();
+
+    async function init() {
+        await loadPosts();
+        setupPagination();
+        renderPage();
+        setupResponsiveImages();
+    }
+
+    async function loadPosts() {
+        try {
+            showLoading(true);
+            const response = await fetch(config.API_URL);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            
+            state.allPosts = await response.json();
+            if (!Array.isArray(state.allPosts)) throw new Error('Invalid data format');
+            
+            state.totalPages = Math.ceil(state.allPosts.length / config.POSTS_PER_PAGE);
+        } catch (error) {
+            console.error('Error loading posts:', error);
+            showError('Error loading posts');
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    function renderPage() {
+        const start = (state.currentPage - 1) * config.POSTS_PER_PAGE;
+        const end = start + config.POSTS_PER_PAGE;
+        renderPosts(state.allPosts.slice(start, end));
+        updatePagination();
+    }
+
+    function renderPosts(posts) {
+        const container = document.querySelector('.blog_left_sidebar');
+        if (!container) return;
+        
+        container.querySelectorAll('article.blog_item').forEach(el => el.remove());
+        
+        if (posts.length === 0) {
+            container.innerHTML = '<p>There are no posts available</p>';
+            return;
+        }
+
+        posts.forEach(post => {
+            container.insertAdjacentHTML('beforeend', createPostHtml(post));
+        });
+    }
+
+    function createPostHtml(post) {
+        const safePost = {
+            id: post.Id || 0,
+            title: post.title || 'Without title',
+            description: post.description || '',
+            created: post.created ? new Date(post.created) : new Date(),
+            likes: post.likes || 0,
+            photo: post.photo,
+            mimeType: post.photoMimeType || 'image/jpeg',
+            username: post.user?.userName || config.DEFAULT_USER,
+            userId: post.user?.id || 0,
+            commentsCount: post.comments?.length || 0
+        };
+
+        return `
+        <article class="blog_item">
+            <div class="blog_item_img">
+                ${getImageHtml(safePost.photo, safePost.mimeType, safePost.title)}
+                <a href="#" class="blog_item_date">
+                    <h3>${safePost.created.getDate()} ${config.MONTH_NAMES[safePost.created.getMonth()]}/${safePost.created.getFullYear()}</h3>
+                </a>
+            </div>
+            <div class="blog_details">
+                <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
+                    <h2 class="blog-head">${safePost.title}</h2>
+                </a>
+                <p><a href="post_preview.html">Read more...</a></p>
+                <ul class="blog-info-link">
+                    <li><i class="fa fa-user"></i> ${safePost.username}</li>
+                    <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
+                    <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Comments</li>
+                </ul>
+            </div>
+        </article>
+        `;
+    }
+
+    function setupPagination() {
+        const container = document.querySelector('.blog_left_sidebar');
+        if (!container) return;
+        
+        const paginationHTML = `
+            <div class="pagination-container">
+                <button class="pagination-button prev" aria-label="Previous page">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <span class="page-info">${state.currentPage}/${state.totalPages}</span>
+                <button class="pagination-button next" aria-label="Next page">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+        container.insertAdjacentHTML('afterend', paginationHTML);
+        
+        document.querySelector('.pagination-button.prev').addEventListener('click', () => {
+            if (state.currentPage > 1) {
+                state.currentPage--;
+                renderPage();
+            }
+        });
+        
+        document.querySelector('.pagination-button.next').addEventListener('click', () => {
+            if (state.currentPage < state.totalPages) {
+                state.currentPage++;
+                renderPage();
+            }
+        });
+    }
+
+    function updatePagination() {
+        const pageInfo = document.querySelector('.page-info');
+        const prevBtn = document.querySelector('.pagination-button.prev');
+        const nextBtn = document.querySelector('.pagination-button.next');
+        
+        if (pageInfo) pageInfo.textContent = `${state.currentPage}/${state.totalPages}`;
+        if (prevBtn) prevBtn.disabled = state.currentPage === 1;
+        if (nextBtn) nextBtn.disabled = state.currentPage === state.totalPages;
+    }
+    function setupResponsiveImages() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .blog_item_img img {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                object-fit: cover;
+                transition: transform 0.3s ease;
+            }
+            
+            @media (max-width: 768px) {
+                .blog_item_img img {
+                    max-height: 150px;
+                }
+            }
+            
+            @media (max-width: 480px) {
+                .blog_item_img img {
+                    max-height: 120px;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // Помощни функции
+    function getImageHtml(photoData, mimeType, altText) {
+        if (!photoData) {
+            return `<img src="${config.DEFAULT_IMAGE}" alt="${altText}" loading="lazy">`;
+        }
+
+        try {
+            const base64 = typeof photoData === 'string' ? photoData : btoa(String.fromCharCode(...new Uint8Array(photoData)));
+            return `<img src="data:${mimeType};base64,${base64}" alt="${altText}" loading="lazy">`;
+        } catch (e) {
+            return `<img src="${config.DEFAULT_IMAGE}" alt="${altText}" loading="lazy">`;
+        }
+    }
+
+    function showLoading(show) {
+        let loader = document.getElementById('loading-spinner');
+        if (!loader && show) {
+            loader = document.createElement('div');
+            loader.id = 'loading-spinner';
+            loader.innerHTML = `
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            `;
+            document.body.appendChild(loader);
+        }
+        if (loader) loader.style.display = show ? 'flex' : 'none';
+    }
+
+    function showError(message) {
+        const errorEl = document.createElement('div');
+        errorEl.className = 'error-message';
+        errorEl.textContent = message;
+        document.body.appendChild(errorEl);
+        setTimeout(() => errorEl.remove(), 5000);
+    }
+});

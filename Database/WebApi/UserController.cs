@@ -285,9 +285,6 @@ namespace WebApi
                                 });
                             }
                             break;
-                        case "measurements":
-                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(pair.Value.ToString());
-                            break;
                     }
                 }
                 var res = await _dbContext.SaveChangesAsync();
@@ -347,6 +344,10 @@ namespace WebApi
                             if (value != null)
                                 user.Height = Convert.ToByte(value);
                             break;
+                        case "weight":
+                            if (value != null)
+                                user.Weight = Convert.ToByte(value);
+                            break;
                         case "meals":
                             user.Meals = JsonConvert.DeserializeObject<List<Meal>>(value?.ToString());
                             useNavigationalProperties = true;
@@ -358,12 +359,6 @@ namespace WebApi
                         case "workouts":
                             user.Workouts = JsonConvert.DeserializeObject<List<Workout>>(value?.ToString());
                             useNavigationalProperties = true;
-                            break;
-                        case "measurements":
-                            user.Measurements = JsonConvert.DeserializeObject<List<Measurement>>(value?.ToString());
-                            useNavigationalProperties = true;
-                            break;
-                        case "weight":
                             break;
                         case "photoMimeType":
                             user.PhotoMimeType = value?.ToString();

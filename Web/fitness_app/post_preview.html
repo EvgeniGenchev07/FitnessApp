@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AthloBoostX</title>
+    <title>Агресивен Червено-Черен Блог</title>
     <style>
         :root {
             --primary-bg: #000000;
@@ -66,32 +66,24 @@
         }
         
         .like-btn {
-            background: none;
-            color: var(--text-gray);
+            background: var(--accent-red);
+            color: black;
             border: none;
             padding: 5px 15px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 3px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         
         .like-btn:hover {
-            color: var(--accent-red);
-            transform: scale(1.1);
+            background: var(--text-white);
+            transform: scale(1.05);
         }
         
         .like-btn.liked {
-            color: var(--accent-red);
-            text-shadow: 0 0 10px var(--accent-red);
-        }
-        
-        .like-btn::before {
-            content: "👍";
+            background: var(--text-white);
+            box-shadow: 0 0 10px var(--accent-red);
         }
         
         .like-count {
@@ -191,7 +183,7 @@
             line-height: 1.5;
         }
         
-        /* Респонсивни стилове */
+        /* Респонсив дизайн */
         @media (max-width: 768px) {
             .article-header, .article-content, .comments-section {
                 padding: 1.5rem;
@@ -203,10 +195,6 @@
             
             .article-image {
                 height: 300px;
-            }
-            
-            .like-btn {
-                font-size: 1.3rem; /* По-малък палец на таблет */
             }
         }
         
@@ -232,11 +220,6 @@
             .comments-title {
                 font-size: 1.4rem;
             }
-            
-            .like-btn {
-                font-size: 1.1rem; /* Още по-малък палец на мобилен */
-                padding: 3px 10px; /* По-малко място около него */
-            }
         }
     </style>
 </head>
@@ -249,8 +232,10 @@
                     Публикувано на <span style="color: var(--accent-red)">15.10.2023</span> | Автор: <span style="color: var(--accent-red)">ТИМЪР</span>
                 </div>
                 <div class="like-section">
-                    <button class="like-btn" id="likeBtn"></button>
-                    <span class="like-count" id="likeCount">42</span>
+                    <button class="like-btn" id="likeBtn">
+                        ХАРЕСВАЙ
+                    </button>
+                    <span class="like-count" id="likeCount">0</span>
                 </div>
             </div>
         </header>
@@ -272,6 +257,7 @@
             </div>
             
             <div class="comments-list" id="commentsList">
+                <!-- Коментарите ще се добавят тук чрез JavaScript -->
                 <div class="comment">
                     <div class="comment-author">НИКИТА</div>
                     <div class="comment-date">16.10.2023 22:17</div>
@@ -287,6 +273,7 @@
     </div>
 
     <script>
+        // Логика за харесвания
         const likeBtn = document.getElementById('likeBtn');
         const likeCount = document.getElementById('likeCount');
         let likes = 42;
@@ -307,7 +294,7 @@
             isLiked = !isLiked;
         });
         
-
+        // Логика за коментари
         const commentInput = document.getElementById('commentInput');
         const submitComment = document.getElementById('submitComment');
         const commentsList = document.getElementById('commentsList');

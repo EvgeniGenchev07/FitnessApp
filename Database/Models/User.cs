@@ -28,8 +28,6 @@ namespace Models
 
         public DateTime CreationDate { get; init; }
 
-        public List<Measurement> Measurements { get; set; }
-
         public List<Workout> Workouts { get; set;}
 
         public List<Meal> Meals { get; set;}
@@ -38,7 +36,9 @@ namespace Models
 
         public Schedule Schedule { get; set; }
 
-        [Range(50, 255)]
+        public byte Weight { get; set; }
+
+        [Range(50, 255)]    
         public byte? Height { get; set; }
 
         [Url]

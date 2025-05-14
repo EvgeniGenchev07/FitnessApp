@@ -30,7 +30,6 @@ public class UserContext : IDatabase<User, string>
                 .ThenInclude(w=>w.Exercises)
                 .ThenInclude(e=>e.Sets)
                 .Include(u => u.Meals)
-                .Include(u => u.Measurements)
                 .Include(u => u.Schedule)
                 .Include(u => u.Exercises)
                 .Include(u => u.Followers)
@@ -67,11 +66,6 @@ public class UserContext : IDatabase<User, string>
             {
                 userFromDb.Meals.Clear();
                 userFromDb.Meals = entity.Meals;
-            }
-            if (entity.Measurements != null)
-            {
-                userFromDb.Measurements.Clear();
-                userFromDb.Measurements = entity.Measurements;
             }
             if (entity.Schedule != null)
             {
@@ -133,7 +127,6 @@ public class UserContext : IDatabase<User, string>
         {
             _dbContext.Workouts.RemoveRange(user.Workouts);
             _dbContext.Meals.RemoveRange(user.Meals);
-            _dbContext.Measurements.RemoveRange(user.Measurements);
             /*if (user.Schedule != null)
             {
                 _dbContext.Schedules.Remove(user.Schedule);
