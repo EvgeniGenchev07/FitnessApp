@@ -13,7 +13,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store';
 import { HttpPatchProfile, HttpGetProfile } from '@/serviceLayer/httpManager';
 import Status from '@/serviceLayer/status';
-import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
+import { UpdateMeals } from '@/serviceLayer/managerHandler';
+import { DeletePost } from '@/serviceLayer/postService';
 
 interface Food {
     id: number;
@@ -44,12 +45,6 @@ interface User {
     meals: Meal[];
 }
 
-interface ApiResponse<T> {
-    status: Status;
-    data?: T;
-    error?: string;
-}
-
 interface ProfileData {
     weight: number;
     goalWeight: number;
@@ -60,6 +55,7 @@ interface ProfileData {
 
 const STATUS_BAR_HEIGHT = 44; // Default iOS status bar height
 const default_photo = '@/assets/images/man-avatar-icon-free-vector-3688420316.jpg';
+
 const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; date: string }) => {
     const { t } = useLanguage();
     const { colors } = useTheme();
@@ -95,20 +91,7 @@ const EditProfileModal = ({ isVisible, closeModal, saveChanges, initialData }: {
 
     const handleSave = async () => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            const dataToSend = {
-                email: user,
-                weight: parseFloat(weight),
-                weightGoal: parseFloat(goalWeight),
-                waterGoal: parseInt(waterGoal),
-                dailyCalorieGoal: parseInt(dailyCalorieGoal)
-            };
             
-            const res = await HttpPatchProfile(dataToSend);
-            if (!res || res.status !== Status.OK) {
-                Alert.alert(t('common.error'), t('nutrition.updateError'));
-                return;
-            }
             
             saveChanges({
                 weight: parseFloat(weight),
@@ -346,28 +329,19 @@ const NutritionPage = () => {
 
     const loadProfileData = async () => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            if (!user) {
-                Alert.alert(t('common.error'), t('nutrition.loadError'));
-                return;
-            }
-
-            const res = await HttpGetProfile(user) as unknown as ApiResponse<User>;
-            if (!res || res.status !== Status.OK || !res.data) {
-                Alert.alert(t('common.error'), t('nutrition.loadError'));
-                return;
-            }
-
-            const userData = res.data;
+            const userDataString = await AsyncStorage.getItem('profile');
+            const userData = JSON.parse(userDataString || '{}');
+            const mealsData = await AsyncStorage.getItem('meals');
+            const meals = JSON.parse(mealsData || '[]');
             setUserInfo({
                 userName: userData.userName,
                 photo: userData.photo ? `data:${userData.photoMimeType};base64,${userData.photo}` : '',
                 photoMimeType: userData.photoMimeType || 'image/jpeg',
                 date: userData.date || new Date().toISOString(),
-                meals: userData.meals || []
+                meals: meals || []
             });
-
-            const todayMeal = userData.meals?.[0] || {
+            
+            const todayMeal = meals?.[0] || {
                 id: 0,
                 date: new Date().toISOString(),
                 foods: [],
@@ -394,19 +368,9 @@ const NutritionPage = () => {
 
     const loadMeals = async () => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            if (!user) {
-                Alert.alert(t('common.error'), t('nutrition.loadError'));
-                return;
-            }
-
-            const res = await HttpGetProfile(user) as unknown as ApiResponse<User>;
-            if (!res || res.status !== Status.OK || !res.data) {
-                Alert.alert(t('common.error'), t('nutrition.loadError'));
-                return;
-            }
-
-            setMeals(res.data.meals || []);
+            const mealsData = await AsyncStorage.getItem('meals');
+            const meals = JSON.parse(mealsData || '[]');
+            setMeals(meals || []);
         } catch (error) {
             console.error('Load meals error:', error);
             Alert.alert(t('common.error'), t('nutrition.loadError'));
@@ -422,13 +386,11 @@ const NutritionPage = () => {
         toggleModal();
     };
 
+    const handleWaterEffect = async (value: number) => {
+        setProfile(prev => ({ ...prev, waterIntake: value }));
+    }
     const handleWaterChange = async (value: number) => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            if (!user) {
-                Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
-                return;
-            }
 
             const currentMeals = [...meals];
             const todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
@@ -441,20 +403,19 @@ const NutritionPage = () => {
                 weight: profile.weight,
                 goalWeight: profile.goalWeight
             };
-
+            
             todayMeal.waterIntake = value;
-            if (!currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'))) {
+            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
+            if (index === -1) {
                 currentMeals.push(todayMeal);
             }
+            else {
+                currentMeals[index] = todayMeal;
+            }
 
-            const dataToSend = {
-                email: user,
-                meals: JSON.stringify(currentMeals)
-            };
-
-            const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
-            if (!res || res.status !== Status.OK) {
-                Alert.alert(t('common.error'), t('nutrition.waterUpdateError'));
+            const res = await UpdateMeals(todayMeal);
+            if (!res || res != Status.OK) {
+                Alert.alert(t('common.error'), t('nutrition.addFoodError'));
                 return;
             }
 
@@ -465,27 +426,11 @@ const NutritionPage = () => {
         }
     };
 
-    const getMealTypeNumber = (mealType: string): number => {
-        switch (mealType) {
-            case 'Breakfast': return 0;
-            case 'Brunch': return 1;
-            case 'Lunch': return 2;
-            case 'Dinner': return 3;
-            case 'Snack': return 4;
-            default: return 0;
-        }
-    };
-
     const addFood = async ({ meal, name, calories }: { meal: string; name: string; calories: number }) => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            if (!user) {
-                Alert.alert(t('common.error'), t('nutrition.addFoodError'));
-                return;
-            }
 
             const currentMeals = [...meals];
-            const todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
+            let todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
                 id: 0,
                 date: selectedDate.toISOString(),
                 foods: [],
@@ -495,7 +440,7 @@ const NutritionPage = () => {
                 weight: profile.weight,
                 goalWeight: profile.goalWeight
             };
-
+            if(todayMeal.foods) todayMeal.foods = [];
             const newFood: Food = {
                 id: Math.floor(Math.random() * 2147483647),
                 name,
@@ -507,17 +452,16 @@ const NutritionPage = () => {
             };
 
             todayMeal.foods.push(newFood);
-            if (!currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'))) {
+            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
+            if (index === -1) {
                 currentMeals.push(todayMeal);
             }
+            else {
+                currentMeals[index] = todayMeal;
+            }
 
-            const dataToSend = {
-                email: user,
-                meals: JSON.stringify(currentMeals)
-            };
-
-            const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
-            if (!res || res.status !== Status.OK) {
+            const res = await UpdateMeals(todayMeal);
+            if (!res || res != Status.OK) {
                 Alert.alert(t('common.error'), t('nutrition.addFoodError'));
                 return;
             }
@@ -532,31 +476,22 @@ const NutritionPage = () => {
 
     const deleteFood = async (mealId: number) => {
         try {
-            const user = await SecureStore.getItemAsync('user');
-            if (!user) {
-                Alert.alert(t('common.error'), t('nutrition.deleteError'));
-                return;
-            }
             const currentMeals = [...meals];
-            const todayMeal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day'));
-            
-            if (todayMeal) {
-                todayMeal.foods = todayMeal.foods.filter(f => f.id !== mealId);
-                
-                const dataToSend = {
-                    email: user,
-                    meals: JSON.stringify(currentMeals)
-                };
+            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
 
-                const res = await HttpPatchProfile(dataToSend) as unknown as ApiResponse<void>;
-                if (!res || res.status !== Status.OK) {
+            if (index != -1) {
+                const todayMeal = currentMeals[index];
+                todayMeal.foods = todayMeal.foods.filter(f => f.id !== mealId);
+                currentMeals[index] = todayMeal;
+                const res = await UpdateMeals(todayMeal);
+                if (res != Status.OK) {
                     Alert.alert(t('common.error'), t('nutrition.deleteError'));
                     return;
                 }
-
+            }
                 setMeals(currentMeals);
             }
-        } catch (error) {
+         catch (error) {
             Alert.alert(t('common.error'), t('nutrition.deleteError'));
         }
     };
@@ -565,7 +500,7 @@ const NutritionPage = () => {
         const todayMeal = meals.find(m => moment(m.date).isSame(selectedDate, 'day'));
         if (!todayMeal) return {};
 
-        return todayMeal.foods.reduce((acc, food) => {
+        return todayMeal?.foods?.reduce((acc, food) => {
             if (!acc[food.type]) acc[food.type] = [];
             acc[food.type].push(food);
             return acc;
@@ -574,7 +509,7 @@ const NutritionPage = () => {
 
     const totalCalories = meals
         .find(m => moment(m.date).isSame(selectedDate, 'day'))
-        ?.foods.reduce((acc, food) => acc + food.calories, 0) || 0;
+        ?.foods?.reduce((acc, food) => acc + food.calories, 0) || 0;
 
     const progress = Math.min(totalCalories / profile.dailyCalorieGoal, 1);
     const waterProgress = Math.min(profile.waterIntake / profile.waterGoal, 1);
@@ -636,7 +571,7 @@ const NutritionPage = () => {
                         </View>
                     </View>
 
-                    {Object.entries(groupMealsByType(meals)).map(([mealType, foods]) => (
+                    {Object.entries(groupMealsByType(meals)||[]).map(([mealType, foods]) => (
                         <View key={mealType} style={styles.meal}>
                             <ThemedText type={'subtitle'}>{mealType}</ThemedText>
                             {foods.map((food, idx) => (
@@ -683,13 +618,14 @@ const NutritionPage = () => {
                         ))}
                     </View>
                     <View style={styles.sliderContainer}>
-                    <Slider
+                        <Slider
                             style={styles.slider}
-                        minimumValue={0}
+                            minimumValue={0}
                             maximumValue={profile.waterGoal}
                             step={50}
                             value={profile.waterIntake}
-                            onValueChange={handleWaterChange}
+                            onSlidingComplete={handleWaterChange}
+                            onValueChange={handleWaterEffect}
                             minimumTrackTintColor="#ff0019"
                             maximumTrackTintColor={colors.border}
                             thumbTintColor="#ff0019"

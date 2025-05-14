@@ -216,7 +216,47 @@ namespace WebApi
                             user.Height = Convert.ToByte(pair.Value);
                             break;
                         case "meals":
-                            user.Meals = JsonConvert.DeserializeObject<List<Meal>>(pair.Value.ToString());
+                            Meal meal = JsonConvert.DeserializeObject<Meal>(pair.Value.ToString());
+                            Meal mealDb = user.Meals.FirstOrDefault(w=>w.Id == meal.Id);
+                            if (mealDb != null)
+                            {
+                                Console.WriteLine(meal.Id);
+                                mealDb.Weight = meal.Weight;
+                                mealDb.WeightGoal = meal.WeightGoal;
+                                mealDb.WaterGoal = meal.WaterGoal;
+                                mealDb.DailyCalorieGoal = meal.DailyCalorieGoal;
+                                mealDb.WaterIntake = meal.WaterIntake;
+                                mealDb.Foods = meal.Foods!=null? meal.Foods.Select(f => new Food
+                                {
+                                    Name = f.Name,
+                                    Calories = f.Calories,
+                                    Carbs = f.Carbs,
+                                    Fats = f.Fats,
+                                    Proteins = f.Proteins,
+                                    Type = f.Type,
+                                }).ToList():new List<Food>();
+                            }
+                            else
+                            {
+                                user.Meals.Add(new Meal
+                                {
+                                    Weight = meal.Weight,
+                                    WeightGoal = meal.WeightGoal,
+                                    WaterGoal = meal.WaterGoal,
+                                    WaterIntake = meal.WaterIntake,
+                                    DailyCalorieGoal = meal.DailyCalorieGoal,
+                                    Date = meal.Date,
+                                    Foods = meal.Foods!=null? meal.Foods.Select(f => new Food
+                                    {
+                                        Name = f.Name,
+                                        Calories = f.Calories,
+                                        Carbs = f.Carbs,
+                                        Fats = f.Fats,
+                                        Proteins = f.Proteins,
+                                        Type = f.Type,
+                                    }).ToList():new List<Food>()
+                                });
+                            }
                             break;
                         case "schedule":
                             user.Schedule = JsonConvert.DeserializeObject<Schedule>(pair.Value.ToString());
@@ -287,11 +327,12 @@ namespace WebApi
                             break;
                     }
                 }
-                var res = await _dbContext.SaveChangesAsync();
-                return Ok(res);
+                await _dbContext.SaveChangesAsync();
+                return Ok(1);
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }

@@ -3,10 +3,10 @@ import {HttpGetProfile, HttpGetUser, HttpGetWorkouts, HttpPatchProfile, HttpPost
 import Status from "@/serviceLayer/status";
 import {router} from "expo-router";
 import * as SecureStore from 'expo-secure-store';
-import * as Updates from 'expo-updates';
-import {Alert} from "react-native";
 import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {Alert} from "react-native";
+import moment from "moment/moment";
 async function Login(email, password) {
     const formErrors = ValidateLogin(email, password);
     if (Object.keys(formErrors).length !== 0) {
@@ -48,7 +48,9 @@ function IsLoggedIn() {
 }
 
 async function LocalSaveProfile(){
-    const data = await GetProfile()
+    const user = SecureStore.getItem('user');
+    const res = await HttpGetProfile(user)
+    const data = res.data;
     await asyncStorage.setItem('workouts', JSON.stringify(data.workouts));
     await asyncStorage.setItem('profile', JSON.stringify({
         userName: data.userName,
@@ -196,6 +198,34 @@ async function CreatePost(post)
     return Status.ServerError;
 }
 }
+async function UpdateMeals(meal) {
+    try {
+        const user = await SecureStore.getItemAsync('user');
+
+            const dataToSend = {
+                email: user,
+                meals: JSON.stringify(meal)
+            };
+            const res = await HttpPatchProfile(dataToSend);
+            let meals = await AsyncStorage.getItem('meals');
+            meals = meals ? JSON.parse(meals) : [];
+            const index = meals.findIndex(m => m.id === meal.id);
+            if (index !== -1) {
+                meals[index] = meal;
+            } else {
+                meals.push(meal);
+            }
+            await AsyncStorage.setItem('meals', JSON.stringify(meals));
+            if (!res || res.status !== Status.OK) {
+                console.error('Server update failed:', res);
+                return Status.ServerError;
+            }
+            return Status.OK;
+    } catch (error) {
+        console.error('Error saving meals data:', error);
+        return Status.ServerError;
+    }
+}
 const _Login = Login;
 export {_Login as Login};
 const _Register = Register;
@@ -212,3 +242,5 @@ const _UpdateUserProfileData = UpdateUserProfileData;
 export {_UpdateUserProfileData as UpdateUserProfile};
 const _CreatePost = CreatePost;
 export {_CreatePost as CreatePost};
+const _UpdateMeals = UpdateMeals;
+export {_UpdateMeals as UpdateMeals};

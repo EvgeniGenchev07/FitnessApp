@@ -18,10 +18,17 @@ namespace DBContexts.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
+                    Password = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Height = table.Column<byte>(type: "INTEGER", nullable: true)
+                    CreationDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Weight = table.Column<byte>(type: "INTEGER", nullable: false),
+                    Height = table.Column<byte>(type: "INTEGER", nullable: true),
+                    Facebook = table.Column<string>(type: "TEXT", nullable: true),
+                    Instagram = table.Column<string>(type: "TEXT", nullable: true),
+                    X = table.Column<string>(type: "TEXT", nullable: true),
+                    Photo = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    Bio = table.Column<string>(type: "TEXT", nullable: true),
+                    PhotoMimeType = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,68 +36,48 @@ namespace DBContexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Exercises",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    MuscleGroups = table.Column<string>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Exercises", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Exercises_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Foods",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
-                    Calories = table.Column<ushort>(type: "INTEGER", nullable: false),
-                    Carbs = table.Column<ushort>(type: "INTEGER", nullable: false),
-                    Fats = table.Column<ushort>(type: "INTEGER", nullable: false),
-                    Proteins = table.Column<ushort>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Foods", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Foods_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Measurements",
+                name: "Meals",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Waist = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
-                    Arm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
-                    Forearm = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
-                    Calf = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
-                    Chest = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
-                    Weight = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: true),
+                    WaterIntake = table.Column<int>(type: "INTEGER", nullable: false),
+                    WaterGoal = table.Column<int>(type: "INTEGER", nullable: false),
+                    DailyCalorieGoal = table.Column<int>(type: "INTEGER", nullable: false),
+                    Weight = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
+                    WeightGoal = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Measurements", x => x.Id);
+                    table.PrimaryKey("PK_Meals", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Measurements_Users_UserId",
+                        name: "FK_Meals_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Posts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Likes = table.Column<int>(type: "INTEGER", nullable: false),
+                    Photo = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    PhotoMimeType = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Posts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Posts_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id");
@@ -116,29 +103,72 @@ namespace DBContexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Meals",
+                name: "UserUser",
+                columns: table => new
+                {
+                    FollowersId = table.Column<int>(type: "INTEGER", nullable: false),
+                    FollowingId = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserUser", x => new { x.FollowersId, x.FollowingId });
+                    table.ForeignKey(
+                        name: "FK_UserUser_Users_FollowersId",
+                        column: x => x.FollowersId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserUser_Users_FollowingId",
+                        column: x => x.FollowingId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Foods",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Weight = table.Column<ushort>(type: "INTEGER", nullable: false),
-                    FoodId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 30, nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: false),
+                    Calories = table.Column<ushort>(type: "INTEGER", nullable: false),
+                    Carbs = table.Column<ushort>(type: "INTEGER", nullable: false),
+                    Fats = table.Column<ushort>(type: "INTEGER", nullable: false),
+                    Proteins = table.Column<ushort>(type: "INTEGER", nullable: false),
+                    MealId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Meals", x => x.Id);
+                    table.PrimaryKey("PK_Foods", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Meals_Foods_FoodId",
-                        column: x => x.FoodId,
-                        principalTable: "Foods",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        name: "FK_Foods_Meals_MealId",
+                        column: x => x.MealId,
+                        principalTable: "Meals",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserID = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: true),
+                    Likes = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    PostId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Meals_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Comments_Posts_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Posts",
                         principalColumn: "Id");
                 });
 
@@ -148,7 +178,7 @@ namespace DBContexts.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", nullable: false),
                     ScheduleUserId = table.Column<int>(type: "INTEGER", nullable: true),
                     UserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
@@ -168,25 +198,26 @@ namespace DBContexts.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkoutExercises",
+                name: "Exercises",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    ExerciseId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    EstimatedTime = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true),
                     WorkoutId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkoutExercises", x => x.Id);
+                    table.PrimaryKey("PK_Exercises", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WorkoutExercises_Exercises_ExerciseId",
-                        column: x => x.ExerciseId,
-                        principalTable: "Exercises",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        name: "FK_Exercises_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_WorkoutExercises_Workouts_WorkoutId",
+                        name: "FK_Exercises_Workouts_WorkoutId",
                         column: x => x.WorkoutId,
                         principalTable: "Workouts",
                         principalColumn: "Id");
@@ -200,17 +231,23 @@ namespace DBContexts.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Weight = table.Column<double>(type: "REAL", precision: 2, scale: 5, nullable: false),
                     Reps = table.Column<byte>(type: "INTEGER", nullable: false),
-                    WorkoutExerciseId = table.Column<int>(type: "INTEGER", nullable: true)
+                    RestTime = table.Column<int>(type: "INTEGER", nullable: false),
+                    ExerciseId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sets", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Sets_WorkoutExercises_WorkoutExerciseId",
-                        column: x => x.WorkoutExerciseId,
-                        principalTable: "WorkoutExercises",
+                        name: "FK_Sets_Exercises_ExerciseId",
+                        column: x => x.ExerciseId,
+                        principalTable: "Exercises",
                         principalColumn: "Id");
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exercises_UserId",
@@ -218,15 +255,14 @@ namespace DBContexts.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Foods_UserId",
-                table: "Foods",
-                column: "UserId");
+                name: "IX_Exercises_WorkoutId",
+                table: "Exercises",
+                column: "WorkoutId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Meals_FoodId",
-                table: "Meals",
-                column: "FoodId",
-                unique: true);
+                name: "IX_Foods_MealId",
+                table: "Foods",
+                column: "MealId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Meals_UserId",
@@ -234,14 +270,14 @@ namespace DBContexts.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Measurements_UserId",
-                table: "Measurements",
+                name: "IX_Posts_UserId",
+                table: "Posts",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sets_WorkoutExerciseId",
+                name: "IX_Sets_ExerciseId",
                 table: "Sets",
-                column: "WorkoutExerciseId");
+                column: "ExerciseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
@@ -250,15 +286,9 @@ namespace DBContexts.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkoutExercises_ExerciseId",
-                table: "WorkoutExercises",
-                column: "ExerciseId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkoutExercises_WorkoutId",
-                table: "WorkoutExercises",
-                column: "WorkoutId");
+                name: "IX_UserUser_FollowingId",
+                table: "UserUser",
+                column: "FollowingId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Workouts_ScheduleUserId",
@@ -275,19 +305,22 @@ namespace DBContexts.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Meals");
-
-            migrationBuilder.DropTable(
-                name: "Measurements");
-
-            migrationBuilder.DropTable(
-                name: "Sets");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Foods");
 
             migrationBuilder.DropTable(
-                name: "WorkoutExercises");
+                name: "Sets");
+
+            migrationBuilder.DropTable(
+                name: "UserUser");
+
+            migrationBuilder.DropTable(
+                name: "Posts");
+
+            migrationBuilder.DropTable(
+                name: "Meals");
 
             migrationBuilder.DropTable(
                 name: "Exercises");

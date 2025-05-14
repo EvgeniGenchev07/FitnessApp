@@ -1,3 +1,5 @@
 
 Database/WebApi/Properties/launchSettings.json
 /Database/DBContexts/obj
+/Database/Models/obj
+/Database/WebApi/obj
