@@ -59,7 +59,7 @@ interface ProfileData {
 }
 
 const STATUS_BAR_HEIGHT = 44; // Default iOS status bar height
-
+const default_photo = '@/assets/images/man-avatar-icon-free-vector-3688420316.jpg';
 const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; date: string }) => {
     const { t } = useLanguage();
     const { colors } = useTheme();
@@ -67,7 +67,7 @@ const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; dat
     return (
         <View style={styles.profileHeader}>
             <Image
-                source={photo ? { uri: photo } : require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg')}
+                source={photo ? { uri: photo } : require(default_photo)}
                 style={[styles.profilePic, { borderColor: colors.primary }]}
             />
             <View style={styles.profileInfo}>
