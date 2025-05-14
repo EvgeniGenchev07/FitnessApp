@@ -146,53 +146,6 @@ namespace DBContexts.Migrations
                     b.ToTable("Meals");
                 });
 
-            modelBuilder.Entity("Models.Measurement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Arm")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Calf")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Chest")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("Forearm")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Neck")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<double?>("Waist")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Weight")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Measurements");
-                });
-
             modelBuilder.Entity("Models.Post", b =>
                 {
                     b.Property<int>("Id")
@@ -395,13 +348,6 @@ namespace DBContexts.Migrations
                         .HasForeignKey("UserId");
                 });
 
-            modelBuilder.Entity("Models.Measurement", b =>
-                {
-                    b.HasOne("Models.User", null)
-                        .WithMany("Measurements")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Models.Post", b =>
                 {
                     b.HasOne("Models.User", "User")
@@ -478,8 +424,6 @@ namespace DBContexts.Migrations
                     b.Navigation("Exercises");
 
                     b.Navigation("Meals");
-
-                    b.Navigation("Measurements");
 
                     b.Navigation("Posts");
 

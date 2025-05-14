@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBContexts.Migrations
 {
     [DbContext(typeof(AthloboostDbContext))]
-    [Migration("20250512160750_Update_v14")]
-    partial class Update_v14
+    [Migration("20250514162240_update_v17")]
+    partial class update_v17
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -106,14 +106,9 @@ namespace DBContexts.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MealId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Foods");
                 });
@@ -124,56 +119,26 @@ namespace DBContexts.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("DailyCalorieGoal")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Meals");
-                });
-
-            modelBuilder.Entity("Models.Measurement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("WaterGoal")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("Arm")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Calf")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Chest")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<double?>("Forearm")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double?>("Neck")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<int?>("UserId")
+                    b.Property<int>("WaterIntake")
                         .HasColumnType("INTEGER");
 
-                    b.Property<double?>("Waist")
+                    b.Property<double>("Weight")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
-                    b.Property<double?>("Weight")
+                    b.Property<double>("WeightGoal")
                         .HasPrecision(2, 5)
                         .HasColumnType("REAL");
 
@@ -181,7 +146,7 @@ namespace DBContexts.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Measurements");
+                    b.ToTable("Meals");
                 });
 
             modelBuilder.Entity("Models.Post", b =>
@@ -303,14 +268,6 @@ namespace DBContexts.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
-                    b.Property<double>("Weight")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
-                    b.Property<double>("WeightGoal")
-                        .HasPrecision(2, 5)
-                        .HasColumnType("REAL");
-
                     b.Property<string>("X")
                         .HasColumnType("TEXT");
 
@@ -385,23 +342,12 @@ namespace DBContexts.Migrations
                     b.HasOne("Models.Meal", null)
                         .WithMany("Foods")
                         .HasForeignKey("MealId");
-
-                    b.HasOne("Models.User", null)
-                        .WithMany("Foods")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Models.Meal", b =>
                 {
                     b.HasOne("Models.User", null)
                         .WithMany("Meals")
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("Models.Measurement", b =>
-                {
-                    b.HasOne("Models.User", null)
-                        .WithMany("Measurements")
                         .HasForeignKey("UserId");
                 });
 
@@ -480,11 +426,7 @@ namespace DBContexts.Migrations
                 {
                     b.Navigation("Exercises");
 
-                    b.Navigation("Foods");
-
                     b.Navigation("Meals");
-
-                    b.Navigation("Measurements");
 
                     b.Navigation("Posts");
 

@@ -15,13 +15,9 @@ namespace DBContexts
         internal DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
 
-        public AthloboostDbContext() : base()
-        {
-        }
+        public AthloboostDbContext() : base() { }
 
-        public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options)
-        {
-        }
+        public AthloboostDbContext(DbContextOptions<AthloboostDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,7 +30,6 @@ namespace DBContexts
                 user.HasIndex(u => u.Email)
                     .IsUnique();
             });
-
             base.OnModelCreating(modelBuilder);
         }
 
