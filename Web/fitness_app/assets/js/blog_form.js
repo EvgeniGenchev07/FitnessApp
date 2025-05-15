@@ -1,11 +1,17 @@
-const apiUrl = 'http://192.168.100.6:5000';
+const apiUrl = 'http://192.168.56.1:5000';
 let selectedPhotoFile = null;
-
-
+const isBulgarian = window.location.pathname.includes('blog_form_bg.html');
+let language="";
+if(isBulgarian)
+{
+    language="bg";
+}
+else{
+    language="en";
+}
 $(document).ready(function () {
     const userData = JSON.parse(sessionStorage.getItem('user'));
     const blogFormSection = $('.blog-form-container');
-    const isBulgarian = window.location.pathname.includes('blog_form_bg.html');
 
     if (!userData) return showAuthRequired();
 
@@ -64,6 +70,7 @@ $(document).ready(function () {
             formData.append('title', $('#title').val());
             formData.append('description', $('#content').val());
             formData.append('userId', userData.id);
+            formData.append("language",language);
             if (selectedPhotoFile) formData.append('photo', selectedPhotoFile);
 
             const response = await fetch(`${apiUrl}/posts`, {

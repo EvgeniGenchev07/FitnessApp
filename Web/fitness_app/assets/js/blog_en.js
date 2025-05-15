@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Конфигурация
     const config = {
         API_URL: 'http://192.168.56.1:5000/posts',
         DEFAULT_IMAGE: 'img/default-post-image.jpg',
@@ -60,8 +59,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         posts.forEach(post => {
-            container.insertAdjacentHTML('beforeend', createPostHtml(post));
-        });
+        const postHtml = createPostHtml(post);
+        if (postHtml) { 
+            container.insertAdjacentHTML('beforeend', postHtml);
+        }
+       });
     }
 
     function createPostHtml(post) {
@@ -75,73 +77,150 @@ document.addEventListener('DOMContentLoaded', function() {
             mimeType: post.photoMimeType || 'image/jpeg',
             username: post.user?.userName || config.DEFAULT_USER,
             userId: post.user?.id || 0,
-            commentsCount: post.comments?.length || 0
+            commentsCount: post.comments?.length || 0,
+            language:post.language
         };
-
-        return `
-        <article class="blog_item">
-            <div class="blog_item_img">
-                ${getImageHtml(safePost.photo, safePost.mimeType, safePost.title)}
-                <a href="#" class="blog_item_date">
-                    <h3>${safePost.created.getDate()} ${config.MONTH_NAMES[safePost.created.getMonth()]}/${safePost.created.getFullYear()}</h3>
-                </a>
-            </div>
-            <div class="blog_details">
-                <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
-                    <h2 class="blog-head">${safePost.title}</h2>
-                </a>
-                <p><a href="post_preview.html">Read more...</a></p>
-                <ul class="blog-info-link">
-                    <li><i class="fa fa-user"></i> ${safePost.username}</li>
-                    <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
-                    <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Comments</li>
-                </ul>
-            </div>
-        </article>
-        `;
+        if(safePost.language=="en")
+        {
+            return `
+            <article class="blog_item">
+                <div class="blog_item_img">
+                    ${getImageHtml(safePost.photo, safePost.mimeType, safePost.title)}
+                    <a href="#" class="blog_item_date">
+                        <h3>${safePost.created.getDate()} ${config.MONTH_NAMES[safePost.created.getMonth()]}/${safePost.created.getFullYear()}</h3>
+                    </a>
+                </div>
+                <div class="blog_details">
+                    <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
+                        <h2 class="blog-head">${safePost.title}</h2>
+                    </a>
+                    <p><a href="post_preview.html">Read more...</a></p>
+                    <ul class="blog-info-link">
+                        <li><i class="fa fa-user"></i> ${safePost.username}</li>
+                        <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
+                        <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Comments</li>
+                    </ul>
+                </div>
+            </article>
+            `;
+        }
     }
 
-    function setupPagination() {
-        const container = document.querySelector('.blog_left_sidebar');
-        if (!container) return;
-        
-        const paginationHTML = `
-            <div class="pagination-container">
-                <button class="pagination-button prev" aria-label="Previous page">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <span class="page-info">${state.currentPage}/${state.totalPages}</span>
-                <button class="pagination-button next" aria-label="Next page">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        `;
-        container.insertAdjacentHTML('afterend', paginationHTML);
-        
-        document.querySelector('.pagination-button.prev').addEventListener('click', () => {
-            if (state.currentPage > 1) {
-                state.currentPage--;
-                renderPage();
-            }
-        });
-        
-        document.querySelector('.pagination-button.next').addEventListener('click', () => {
-            if (state.currentPage < state.totalPages) {
-                state.currentPage++;
-                renderPage();
-            }
-        });
+     function setupPagination() {
+    const container = document.querySelector('.blog_left_sidebar');
+    if (!container) return;
+    
+    const paginationHTML = `
+        <div class="pagination-container">
+            <button class="pagination-button prev" aria-label="Предишна страница">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="page-circle">${state.currentPage}</div>
+            <button class="pagination-button next" aria-label="Следваща страница">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    `;
+    container.insertAdjacentHTML('afterend', paginationHTML);
+    
+   const style = document.createElement('style');
+style.textContent = `
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 30px 0;
     }
+    
+    .page-circle {
+        width: 40px;
+        height: 40px;
+        background-color: #ff0000;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    
+    .pagination-button {
+        background: none;
+        border: none;
+        color: #333;
+        font-size: 18px;
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: all 0.3s;
+    }
+    
+    .pagination-button:hover {
+        color: #ff0000;
+    }
+    
+    .pagination-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        color: #ccc;
+    }
+
+    /* Респонсивни стилове */
+    @media (max-width: 768px) {
+        .page-circle {
+            width: 35px;
+            height: 35px;
+            font-size: 14px;
+        }
+        
+        .pagination-button {
+            font-size: 16px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .pagination-container {
+            gap: 10px;
+        }
+        
+        .page-circle {
+            width: 30px;
+            height: 30px;
+            font-size: 12px;
+        }
+        
+        .pagination-button {
+            font-size: 14px;
+            padding: 3px 6px;
+        }
+    }
+`;
+document.head.appendChild(style);
+    document.querySelector('.pagination-button.prev').addEventListener('click', () => {
+        if (state.currentPage > 1) {
+            state.currentPage--;
+            renderPage();
+        }
+    });
+    
+    document.querySelector('.pagination-button.next').addEventListener('click', () => {
+        if (state.currentPage < state.totalPages) {
+            state.currentPage++;
+            renderPage();
+        }
+    });
+}
 
     function updatePagination() {
-        const pageInfo = document.querySelector('.page-info');
-        const prevBtn = document.querySelector('.pagination-button.prev');
-        const nextBtn = document.querySelector('.pagination-button.next');
-        
-        if (pageInfo) pageInfo.textContent = `${state.currentPage}/${state.totalPages}`;
-        if (prevBtn) prevBtn.disabled = state.currentPage === 1;
-        if (nextBtn) nextBtn.disabled = state.currentPage === state.totalPages;
-    }
+    const pageCircle = document.querySelector('.page-circle');
+    const prevBtn = document.querySelector('.pagination-button.prev');
+    const nextBtn = document.querySelector('.pagination-button.next');
+    
+    if (pageCircle) pageCircle.textContent = state.currentPage;
+    if (prevBtn) prevBtn.disabled = state.currentPage === 1;
+    if (nextBtn) nextBtn.disabled = state.currentPage === state.totalPages;
+}
     function setupResponsiveImages() {
         const style = document.createElement('style');
         style.textContent = `
@@ -167,8 +246,6 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         document.head.appendChild(style);
     }
-
-    // Помощни функции
     function getImageHtml(photoData, mimeType, altText) {
         if (!photoData) {
             return `<img src="${config.DEFAULT_IMAGE}" alt="${altText}" loading="lazy">`;

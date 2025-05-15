@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 [ApiController]
 [Route("posts/")]
@@ -30,7 +31,8 @@ public class PostsController : ControllerBase
     [FromForm] string title,
     [FromForm] string description,
     [FromForm] IFormFile photo,
-    [FromForm] int userId)
+    [FromForm] int userId,
+    [FromForm] string language)
     {
         try
         {
@@ -45,6 +47,7 @@ public class PostsController : ControllerBase
                 Title = title,
                 Description = description,
                 Created = DateTime.UtcNow,
+                Language=language,
                 Likes = 0,
                 User = user
             };
@@ -92,6 +95,7 @@ public class PostsController : ControllerBase
                 post.Description,
                 post.Created,
                 post.Likes,
+                post.Language,
                 User = post.User != null ? new { post.User.Id } : null,
                 Comments = includeComments && post.Comments != null
                     ? post.Comments.Select(c => new
@@ -222,6 +226,7 @@ public class PostsController : ControllerBase
                     p.Created,
                     p.Likes,
                     p.Photo,
+                    p.Language,
                     p.PhotoMimeType,
                     User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
                     Comments = includeComments ? p.Comments.Select(c => new
