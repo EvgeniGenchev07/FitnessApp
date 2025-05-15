@@ -30,6 +30,7 @@ public class UserContext : IDatabase<User, string>
                 .ThenInclude(w=>w.Exercises)
                 .ThenInclude(e=>e.Sets)
                 .Include(u => u.Meals)
+                .ThenInclude(m=>m.Foods)
                 .Include(u => u.Schedule)
                 .Include(u => u.Exercises)
                 .Include(u => u.Followers)

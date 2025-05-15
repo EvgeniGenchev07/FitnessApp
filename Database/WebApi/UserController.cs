@@ -220,7 +220,7 @@ namespace WebApi
                             Meal mealDb = user.Meals.FirstOrDefault(w=>w.Id == meal.Id);
                             if (mealDb != null)
                             {
-                                Console.WriteLine(meal.Id);
+                                Console.WriteLine(meal.WeightGoal);
                                 mealDb.Weight = meal.Weight;
                                 mealDb.WeightGoal = meal.WeightGoal;
                                 mealDb.WaterGoal = meal.WaterGoal;

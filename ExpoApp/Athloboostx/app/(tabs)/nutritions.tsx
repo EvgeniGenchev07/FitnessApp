@@ -10,11 +10,8 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import moment from 'moment';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from 'expo-secure-store';
-import { HttpPatchProfile, HttpGetProfile } from '@/serviceLayer/httpManager';
 import Status from '@/serviceLayer/status';
 import { UpdateMeals } from '@/serviceLayer/managerHandler';
-import { DeletePost } from '@/serviceLayer/postService';
 
 interface Food {
     id: number;
@@ -33,7 +30,7 @@ interface Meal {
     waterIntake: number;
     waterGoal: number;
     weight: number;
-    goalWeight: number;
+    weightGoal: number;
     dailyCalorieGoal: number;
 }
 
@@ -47,13 +44,13 @@ interface User {
 
 interface ProfileData {
     weight: number;
-    goalWeight: number;
+    weightGoal: number;
     waterGoal: number;
     dailyCalorieGoal: number;
     waterIntake: number;
 }
 
-const STATUS_BAR_HEIGHT = 44; // Default iOS status bar height
+const STATUS_BAR_HEIGHT = 5; // Default iOS status bar height
 const default_photo = '@/assets/images/man-avatar-icon-free-vector-3688420316.jpg';
 
 const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; date: string }) => {
@@ -73,82 +70,6 @@ const ProfileHeader = ({ name, photo, date }: { name: string; photo: string; dat
                 </ThemedText>
             </View>
         </View>
-    );
-};
-
-const EditProfileModal = ({ isVisible, closeModal, saveChanges, initialData }: { 
-    isVisible: boolean; 
-    closeModal: () => void; 
-    saveChanges: (data: Partial<ProfileData>) => void;
-    initialData: ProfileData;
-}) => {
-    const { t } = useLanguage();
-    const { colors } = useTheme();
-    const [weight, setWeight] = useState(initialData.weight.toString());
-    const [goalWeight, setGoalWeight] = useState(initialData.goalWeight.toString());
-    const [waterGoal, setWaterGoal] = useState(initialData.waterGoal.toString());
-    const [dailyCalorieGoal, setDailyCalorieGoal] = useState(initialData.dailyCalorieGoal.toString());
-
-    const handleSave = async () => {
-        try {
-            
-            
-            saveChanges({
-                weight: parseFloat(weight),
-                goalWeight: parseFloat(goalWeight),
-                waterGoal: parseInt(waterGoal),
-                dailyCalorieGoal: parseInt(dailyCalorieGoal)
-            });
-            closeModal();
-        } catch (error) {
-            Alert.alert(t('common.error'), t('nutrition.updateError'));
-        }
-    };
-
-    return (
-        <Modal visible={isVisible} transparent={true} animationType="slide">
-            <View style={[styles.modalBackground, { backgroundColor: colors.modalBackground }]}>
-                <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
-                    <ThemedText type={'subtitle'} style={styles.modalTitle}>{t('nutrition.stats')}</ThemedText>
-                    <TextInput
-                        value={weight}
-                        onChangeText={setWeight}
-                        placeholder={t('nutrition.weight')}
-                        keyboardType="numeric"
-                        style={[styles.input, { borderColor: colors.border }]}
-                    />
-                    <TextInput
-                        value={goalWeight}
-                        onChangeText={setGoalWeight}
-                        placeholder={t('nutrition.goalWeight')}
-                        keyboardType="numeric"
-                        style={[styles.input, { borderColor: colors.border }]}
-                    />
-                    <TextInput
-                        value={waterGoal}
-                        onChangeText={setWaterGoal}
-                        placeholder={t('nutrition.waterGoal')}
-                        keyboardType="numeric"
-                        style={[styles.input, { borderColor: colors.border }]}
-                    />
-                    <TextInput
-                        value={dailyCalorieGoal}
-                        onChangeText={setDailyCalorieGoal}
-                        placeholder={t('nutrition.dailyCalorieGoal')}
-                        keyboardType="numeric"
-                        style={[styles.input, { borderColor: colors.border }]}
-                    />
-                    <View style={styles.modalActions}>
-                        <TouchableOpacity onPress={closeModal} style={[styles.modalButton, { backgroundColor: colors.button }]}>
-                            <ThemedText type={'default'}>{t('common.cancel')}</ThemedText>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={handleSave} style={[styles.modalButtonPrimary, { backgroundColor: colors.primary }]}>
-                            <ThemedText type={'default'} style={{ color: '#fff' }}>{t('common.save')}</ThemedText>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </View>
-        </Modal>
     );
 };
 
@@ -243,73 +164,36 @@ const AddFoodModal = ({ visible, closeModal, addFood }: {
     );
 };
 
-const CalendarStrip = ({ selectedDate, onDateSelect }: { selectedDate: Date; onDateSelect: (date: Date) => void }) => {
-    const { t } = useLanguage();
-    const { colors } = useTheme();
-    const dates = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        return date;
-    }).reverse();
 
-    return (
-        <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false}
-            style={styles.calendarStrip}
-        >
-            {dates.map((date) => {
-                const isSelected = moment(date).isSame(selectedDate, 'day');
-                return (
-                    <TouchableOpacity
-                        key={date.toISOString()}
-                        style={[
-                            styles.calendarDay,
-                            { backgroundColor: isSelected ? colors.primary : colors.card }
-                        ]}
-                        onPress={() => onDateSelect(date)}
-                    >
-                        <ThemedText 
-                            type={'default'} 
-                            style={[
-                                styles.calendarDayText,
-                                { color: isSelected ? '#fff' : colors.text }
-                            ]}
-                        >
-                            {moment(date).format('ddd')}
-                        </ThemedText>
-                        <ThemedText 
-                            type={'subtitle'} 
-                            style={[
-                                styles.calendarDateText,
-                                { color: isSelected ? '#fff' : colors.text }
-                            ]}
-                        >
-                            {moment(date).format('D')}
-                        </ThemedText>
-                    </TouchableOpacity>
-                );
-            })}
-        </ScrollView>
-    );
-};
 
 const NutritionPage = () => {
     const { t } = useLanguage();
     const { colors } = useTheme();
-    const [selectedDate, setSelectedDate] = useState(new Date());
     const [isModalVisible, setModalVisible] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [editable,setEditable] = useState(true);
     const [isFoodModalVisible, setFoodModalVisible] = useState(false);
     const [deleteMode, setDeleteMode] = useState(false);
     const [loading, setLoading] = useState(true);
     const [profile, setProfile] = useState<ProfileData>({
         weight: 0,
-        goalWeight: 0,
+        weightGoal: 0,
         waterGoal: 2000,
         dailyCalorieGoal: 2000,
         waterIntake: 0
     });
     const [meals, setMeals] = useState<Meal[]>([]);
+    const [currMealIndex,setCurrMealIndex] = useState(-1);
+    const [currentMeal, setCurrentMeal] = useState<Meal>({
+        id: 0,
+        date: new Date().toISOString(),
+        foods: [],
+        waterIntake: 0,
+        waterGoal: 2000,
+        weight: 0,
+        weightGoal: 0,
+        dailyCalorieGoal: 2000
+    });
     const [userInfo, setUserInfo] = useState<User>({
         userName: '',
         photo: '',
@@ -317,63 +201,206 @@ const NutritionPage = () => {
         date: '',
         meals: []
     });
+    const EditProfileModal = ({ isVisible, closeModal, saveChanges }: {
+        isVisible: boolean;
+        closeModal: () => void;
+        saveChanges: (data: Partial<ProfileData>) => void;
+    }) => {
+        const { t } = useLanguage();
+        const { colors } = useTheme();
+        const [weight, setWeight] = useState(profile.weight.toString());
+        const [weightGoal, setweightGoal] = useState(profile.weightGoal.toString());
+        const [waterGoal, setWaterGoal] = useState(profile.waterGoal.toString());
+        const [dailyCalorieGoal, setDailyCalorieGoal] = useState(profile.dailyCalorieGoal.toString());
 
+        const handleSave = async () => {
+            try {
+
+
+                saveChanges({
+                    weight: parseFloat(weight),
+                    weightGoal: parseFloat(weightGoal),
+                    waterGoal: parseInt(waterGoal),
+                    dailyCalorieGoal: parseInt(dailyCalorieGoal)
+                });
+                closeModal();
+            } catch (error) {
+                Alert.alert(t('common.error'), t('nutrition.updateError'));
+            }
+        };
+
+        return (
+            <Modal visible={isVisible} transparent={true} animationType="slide">
+                <View style={[styles.modalBackground, { backgroundColor: colors.modalBackground }]}>
+                    <View style={[styles.modalContainer, { backgroundColor: colors.card }]}>
+                        <ThemedText type={'subtitle'} style={styles.modalTitle}>{t('nutrition.stats')}</ThemedText>
+                        <TextInput
+                            value={weight}
+                            onChangeText={setWeight}
+                            placeholder={t('nutrition.weight')}
+                            keyboardType="numeric"
+                            style={[styles.input, { borderColor: colors.border }]}
+                        />
+                        <TextInput
+                            value={weightGoal}
+                            onChangeText={setweightGoal}
+                            placeholder={t('nutrition.weightGoal')}
+                            keyboardType="numeric"
+                            style={[styles.input, { borderColor: colors.border }]}
+                        />
+                        <TextInput
+                            value={waterGoal}
+                            onChangeText={setWaterGoal}
+                            placeholder={t('nutrition.waterGoal')}
+                            keyboardType="numeric"
+                            style={[styles.input, { borderColor: colors.border }]}
+                        />
+                        <TextInput
+                            value={dailyCalorieGoal}
+                            onChangeText={setDailyCalorieGoal}
+                            placeholder={t('nutrition.dailyCalorieGoal')}
+                            keyboardType="numeric"
+                            style={[styles.input, { borderColor: colors.border }]}
+                        />
+                        <View style={styles.modalActions}>
+                            <TouchableOpacity onPress={closeModal} style={[styles.modalButton, { backgroundColor: colors.button }]}>
+                                <ThemedText type={'default'}>{t('common.cancel')}</ThemedText>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleSave} style={[styles.modalButtonPrimary, { backgroundColor: colors.primary }]}>
+                                <ThemedText type={'default'} style={{ color: '#fff' }}>{t('common.save')}</ThemedText>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+        );
+    };
+    const CalendarStrip = ({ selectedDate, onDateSelect }: { selectedDate: Date; onDateSelect: (date: Date) => void}) => {
+        const { t } = useLanguage();
+        const { colors } = useTheme();
+        const dates = Array.from({ length: 7 }, (_, i) => {
+            const date = new Date();
+            date.setDate(date.getDate() - i);
+            return date;
+        });
+
+        return (
+            <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.calendarStrip}
+            >
+                {dates.map((date) => {
+                    const isSelected = moment(date).isSame(selectedDate, 'day');
+                    return (
+                        <TouchableOpacity
+                            key={date.toISOString()}
+                            style={[
+                                styles.calendarDay,
+                                { backgroundColor: isSelected ? colors.primary : colors.card }
+                            ]}
+                            onPress={() => {
+                                onDateSelect(date);
+                                setSelectedDate(date);
+                            }}
+                        >
+                            <ThemedText
+                                type={'default'}
+                                style={[
+                                    styles.calendarDayText,
+                                    { color: isSelected ? '#fff' : colors.text }
+                                ]}
+                            >
+                                {moment(date).format('ddd')}
+                            </ThemedText>
+                            <ThemedText
+                                type={'subtitle'}
+                                style={[
+                                    styles.calendarDateText,
+                                    { color: isSelected ? '#fff' : colors.text }
+                                ]}
+                            >
+                                {moment(date).format('D')}
+                            </ThemedText>
+                        </TouchableOpacity>
+                    );
+                })}
+            </ScrollView>
+        );
+    };
+    const loadUser = async () =>{
+        const userDataString = await AsyncStorage.getItem('profile');
+        const userData = JSON.parse(userDataString || '{}');
+
+        setUserInfo({
+            userName: userData.userName,
+            photo: userData.photo ? `data:${userData.photoMimeType};base64,${userData.photo}` : '',
+            photoMimeType: userData.photoMimeType || 'image/jpeg',
+            date: userData.date || new Date().toISOString(),
+            meals: []
+        });
+    };
     useEffect(() => {
-        loadProfileData();
-        loadMeals();
+        setLoading(true);
+        loadUser();
+        setLoading(false);
     }, []);
-
     useEffect(() => {
-        loadMeals();
+        const loadData = async () => {
+            const mealsData = await AsyncStorage.getItem('meals');
+            const mealsJson = JSON.parse(mealsData || '[]');
+            setMeals(mealsJson);
+            
+            const currentMealIndex = mealsJson.findIndex((m: Meal) => 
+                moment(new Date(m.date)).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD')
+            );
+            
+            let currentMealData: Meal;
+            if (currentMealIndex !== -1) {
+                setCurrMealIndex(currentMealIndex);
+                currentMealData = mealsJson[currentMealIndex];
+                setCurrentMeal(currentMealData);
+            } else {
+                currentMealData = {
+                    id: Math.floor(Math.random() * 2147483647),
+                    date: selectedDate.toISOString(),
+                    foods: [],
+                    waterIntake: 0,
+                    waterGoal: 2000,
+                    weight: profile.weight,
+                    weightGoal: profile.weightGoal,
+                    dailyCalorieGoal: profile.dailyCalorieGoal
+                };
+                setCurrMealIndex(mealsJson.length);
+                setCurrentMeal(currentMealData);
+                setMeals([...mealsJson, currentMealData]);
+            }
+            if(moment(new Date()).format('YYYY-MM-DD') === moment(selectedDate).format('YYYY-MM-DD')){
+                setEditable(true);
+            } else{
+                setEditable(false);
+            }
+            await loadProfileData(currentMealData);
+        };
+        loadData();
     }, [selectedDate]);
 
-    const loadProfileData = async () => {
+    const loadProfileData = async (currentMealData: Meal | null) => {
         try {
-            const userDataString = await AsyncStorage.getItem('profile');
-            const userData = JSON.parse(userDataString || '{}');
-            const mealsData = await AsyncStorage.getItem('meals');
-            const meals = JSON.parse(mealsData || '[]');
-            setUserInfo({
-                userName: userData.userName,
-                photo: userData.photo ? `data:${userData.photoMimeType};base64,${userData.photo}` : '',
-                photoMimeType: userData.photoMimeType || 'image/jpeg',
-                date: userData.date || new Date().toISOString(),
-                meals: meals || []
-            });
-            
-            const todayMeal = meals?.[0] || {
-                id: 0,
-                date: new Date().toISOString(),
-                foods: [],
-                waterIntake: 0,
-                waterGoal: 2000,
-                dailyCalorieGoal: 2000,
-                weight: 0,
-                goalWeight: 0
-            };
-
-            setProfile({
-                weight: todayMeal.weight || 0,
-                goalWeight: todayMeal.goalWeight || 0,
-                waterGoal: todayMeal.waterGoal || 2000,
-                dailyCalorieGoal: todayMeal.dailyCalorieGoal || 2000,
-                waterIntake: todayMeal.waterIntake || 0
-            });
+            if (currentMealData) {
+                setProfile({
+                    weight: currentMealData.weight || 0,
+                    weightGoal: currentMealData.weightGoal || 0,
+                    waterGoal: currentMealData.waterGoal || 2000,
+                    dailyCalorieGoal: currentMealData.dailyCalorieGoal || 2000,
+                    waterIntake: currentMealData.waterIntake || 0
+                });
+            }
         } catch (error) {
+            console.error('Load profile error:', error);
             Alert.alert(t('common.error'), t('nutrition.loadError'));
         } finally {
             setLoading(false);
-        }
-    };
-
-    const loadMeals = async () => {
-        try {
-            const mealsData = await AsyncStorage.getItem('meals');
-            const meals = JSON.parse(mealsData || '[]');
-            setMeals(meals || []);
-        } catch (error) {
-            console.error('Load meals error:', error);
-            Alert.alert(t('common.error'), t('nutrition.loadError'));
         }
     };
 
@@ -382,7 +409,27 @@ const NutritionPage = () => {
     const toggleDeleteMode = () => setDeleteMode(!deleteMode);
 
     const saveProfileChanges = async (newProfile: Partial<ProfileData>) => {
-        setProfile(prev => ({ ...prev, ...newProfile }));
+        try {
+            const meal = meals[currMealIndex];
+            meal.weight = newProfile.weight || 0;
+            meal.weightGoal = newProfile.weightGoal || 0;
+            meal.waterGoal = newProfile.waterGoal || 0;
+            meal.dailyCalorieGoal = newProfile.dailyCalorieGoal || 0;
+            setProfile(prev => ({...prev, ...newProfile}));
+            const currentMeals = [...meals];
+
+            currentMeals[currMealIndex] = meal;
+            const res = await UpdateMeals(meal);
+            if (!res || res != Status.OK) {
+                Alert.alert(t('common.error'), t('nutrition.addFoodError'));
+                return;
+            }
+
+            setMeals(currentMeals);
+        } catch (error) {
+            console.error('Load meals error:', error);
+            Alert.alert(t('common.error'), t('nutrition.loadError'));
+        }
         toggleModal();
     };
 
@@ -393,27 +440,11 @@ const NutritionPage = () => {
         try {
 
             const currentMeals = [...meals];
-            const todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
-                id: 0,
-                date: selectedDate.toISOString(),
-                foods: [],
-                waterIntake: 0,
-                waterGoal: profile.waterGoal,
-                dailyCalorieGoal: profile.dailyCalorieGoal,
-                weight: profile.weight,
-                goalWeight: profile.goalWeight
-            };
-            
-            todayMeal.waterIntake = value;
-            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
-            if (index === -1) {
-                currentMeals.push(todayMeal);
-            }
-            else {
-                currentMeals[index] = todayMeal;
-            }
 
-            const res = await UpdateMeals(todayMeal);
+            currentMeal.waterIntake = value;
+            currentMeals[currMealIndex] = currentMeal;
+
+            const res = await UpdateMeals(currentMeal);
             if (!res || res != Status.OK) {
                 Alert.alert(t('common.error'), t('nutrition.addFoodError'));
                 return;
@@ -430,17 +461,7 @@ const NutritionPage = () => {
         try {
 
             const currentMeals = [...meals];
-            let todayMeal: Meal = currentMeals.find(m => moment(m.date).isSame(selectedDate, 'day')) || {
-                id: 0,
-                date: selectedDate.toISOString(),
-                foods: [],
-                waterIntake: profile.waterIntake,
-                waterGoal: profile.waterGoal,
-                dailyCalorieGoal: profile.dailyCalorieGoal,
-                weight: profile.weight,
-                goalWeight: profile.goalWeight
-            };
-            if(todayMeal.foods) todayMeal.foods = [];
+            if(!currentMeal.foods) currentMeal.foods = [];
             const newFood: Food = {
                 id: Math.floor(Math.random() * 2147483647),
                 name,
@@ -451,16 +472,10 @@ const NutritionPage = () => {
                 proteins: 0
             };
 
-            todayMeal.foods.push(newFood);
-            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
-            if (index === -1) {
-                currentMeals.push(todayMeal);
-            }
-            else {
-                currentMeals[index] = todayMeal;
-            }
+            currentMeal.foods.push(newFood);
+            currentMeals[currMealIndex] = currentMeal;
 
-            const res = await UpdateMeals(todayMeal);
+            const res = await UpdateMeals(currentMeal);
             if (!res || res != Status.OK) {
                 Alert.alert(t('common.error'), t('nutrition.addFoodError'));
                 return;
@@ -477,18 +492,13 @@ const NutritionPage = () => {
     const deleteFood = async (mealId: number) => {
         try {
             const currentMeals = [...meals];
-            const index = currentMeals.findIndex(m => moment(m.date).isSame(selectedDate, 'day'));
-
-            if (index != -1) {
-                const todayMeal = currentMeals[index];
-                todayMeal.foods = todayMeal.foods.filter(f => f.id !== mealId);
-                currentMeals[index] = todayMeal;
-                const res = await UpdateMeals(todayMeal);
+                currentMeal.foods = currentMeal.foods.filter(f => f.id !== mealId);
+                currentMeals[currMealIndex] = currentMeal;
+                const res = await UpdateMeals(currentMeal);
                 if (res != Status.OK) {
                     Alert.alert(t('common.error'), t('nutrition.deleteError'));
                     return;
                 }
-            }
                 setMeals(currentMeals);
             }
          catch (error) {
@@ -496,23 +506,18 @@ const NutritionPage = () => {
         }
     };
 
-    const groupMealsByType = (meals: Meal[]): Record<string, Food[]> => {
-        const todayMeal = meals.find(m => moment(m.date).isSame(selectedDate, 'day'));
-        if (!todayMeal) return {};
-
-        return todayMeal?.foods?.reduce((acc, food) => {
+    const groupMealsByType = (meal: Meal): Record<string, Food[]> => {
+        if (!meal) return {};
+        return meal?.foods?.reduce((acc, food) => {
             if (!acc[food.type]) acc[food.type] = [];
             acc[food.type].push(food);
             return acc;
         }, {} as Record<string, Food[]>);
     };
 
-    const totalCalories = meals
-        .find(m => moment(m.date).isSame(selectedDate, 'day'))
-        ?.foods?.reduce((acc, food) => acc + food.calories, 0) || 0;
+    const totalCalories = currentMeal?.foods?.reduce((acc, food) => acc + food.calories, 0) || 0;
 
     const progress = Math.min(totalCalories / profile.dailyCalorieGoal, 1);
-    const waterProgress = Math.min(profile.waterIntake / profile.waterGoal, 1);
 
     if (loading) {
         return (
@@ -526,29 +531,30 @@ const NutritionPage = () => {
         <ThemedView type={'default'} style={styles.container}>
             <View style={{ height: STATUS_BAR_HEIGHT }} />
             <ProfileHeader name={userInfo.userName} photo={userInfo.photo} date={userInfo.date} />
-            <CalendarStrip 
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-            />
+
             <ScrollView showsVerticalScrollIndicator={false} style={{marginBottom: 80}}>
+                <CalendarStrip
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                />
                 <View style={[styles.card, { backgroundColor: colors.card }]}>
-                    <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.button }]} onPress={toggleModal}>
+                    { editable &&( <TouchableOpacity style={[styles.editButton, { backgroundColor: colors.button }]} onPress={toggleModal}>
                         <MaterialCommunityIcons name="pencil" size={12} color={colors.primary} />
-                    </TouchableOpacity>
+                    </TouchableOpacity>)}
                     <ThemedText type={'subtitle'}>{t('nutrition.stats')}</ThemedText>
                     <View style={styles.statsRow}>
                         <View>
                             <ThemedText type={'default'} style={styles.statLabel}>{t('nutrition.current')}</ThemedText>
                             <ThemedText type={'subtitle'}>{profile.weight} kg</ThemedText>
                             <ThemedText type={'default'} style={[styles.statChange, { color: colors.success }]}>
-                                ↓ {Math.abs(profile.weight - profile.goalWeight).toFixed(1)} kg
+                                ↓ {Math.abs(profile.weight - profile.weightGoal).toFixed(1)} kg
                             </ThemedText>
                         </View>
                         <View>
                             <ThemedText type={'default'} style={styles.statLabel}>{t('nutrition.goal')}</ThemedText>
-                            <ThemedText type={'subtitle'}>{profile.goalWeight} kg</ThemedText>
+                            <ThemedText type={'subtitle'}>{profile.weightGoal} kg</ThemedText>
                             <ThemedText type={'default'} style={[styles.statChange, { color: colors.success }]}>
-                                {Math.abs(profile.weight - profile.goalWeight).toFixed(1)} kg {t('nutrition.toGo')}
+                                {Math.abs(profile.weight - profile.weightGoal).toFixed(1)} kg {t('nutrition.toGo')}
                             </ThemedText>
                         </View>
                     </View>
@@ -557,7 +563,7 @@ const NutritionPage = () => {
                 <View style={[styles.card, { backgroundColor: colors.card }]}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <ThemedText type={'subtitle'}>{t('nutrition.nutritionPlan')}</ThemedText>
-                        <View style={{ flexDirection: 'row' }}>
+                        { editable &&( <View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={toggleDeleteMode} style={{ marginRight: 10 }}>
                                 <MaterialCommunityIcons 
                                     name="delete-outline" 
@@ -568,10 +574,10 @@ const NutritionPage = () => {
                             <TouchableOpacity onPress={toggleFoodModal}>
                                 <MaterialCommunityIcons name="plus-circle-outline" size={20} color={colors.primary} />
                             </TouchableOpacity>
-                        </View>
+                        </View>)}
                     </View>
 
-                    {Object.entries(groupMealsByType(meals)||[]).map(([mealType, foods]) => (
+                    {Object.entries(groupMealsByType(currentMeal)||{}).map(([mealType, foods]) => (
                         <View key={mealType} style={styles.meal}>
                             <ThemedText type={'subtitle'}>{mealType}</ThemedText>
                             {foods.map((food, idx) => (
@@ -618,7 +624,7 @@ const NutritionPage = () => {
                         ))}
                     </View>
                     <View style={styles.sliderContainer}>
-                        <Slider
+                        { editable &&( <Slider
                             style={styles.slider}
                             minimumValue={0}
                             maximumValue={profile.waterGoal}
@@ -629,19 +635,17 @@ const NutritionPage = () => {
                             minimumTrackTintColor="#ff0019"
                             maximumTrackTintColor={colors.border}
                             thumbTintColor="#ff0019"
-                        />
+                        />)}
                         <ThemedText type={'default'} style={styles.waterLabel}>
                             {profile.waterIntake} / {profile.waterGoal} ml
                         </ThemedText>
                     </View>
-                    <ProgressBar progress={waterProgress} color="#ff0019" style={styles.progressBar} />
                 </View>
 
                 <EditProfileModal 
                     isVisible={isModalVisible} 
                     closeModal={toggleModal} 
                     saveChanges={saveProfileChanges}
-                    initialData={profile}
                 />
                 <AddFoodModal 
                     visible={isFoodModalVisible} 

@@ -128,7 +128,7 @@ export const Languages = {
             success: 'Success'
         },
         nutrition: {
-            eliteMember: 'Elite Member since January 2021',
+            eliteMember: 'Elite Member since',
             stats: 'Nutrition Stats',
             current: 'Current',
             goal: 'Goal',
@@ -290,7 +290,7 @@ export const Languages = {
             success: 'Успех'
         },
         nutrition: {
-            eliteMember: 'Elite Member since January 2021',
+            eliteMember: 'Elite Member since',
             stats: 'Хранителни Статистики',
             current: 'Текущо',
             goal: 'Цел',
