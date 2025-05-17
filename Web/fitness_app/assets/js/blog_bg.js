@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
                             <h2 class="blog-head">${safePost.title}</h2>
                         </a>
-                        <p><a href="post_preview.html">Прочетете повече...</a></p>
+                        <p><a href="post_preview.html?postId=${safePost.id}">Прочетете повече...</a></p>
                         <ul class="blog-info-link">
                             <li> ${getUserHtml(safePost.username, safePost.userId)}</li>
                             <li><i class="fa fa-heart"></i> ${safePost.likes} Харесвания</li>

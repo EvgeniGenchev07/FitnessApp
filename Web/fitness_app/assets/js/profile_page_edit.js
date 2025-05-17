@@ -1,7 +1,7 @@
 const apiUrl = 'http://192.168.100.6:5000';
 let selectedPhotoFile = null;
 const currentPath = window.location.pathname;
-const isEnglish = currentPath.includes('_en.html');
+const isBulgarian = currentPath.includes('_bg.html');
 // Image preview functionality
 document.getElementById('photo-upload').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -54,18 +54,19 @@ function loadProfileData() {
     if (user.creationDate) {
         const creationDate = new Date(user.creationDate);
         const options = { year: 'numeric', month: 'long' };
-        if(isEnglish){
-            memberSinceDisplay.textContent = `Member since: ${creationDate.toLocaleDateString('en-US', options)}`;
-        }
-        else{
+        if(isBulgarian){
             memberSinceDisplay.textContent = `Член от: ${creationDate.toLocaleDateString('bg-BG', options)}`;
         }
+        else{
+            memberSinceDisplay.textContent = `Member since: ${creationDate.toLocaleDateString('en-US', options)}`;
+        }
     } else {
-        if(isEnglish){
-           memberSinceDisplay.textContent = 'New member'; 
+        if(isBulgarian){
+            memberSinceDisplay.textContent = 'Нов член';
         }
         else{
             memberSinceDisplay.textContent = 'Нов член';
+            memberSinceDisplay.textContent = 'New member'; 
         }
     }
 }
@@ -78,12 +79,12 @@ document.querySelector('.edit-form').addEventListener('submit', async function(e
 
     const saveBtn = document.querySelector('.save-btn');
     saveBtn.disabled = true;
-    if(isEnglish)
+    if(isBulgarian)
     {
-        saveBtn.textContent = 'Saving...';
+        saveBtn.textContent = 'Запазване...';
     }
     else{
-            saveBtn.textContent = 'Запазване...';
+            saveBtn.textContent = 'Saving...';
     }
 
     try {
@@ -134,7 +135,12 @@ document.querySelector('.edit-form').addEventListener('submit', async function(e
 
             sessionStorage.setItem('user', JSON.stringify(updatedUser));
             alert('Профилът е обновен успешно!');
-            window.location.href = 'profile_page.html';
+            if(isBulgarian){
+                window.location.href = 'profile_page_bg.html';
+            }
+            else{
+                window.location.href = 'profile_page.html';
+            }
         } else {
             const error = await response.text();
             throw new Error(error || 'Грешка при обновяване на профила');
