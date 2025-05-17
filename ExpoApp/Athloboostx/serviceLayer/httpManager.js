@@ -1,7 +1,7 @@
 import {router} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Status from "@/serviceLayer/status";
-const url = "http://192.168.50.179:5000/";
+const url = "http://172.20.10.8:5000/";
 let isRunning = false;
 
 
@@ -145,6 +145,31 @@ async function UpdateProfile(data){
         return responseMessage;
     }
 }
+async function GetPosts(){
+    if (!isRunning) {
+        isRunning = true;
+        let responseMessage = "";
+        try {
+            const res = await fetch(`${url}posts/all`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const responseData = await res.json();
+            if (res.ok) {
+                responseMessage = { status: Status.OK, data:responseData };
+            } else {
+                responseMessage = { status: Status.ServerError, error: responseData };
+            }
+        } catch (error) {
+            console.error('Server error:', error);
+            responseMessage = { status: Status.ServerError, error };
+        }
+        isRunning = false;
+        return responseMessage;
+    }
+}
 const _Login = Login;
 export {_Login as HttpGetUser};
 
@@ -158,3 +183,5 @@ const _GetUser = GetUser;
 export {_GetUser as HttpGetProfile};
 const _UpdateProfile = UpdateProfile;
 export {_UpdateProfile as HttpPatchProfile};
+const _GetPosts = GetPosts;
+export {_GetPosts as HttpGetAllPosts};

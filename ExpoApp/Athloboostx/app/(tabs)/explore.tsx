@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
     View,
     StyleSheet,
@@ -6,13 +6,16 @@ import {
     FlatList,
     TouchableOpacity,
     SafeAreaView,
-    TextInput, // Import TextInput
+    TextInput, Alert, // Import TextInput
 } from 'react-native';
 import { Ionicons, Feather } from '@expo/vector-icons';
 import { ThemedText } from '@/components/ThemedText';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { useState } from 'react'; // Import useState
+import { useState } from 'react';
+import {useFocusEffect} from "expo-router";
+import {GetAllPosts} from "@/serviceLayer/managerHandler";
+import Status from "@/serviceLayer/status"; // Import useState
 
 interface Post {
     id: string;
@@ -23,30 +26,27 @@ interface Post {
     image?: string;
 }
 
-const posts: Post[] = [
-    {
-        id: '1',
-        user: 'Tracy Adams',
-        avatar: 'https://i.pravatar.cc/100?img=1',
-        time: '2h ago',
-        content: 'Just crushed my morning HIIT workout 💪🔥',
-        image: 'https://source.unsplash.com/400x300/?fitness',
-    },
-    {
-        id: '2',
-        user: 'Jordan Fit',
-        avatar: 'https://i.pravatar.cc/100?img=2',
-        time: '4h ago',
-        content: 'Leg day never skips me 🏋️‍♂️',
-        image: 'https://source.unsplash.com/400x300/?gym',
-    },
-];
 
 export default function ExploreScreen() {
     const { colors } = useTheme();
     const { t } = useLanguage();
     const [searchQuery, setSearchQuery] = useState(''); // Add state for search query
+    const [posts,setPosts] = React.useState<Post[]>([]);
+    const loadPosts = async () => {
+        const res = await GetAllPosts();
+        if (res.status === Status.OK){
+            setPosts(res.data);
+        } else{
+            Alert.alert("Something went wrong!");
+        }
+    }
+    useEffect(() => {
+        loadPosts();
+    }, []);
+    useFocusEffect(()=>{
 
+        loadPosts();
+    })
     const SearchBar = () => (
         <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
             <Ionicons name="search" size={20} color={colors.text} style={styles.searchIcon} />

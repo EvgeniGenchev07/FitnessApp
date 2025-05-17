@@ -9,7 +9,11 @@
       "launchBrowser": false,
       "launchUrl": "",
       "use64Bit": true,
+<<<<<<< Updated upstream
       "applicationUrl": "http://192.168.100.6:5000",
+=======
+      "applicationUrl": "http://172.20.10.8:5000",
+>>>>>>> Stashed changes
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

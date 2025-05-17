@@ -202,8 +202,9 @@ public class PostsController : ControllerBase
         }
     }
     [HttpGet]
+    [Route("all")]
     [EnableCors("Disable cross-origin")]
-    public async Task<IActionResult> GetAllPosts([FromQuery] bool includeComments = false)
+    public async Task<IActionResult> GetAllPosts()
     {
         try
         {
@@ -211,10 +212,7 @@ public class PostsController : ControllerBase
                 .Include(p => p.User)
                 .AsQueryable();
 
-            if (includeComments)
-            {
                 postsQuery = postsQuery.Include(p => p.Comments);
-            }
 
             var result = await postsQuery
                 .OrderByDescending(p => p.Created) 
@@ -229,13 +227,13 @@ public class PostsController : ControllerBase
                     p.Language,
                     p.PhotoMimeType,
                     User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
-                    Comments = includeComments ? p.Comments.Select(c => new
+                    Comments = p.Comments.Select(c => new
                     {
                         c.Id,
                         c.Description,
                         c.CreatedAt,
                         UserId = c.UserID
-                    }) : null
+                    })
                 })
                 .ToListAsync();
 
