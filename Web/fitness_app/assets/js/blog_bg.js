@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const config = {
-        API_URL: 'http://192.168.56.1:5000/posts',
+        API_URL: 'http://192.168.100.6:5000/posts',
         DEFAULT_IMAGE: 'img/default-post-image.jpg',
         DEFAULT_USER: 'Анонимен',
         MONTH_NAMES: ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'],
@@ -82,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
             commentsCount: post.comments?.length || 0,
             language:post.language
         };
+        function getUserHtml(username, userId) {
+        return `<a href="profile_page_user.html?userId=${userId}" class="user-link"><i class="fa fa-user"></i> ${username}</a>`;
+    }
         if(safePost.language=="bg")
         {
             return `
@@ -98,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </a>
                         <p><a href="post_preview.html">Прочетете повече...</a></p>
                         <ul class="blog-info-link">
-                            <li><i class="fa fa-user"></i> ${safePost.username}</li>
+                            <li> ${getUserHtml(safePost.username, safePost.userId)}</li>
                             <li><i class="fa fa-heart"></i> ${safePost.likes} Харесвания</li>
                             <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Коментара</li>
                         </ul>

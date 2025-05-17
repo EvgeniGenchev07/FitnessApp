@@ -14,7 +14,7 @@ namespace WebApi
     [EnableCors("Disable cross-origin")]
     public class UserController : ControllerBase
     {
-        private readonly IDatabase<User, string> _userContext;
+        private readonly UserContext _userContext;
         private readonly UserLogin _userLoginContext;
         private readonly AthloboostDbContext _dbContext;
 
@@ -23,6 +23,53 @@ namespace WebApi
             _userContext = context;
             _userLoginContext = userLogin;
             _dbContext = dbContext;
+        }
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById(int userId)
+        {
+            try
+            {
+                var user = await _userContext.GetUserByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return NotFound($"User with ID {userId} not found");
+                }
+
+                return Ok(new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.Bio,
+                    Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
+                    user.Height,
+                    user.Facebook,
+                    user.X,
+                    user.Instagram,
+                    user.Followers,
+                    user.Following,
+                    user.CreationDate,
+                    Password = "",
+                    Posts = user.Posts?.Select(p => new {
+                        p.Id,
+                        p.Title,
+                        p.Description,
+                        p.Created,
+                        Image = p.Photo != null ? Convert.ToBase64String(p.Photo) : null,
+                        Comments = p.Comments?.Select(c => new {
+                            c.Id,
+                            c.Description,
+                            c.CreatedAt,
+                            c.Likes
+                        })
+                    })
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         [HttpPost]

@@ -25,6 +25,9 @@
             <div class="settings-option" onclick="navigateToMainPage()">
                 <i class="fas fa-home"></i> Back to home
             </div>
+            <div class="settings-option" onclick="deleteAccount()">
+                <i class="fas fa-trash-alt"></i> Delete your аccount
+            </div>
             <div class="settings-option" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </div>
@@ -37,32 +40,13 @@
         <div class="profile-header">
             <img src="avatar-placeholder.jpg" alt="Profile" class="profile-avatar">
             <div class="profile-info">
-                <h1 class="profile-name">DARK_USER</h1>
+                <h1 class="profile-name"></h1>
                 <ul class="profile-stats">
-                    <li><span>666</span> posts</li>
-                    <li><span>9.9k</span> followers</li>
-                    <li><span>666</span> following</li>
                 </ul>
                 <p class="profile-bio">
-                    🖤 Blood and darkness enthusiast 🔥 
-                    <br>Living in the shadows 🌑
-                    <br>#DarkAesthetic #RedDevil
                 </p>
             </div>
         </div>
-
-        <!-- Posts Grid -->
-        <div class="profile-posts">
-            <div class="post-item">
-                <img src="post-placeholder.jpg" alt="Post">
-                <div class="post-hover">
-                    <span>❤️ 666</span>
-                    <span>💬 66</span>
-                </div>
-            </div>
-            <!-- Add more posts here -->
-        </div>
-    </div>
 
     <script src="assets/js/profile_page.js"></script>
 </body>

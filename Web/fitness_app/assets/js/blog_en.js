@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const config = {
-        API_URL: 'http://192.168.56.1:5000/posts',
+        API_URL: 'http://192.168.100.6:5000/posts',
         DEFAULT_IMAGE: 'img/default-post-image.jpg',
         DEFAULT_USER: 'Anonymous',
         MONTH_NAMES: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],
@@ -80,6 +80,11 @@ document.addEventListener('DOMContentLoaded', function() {
             commentsCount: post.comments?.length || 0,
             language:post.language
         };
+        function getUserHtml(username, userId) {
+        return `<a href="profile_page_user.html?userId=${userId}" style="color: inherit; text-decoration: none; transition: color 0.3s;" 
+   onmouseover="this.style.color='#ff3368';this.style.textDecoration='underline'" 
+   onmouseout="this.style.color='inherit';this.style.textDecoration='none'"class="user-link"><i class="fa fa-user"></i> ${username}</a>`;
+    }
         if(safePost.language=="en")
         {
             return `
@@ -96,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     </a>
                     <p><a href="post_preview.html">Read more...</a></p>
                     <ul class="blog-info-link">
-                        <li><i class="fa fa-user"></i> ${safePost.username}</li>
+                        <li><i class="fa fa-user"></i> ${getUserHtml(safePost.username, safePost.userId)}</li>
                         <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
                         <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Comments</li>
                     </ul>
@@ -166,7 +171,6 @@ style.textContent = `
         color: #ccc;
     }
 
-    /* Респонсивни стилове */
     @media (max-width: 768px) {
         .page-circle {
             width: 35px;

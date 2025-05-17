@@ -1,3 +1,4 @@
+const apiUrl = 'http://192.168.100.6:5000';
 // Navigation functions with URL-based language detection
 function getLanguageFromUrl() {
     const currentUrl = window.location.pathname;
@@ -5,6 +6,44 @@ function getLanguageFromUrl() {
         return 'bg';
     }
     return 'en'; // Default to English
+}
+async function deleteAccount() {
+    try {
+        const userData = JSON.parse(sessionStorage.getItem('user'));
+        if (!userData || !userData.email) {
+            alert('No user data found');
+            return;
+        }
+
+        // Show confirmation dialog
+        const language = getLanguageFromUrl();
+        const confirmMessage = language === 'bg' 
+            ? 'Сигурни ли сте, че искате да изтриете акаунта си? Това действие е необратимо!' 
+            : 'Are you sure you want to delete your account? This action cannot be undone!';
+        
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        const response = await fetch(`${apiUrl}/user/${encodeURIComponent(userData.email)}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            // Clear session storage and redirect
+            sessionStorage.removeItem('user');
+            window.location.href = language === 'bg' ? 'index.html' : 'index_en.html';
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to delete account');
+        }
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        const language = getLanguageFromUrl();
+        alert(language === 'bg' 
+            ? 'Грешка при изтриване на акаунта: ' + error.message 
+            : 'Error deleting account: ' + error.message);
+    }
 }
 
 function navigateToDashboard() {
@@ -107,8 +146,16 @@ function loadProfileData() {
                 profilePostsContainer.appendChild(postItem);
             });
         } else {
+            const language=getLanguageFromUrl();
+            if(language=="en")
+            {
+                profilePostsContainer.innerHTML =
+                    '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">No posts yet</p>';
+            }
+            else{
             profilePostsContainer.innerHTML =
-                '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">No posts yet</p>';
+                    '<p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.2em;">Все още няма постове</p>';
+            }
         }
     } else {
         console.log('No user data found in session storage');

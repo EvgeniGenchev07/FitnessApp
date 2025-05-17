@@ -1,0 +1,163 @@
+        :root {
+            --primary-red: #e74c3c;
+            --dark-red: #c0392b;
+            --black: #222222;
+            --dark-gray: #333333;
+            --medium-gray: #555555;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: var(--black);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .workout-container {
+            width: 100%;
+            max-width: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--medium-gray);
+        }
+        
+        .workout-header {
+            background: linear-gradient(to right, var(--black), var(--dark-red));
+            color: var(--white);
+            padding: 25px;
+            text-align: center;
+            border-bottom: 2px solid var(--primary-red);
+        }
+        
+        .exercise-view {
+            background-color: var(--black);
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .exercise-info {
+            margin: 20px 0;
+        }
+        
+        .exercise-name {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .exercise-visual {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--primary-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--dark-gray);
+        }
+        
+        .exercise-gif {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        
+        .timer-display {
+            font-size: 3.5rem;
+            color: var(--primary-red);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .control-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .start-btn {
+            background-color: var(--primary-red);
+            color: var(--white);
+        }
+        
+        .pause-btn {
+            background-color: var(--medium-gray);
+            color: var(--white);
+        }
+        
+        .next-btn {
+            background-color: var(--dark-red);
+            color: var(--white);
+        }
+        
+        .finish-btn {
+            background-color: #27ae60;
+            color: var(--white);
+        }
+        
+        .reset-btn {
+            background-color: var(--dark-gray);
+            color: var(--white);
+        }
+        
+        .progress-info {
+            color: var(--light-gray);
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+        
+        .completion-message {
+            color: var(--white);
+            font-size: 1.8rem;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        @media (max-width: 600px) {
+            .exercise-name {
+                font-size: 1.4rem;
+            }
+            
+            .timer-display {
+                font-size: 2.5rem;
+            }
+            
+            .exercise-visual {
+                height: 200px;
+            }
+            
+            .control-btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }

@@ -64,7 +64,6 @@ document.querySelectorAll('.start-btn').forEach(btn => {
      alert(`Starting ${workoutName} workout!`);
  });
 });
-//BACK
 function backToMainPage()
 {
      const language = navigator.language;

@@ -137,4 +137,35 @@ public class UserContext : IDatabase<User, string>
             await _dbContext.SaveChangesAsync();
         }
     }
+    public async Task<User> GetUserByIdAsync(int userId)
+    {
+        try
+        {
+            if (userId <= 0)
+            {
+                throw new ArgumentException("Invalid user ID", nameof(userId));
+            }
+
+            var user = await _dbContext.Users
+                .Include(u => u.Posts)
+                .Include(u => u.Followers)
+                .Include(u => u.Following)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException($"User with ID {userId} does not exist");
+            }
+
+            return user;
+        }
+        catch (DbUpdateException)
+        {
+            throw new Exception("Database error occurred while fetching user");
+        }
+        catch (TimeoutException)
+        {
+            throw new Exception("Request timed out while fetching user");
+        }
+    }
 }
