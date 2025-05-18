@@ -1,12 +1,17 @@
 import {ValidateLogin,ValidateRegister} from "./validatorManager";
-import {HttpGetProfile, HttpGetUser, HttpGetWorkouts, HttpPatchProfile, HttpPostUser} from "./httpManager";
+import {
+    HttpGetAllPosts,
+    HttpGetProfile,
+    HttpGetUser,
+    HttpGetWorkouts,
+    HttpPatchProfile,
+    HttpPostUser
+} from "./httpManager";
 import Status from "@/serviceLayer/status";
 import {router} from "expo-router";
 import * as SecureStore from 'expo-secure-store';
 import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {Alert} from "react-native";
-import moment from "moment/moment";
 async function Login(email, password) {
     const formErrors = ValidateLogin(email, password);
     if (Object.keys(formErrors).length !== 0) {
@@ -226,6 +231,16 @@ async function UpdateMeals(meal) {
         return Status.ServerError;
     }
 }
+async function GetAllPosts(){
+    const res = await HttpGetAllPosts();
+    if (!res || res.status !== Status.OK) {
+        console.error('Server getAllPosts failed:', res);
+        return {status:Status.ServerError};
+    }
+    else{
+        return {status: Status.OK, data:res.data};
+    }
+}
 const _Login = Login;
 export {_Login as Login};
 const _Register = Register;
@@ -244,3 +259,5 @@ const _CreatePost = CreatePost;
 export {_CreatePost as CreatePost};
 const _UpdateMeals = UpdateMeals;
 export {_UpdateMeals as UpdateMeals};
+const _GetAllPosts = GetAllPosts;
+export {_GetAllPosts as GetAllPosts};
