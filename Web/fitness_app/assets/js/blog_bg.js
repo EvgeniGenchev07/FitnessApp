@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createPostHtml(post) {
         const safePost = {
-            id: post.Id || 0,
+            id: post.id,
             title: post.title || 'Без заглавие',
             description: post.description || '',
             created: post.created ? new Date(post.created) : new Date(),
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             language:post.language
         };
         function getUserHtml(username, userId) {
-        return `<a href="profile_page_user.html?userId=${userId}" class="user-link"><i class="fa fa-user"></i> ${username}</a>`;
+        return `<a href="profile_page_user_bg.html?userId=${userId}" class="user-link"><i class="fa fa-user"></i> ${username}</a>`;
     }
         if(safePost.language=="bg")
         {

@@ -98,4 +98,19 @@ function loadData(userData) {
     if (profileImage) {
         profileImage.style.backgroundImage = "url('assets/img/index/avatar.jpg')";
     }}
+    
+    if(userData.posts)
+    {
+        let latestPost = userData.posts[userData.posts.length-1];
+        const base64String = latestPost.image.replace(/^data:image\/[a-z]+;base64,/, '');
+        const mimeType = latestPost.photoMimeType;
+        
+        document.querySelector('.last-post .post-title').textContent = latestPost.title;
+        const postCover = document.querySelector('.last-post .post-cover');
+        postCover.style.backgroundImage = `url('data:${mimeType};base64,${base64String}')`;
+        postCover.style.backgroundPosition = 'center'; 
+        postCover.style.backgroundSize = 'cover'; 
+        postCover.style.backgroundRepeat = 'no-repeat';
+        document.querySelector('.last-post .post-CTA').textContent="Виж" 
+    }
 }

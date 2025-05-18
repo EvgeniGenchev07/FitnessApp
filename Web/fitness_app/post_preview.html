@@ -3,237 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Агресивен Червено-Черен Блог</title>
-    <style>
-        :root {
-            --primary-bg: #000000;
-            --secondary-bg: #1a1a1a;
-            --accent-red: #ff0000;
-            --accent-dark-red: #cc0000;
-            --text-white: #ffffff;
-            --text-gray: #cccccc;
-            --border-red: #ff3333;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial Black', 'Arial Bold', Gadget, sans-serif;
-        }
-        
-        body {
-            background-color: var(--primary-bg);
-            color: var(--text-white);
-            line-height: 1.6;
-            padding: 0;
-        }
-        
-        .article-container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: var(--secondary-bg);
-            border: 3px solid var(--border-red);
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-        }
-        
-        .article-header {
-            padding: 2rem;
-            border-bottom: 2px solid var(--accent-red);
-            background: linear-gradient(to right, #000000, #1a0000);
-        }
-        
-        .article-title {
-            font-size: 2.5rem;
-            color: var(--accent-red);
-            text-shadow: 2px 2px 4px rgba(255, 0, 0, 0.5);
-            margin-bottom: 0.5rem;
-            letter-spacing: -1px;
-        }
-        
-        .article-meta {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .like-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .like-btn {
-            background: var(--accent-red);
-            color: black;
-            border: none;
-            padding: 5px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 3px;
-        }
-        
-        .like-btn:hover {
-            background: var(--text-white);
-            transform: scale(1.05);
-        }
-        
-        .like-btn.liked {
-            background: var(--text-white);
-            box-shadow: 0 0 10px var(--accent-red);
-        }
-        
-        .like-count {
-            color: var(--accent-red);
-            font-weight: bold;
-        }
-        
-        .article-image {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-top: 3px solid var(--accent-red);
-            border-bottom: 3px solid var(--accent-red);
-        }
-        
-        .article-content {
-            padding: 2rem;
-        }
-        
-        .article-content p {
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-            color: var(--text-gray);
-        }
-        
-        .comments-section {
-            padding: 2rem;
-            border-top: 2px solid var(--accent-red);
-        }
-        
-        .comments-title {
-            font-size: 1.8rem;
-            color: var(--accent-red);
-            margin-bottom: 1.5rem;
-            text-transform: uppercase;
-        }
-        
-        .comment-form {
-            margin-bottom: 2rem;
-        }
-        
-        .comment-input {
-            width: 100%;
-            padding: 15px;
-            background: #111111;
-            border: 2px solid var(--border-red);
-            color: var(--text-white);
-            font-size: 1rem;
-            margin-bottom: 15px;
-            min-height: 120px;
-        }
-        
-        .submit-btn {
-            background: var(--accent-red);
-            color: black;
-            border: none;
-            padding: 12px 30px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-        }
-        
-        .submit-btn:hover {
-            background: var(--text-white);
-            letter-spacing: 1px;
-        }
-        
-        .comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        
-        .comment {
-            background: #111111;
-            padding: 1.5rem;
-            border-left: 4px solid var(--accent-red);
-        }
-        
-        .comment-author {
-            color: var(--accent-red);
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .comment-date {
-            color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 1rem;
-        }
-        
-        .comment-text {
-            color: var(--text-gray);
-            line-height: 1.5;
-        }
-        
-        /* Респонсив дизайн */
-        @media (max-width: 768px) {
-            .article-header, .article-content, .comments-section {
-                padding: 1.5rem;
-            }
-            
-            .article-title {
-                font-size: 2rem;
-            }
-            
-            .article-image {
-                height: 300px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .article-header, .article-content, .comments-section {
-                padding: 1rem;
-            }
-            
-            .article-title {
-                font-size: 1.5rem;
-            }
-            
-            .article-meta {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .article-image {
-                height: 200px;
-            }
-            
-            .comments-title {
-                font-size: 1.4rem;
-            }
-        }
-    </style>
+    <title>AthloBoostX</title>
+    <link rel="stylesheet" href="assets/css/post_preview.css">
 </head>
 <body>
     <div class="article-container">
         <header class="article-header">
-            <h1 class="article-title">АГРЕСИВНО ЗАГЛАВИЕ НА СТАТИЯ</h1>
+            <h1 class="article-title"></h1>
             <div class="article-meta">
                 <div>
-                    Публикувано на <span style="color: var(--accent-red)">15.10.2023</span> | Автор: <span style="color: var(--accent-red)">ТИМЪР</span>
+                    Публикувано на:<span style="color: var(--accent-red)"></span> | Автор: <span style="color: var(--accent-red)"></span>
                 </div>
                 <div class="like-section">
                     <button class="like-btn" id="likeBtn">
-                        ХАРЕСВАЙ
+                        ХАРЕСАЙ
                     </button>
                     <span class="like-count" id="likeCount">0</span>
                 </div>
@@ -243,9 +26,6 @@
         <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1351&q=80" alt="Агресивна илюстрация" class="article-image">
         
         <div class="article-content">
-            <p>Това не е обикновена статия. Това е манифест. Това е призив за действие в свят на компромиси.</p>
-            <p>Ние не се съгласяваме със статуквото. Ние не приемаме посредствеността. Ние създаваме собствената си реалност.</p>
-            <p>Всеки параграф тук е удар в сърцето на конформизма. Всеки ред е израз на непокорство.</p>
         </div>
         
         <section class="comments-section">
@@ -257,72 +37,9 @@
             </div>
             
             <div class="comments-list" id="commentsList">
-                <!-- Коментарите ще се добавят тук чрез JavaScript -->
-                <div class="comment">
-                    <div class="comment-author">НИКИТА</div>
-                    <div class="comment-date">16.10.2023 22:17</div>
-                    <div class="comment-text">Накрая някой каза истината! Подкрепям на 100%!</div>
-                </div>
-                <div class="comment">
-                    <div class="comment-author">БОРО</div>
-                    <div class="comment-date">16.10.2023 20:45</div>
-                    <div class="comment-text">Трябва да стигнеш до крайностите, за да разбереш средата.</div>
-                </div>
             </div>
         </section>
     </div>
-
-    <script>
-        // Логика за харесвания
-        const likeBtn = document.getElementById('likeBtn');
-        const likeCount = document.getElementById('likeCount');
-        let likes = 42;
-        let isLiked = false;
-        
-        likeCount.textContent = likes;
-        
-        likeBtn.addEventListener('click', () => {
-            if (isLiked) {
-                likes--;
-                likeBtn.classList.remove('liked');
-            } else {
-                likes++;
-                likeBtn.classList.add('liked');
-            }
-            
-            likeCount.textContent = likes;
-            isLiked = !isLiked;
-        });
-        
-        // Логика за коментари
-        const commentInput = document.getElementById('commentInput');
-        const submitComment = document.getElementById('submitComment');
-        const commentsList = document.getElementById('commentsList');
-        
-        submitComment.addEventListener('click', () => {
-            const commentText = commentInput.value.trim();
-            
-            if (commentText) {
-                addComment('АНОНИМЕН', commentText);
-                commentInput.value = '';
-            }
-        });
-        
-        function addComment(author, text) {
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'comment';
-            
-            const now = new Date();
-            const dateString = now.toLocaleDateString('bg-BG') + ' ' + now.toLocaleTimeString('bg-BG', {hour: '2-digit', minute:'2-digit'});
-            
-            commentDiv.innerHTML = `
-                <div class="comment-author">${author}</div>
-                <div class="comment-date">${dateString}</div>
-                <div class="comment-text">${text}</div>
-            `;
-            
-            commentsList.prepend(commentDiv);
-        }
-    </script>
+    <script src="assets/js/post_preview.js"></script>
 </body>
 </html>

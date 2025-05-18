@@ -57,6 +57,7 @@ namespace WebApi
                         p.Description,
                         p.Created,
                         Image = p.Photo != null ? Convert.ToBase64String(p.Photo) : null,
+                        p.PhotoMimeType,
                         Comments = p.Comments?.Select(c => new {
                             c.Id,
                             c.Description,

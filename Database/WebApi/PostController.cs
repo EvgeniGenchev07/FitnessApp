@@ -96,7 +96,9 @@ public class PostsController : ControllerBase
                 post.Created,
                 post.Likes,
                 post.Language,
-                User = post.User != null ? new { post.User.Id } : null,
+                post.Photo,
+                post.PhotoMimeType,
+                User = post.User != null ? new { post.User.Id,post.User.UserName } : null,
                 Comments = includeComments && post.Comments != null
                     ? post.Comments.Select(c => new
                     {

@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createPostHtml(post) {
         const safePost = {
-            id: post.Id || 0,
+            id: post.id ,
             title: post.title || 'Without title',
             description: post.description || '',
             created: post.created ? new Date(post.created) : new Date(),
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             language:post.language
         };
         function getUserHtml(username, userId) {
-        return `<a href="profile_page_user.html?userId=${userId}" style="color: inherit; text-decoration: none; transition: color 0.3s;" 
+        return `<a href="profile_page_user.html?userId=${userId}" style="color: black; text-decoration: none; transition: color 0.3s;" 
    onmouseover="this.style.color='#ff3368';this.style.textDecoration='underline'" 
    onmouseout="this.style.color='inherit';this.style.textDecoration='none'"class="user-link"><i class="fa fa-user"></i> ${username}</a>`;
     }
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a class="d-inline-block" href="post_preview.html?postId=${safePost.id}">
                         <h2 class="blog-head">${safePost.title}</h2>
                     </a>
-                    <p><a href="post_preview.html">Read more...</a></p>
+                    <p><a href="post_preview.html?postId=${safePost.id}">Read more...</a></p>
                     <ul class="blog-info-link">
                         <li><i class="fa fa-user"></i> ${getUserHtml(safePost.username, safePost.userId)}</li>
                         <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
