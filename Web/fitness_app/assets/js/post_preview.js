@@ -25,11 +25,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             created: new Date(post.created).toLocaleString('bg-BG'),
             likes: post.likes || 0,
             comments: post.comments || [],
-            user:post.user
+            user:post.user ,
+            photo:post.photo ,
+            photoMimeType:post.photoMimeType
         };
         
         document.querySelector('.article-title').textContent = safePost.title;
-        
+        const base64String = safePost.photo.trim().replace(/^data:image\/[a-z]+;base64,/, '');
+        const mimeType = safePost.photoMimeType || 'image/jpeg';
+        document.getElementById('postImage').src = `data:${mimeType};base64,${base64String}`;
 
         document.querySelector('.article-meta div').innerHTML = 
             `Публикувано на: <span style="color: var(--accent-red)">${safePost.created.slice(0,12)}</span> 

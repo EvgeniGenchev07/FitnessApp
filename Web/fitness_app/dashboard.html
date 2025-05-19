@@ -4,535 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IRON DOMINANCE | Fitness Tracker</title>
-    <style>
-        /* Aggressive Red/Black Theme */
-        :root {
-            --primary: #ff0000;
-            --primary-dark: #cc0000;
-            --primary-darker: #990000;
-            --secondary: #000000;
-            --text: #ffffff;
-            --text-secondary: #cccccc;
-            --bg: #1a1a1a;
-            --card-bg: #2a2a2a;
-            --nav-width: 240px;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial Black', 'Arial Bold', sans-serif;
-        }
-        
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        /* Side Navigation - Aggressive Style */
-        .side-nav {
-            width: 100%;
-            background-color: var(--secondary);
-            padding: 10px;
-            border-bottom: 3px solid var(--primary);
-            position: relative;
-            z-index: 100;
-        }
-        
-        .nav-header {
-            padding: 10px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .nav-header h2 {
-            color: var(--primary);
-            font-size: 1.5rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .nav-menu {
-            list-style: none;
-            display: flex;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .nav-item {
-            margin-right: 10px;
-            flex-shrink: 0;
-        }
-        
-        .nav-link {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: var(--text);
-            text-decoration: none;
-            transition: all 0.3s;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 3px solid transparent;
-            white-space: nowrap;
-        }
-        
-        .nav-link:hover, .nav-link.active {
-            background-color: var(--primary-darker);
-            color: var(--text);
-            border-bottom: 3px solid var(--primary);
-        }
-        
-        .nav-link i {
-            margin-right: 8px;
-            width: 16px;
-            text-align: center;
-            color: var(--primary);
-            font-size: 0.9rem;
-        }
-        
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 20px;
-            width: 100%;
-        }
-        
-        .page-header {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .page-title {
-            font-size: 1.8rem;
-            color: var(--primary);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-        }
-        
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        /* Buttons - Aggressive Style */
-        .btn {
-            padding: 10px 15px;
-            border-radius: 6px;
-            border: none;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.8rem;
-            flex: 1 1 auto;
-        }
-        
-        .btn-primary {
-            background: var(--primary);
-            color: var(--secondary);
-        }
-        
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
-        }
-        
-        .btn-outline {
-            background: transparent;
-            border: 2px solid var(--primary);
-            color: var(--primary);
-        }
-        
-        .btn-outline:hover {
-            background: var(--primary);
-            color: var(--secondary);
-        }
-        
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            padding: 15px;
-            transition: transform 0.3s;
-            border-left: 4px solid var(--primary);
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.2);
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--primary-darker);
-        }
-        
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary);
-            text-transform: uppercase;
-        }
-        
-        .card-value {
-            font-size: 1.5rem;
-            font-weight: 900;
-            margin: 10px 0;
-            color: var(--text);
-        }
-        
-        .progress-bar {
-            height: 8px;
-            background-color: var(--bg);
-            border-radius: 5px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        
-        .progress {
-            height: 100%;
-            background-color: var(--primary);
-        }
-        
-        /* Weekly Plan */
-        .week-plan {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .day-card {
-            background: var(--card-bg);
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            padding: 12px;
-            border-left: 3px solid var(--primary);
-        }
-        
-        .day-header {
-            font-weight: 700;
-            color: var(--primary);
-            padding-bottom: 8px;
-            margin-bottom: 8px;
-            border-bottom: 1px solid var(--primary-darker);
-            text-transform: uppercase;
-            font-size: 1rem;
-        }
-        
-        .day-section {
-            margin-bottom: 12px;
-        }
-        
-        .day-section h4 {
-            font-size: 0.8rem;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-        
-        .day-list {
-            list-style: none;
-            font-size: 0.75rem;
-        }
-        
-        .day-list li {
-            padding: 6px 0;
-            border-bottom: 1px dashed var(--primary-darker);
-        }
-        
-        /* Exercise Bank */
-        .exercise-bank {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 15px;
-        }
-        
-        .bank-card {
-            background: var(--card-bg);
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            transition: transform 0.3s;
-            border-left: 3px solid var(--primary);
-        }
-        
-        .bank-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
-        }
-        
-        .bank-gif {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .bank-content {
-            padding: 12px;
-        }
-        
-        .bank-content h3 {
-            font-size: 1rem;
-            margin-bottom: 6px;
-            color: var(--primary);
-        }
-        
-        .bank-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-        
-        .bank-content p {
-            font-size: 0.8rem;
-            color: var(--text);
-        }
-        
-        /* Exercise/Meal Selection Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-        
-        .modal-content {
-            background: var(--card-bg);
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 800px;
-            border: 3px solid var(--primary);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary);
-        }
-        
-        .modal-title {
-            color: var(--primary);
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .close-modal {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        
-        .selection-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .selection-item {
-            background: var(--bg);
-            border: 2px solid var(--primary-darker);
-            border-radius: 6px;
-            padding: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .selection-item:hover {
-            border-color: var(--primary);
-            transform: translateY(-3px);
-        }
-        
-        .selection-item.selected {
-            background: var(--primary-darker);
-            border-color: var(--primary);
-        }
-        
-        .selection-item h3 {
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-        
-        .selection-item p {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin: 2px 0;
-        }
-        
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        /* Tablet Styles */
-        @media (min-width: 768px) {
-            body {
-                flex-direction: row;
-            }
-            
-            .side-nav {
-                width: var(--nav-width);
-                height: 100vh;
-                padding: 20px 0;
-                border-bottom: none;
-                border-right: 3px solid var(--primary);
-                position: fixed;
-            }
-            
-            .nav-header {
-                padding: 0 20px 20px;
-                margin-bottom: 20px;
-                text-align: left;
-                border-bottom: 2px solid var(--primary);
-            }
-            
-            .nav-header h2 {
-                font-size: 1.8rem;
-            }
-            
-            .nav-menu {
-                display: block;
-                overflow-x: visible;
-                padding-bottom: 0;
-            }
-            
-            .nav-item {
-                margin-right: 0;
-                margin-bottom: 5px;
-            }
-            
-            .nav-link {
-                padding: 15px 20px;
-                border-bottom: none;
-                border-left: 3px solid transparent;
-                white-space: normal;
-            }
-            
-            .nav-link:hover, .nav-link.active {
-                border-bottom: none;
-                border-left: 3px solid var(--primary);
-            }
-            
-            .nav-link i {
-                margin-right: 10px;
-                width: 20px;
-                font-size: 1rem;
-            }
-            
-            .main-content {
-                margin-left: var(--nav-width);
-                padding: 30px;
-                width: calc(100% - var(--nav-width));
-            }
-            
-            .page-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 30px;
-            }
-            
-            .page-title {
-                font-size: 2.2rem;
-                margin-bottom: 0;
-            }
-            
-            .header-actions {
-                gap: 15px;
-            }
-            
-            .btn {
-                padding: 12px 24px;
-                font-size: 0.9rem;
-                flex: 0 1 auto;
-            }
-            
-            .dashboard-grid {
-                gap: 20px;
-                margin-bottom: 30px;
-            }
-            
-            .card {
-                padding: 20px;
-            }
-            
-            .card-title {
-                font-size: 1.3rem;
-            }
-            
-            .card-value {
-                font-size: 2rem;
-            }
-            
-            .week-plan {
-                gap: 20px;
-            }
-            
-            .exercise-bank {
-                gap: 20px;
-            }
-            
-            .bank-gif {
-                height: 180px;
-            }
-            
-            .selection-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-        /* Desktop Styles */
-        @media (min-width: 992px) {
-            .measurement-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            }
-        }
-    </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
 </head>
 <body>
     <!-- Side Navigation -->
@@ -543,27 +16,17 @@
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="#" class="nav-link active" data-page="dashboard">
-                    <i class="fas fa-fire"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link" data-page="weekly-plan">
-                    <i class="fas fa-dumbbell"></i> Weekly Plan
+                    <i class="fas fa-fire"></i> Today's Plan
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" data-page="exercise-bank">
-                    <i class="fas fa-list"></i> Exercise Bank
+                    <i class="fas fa-dumbbell"></i> Exercise Bank
                 </a>
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link" data-page="measurements">
-                    <i class="fas fa-ruler"></i> Measurements
-                </a>
-            </li>
-            <li class="nav-item">
-                <a href="profile_page_editing.html" class="nav-link" data-page="profoile_page_editing">
-                    <i class="fas fa-user"></i> User page
+                <a href="#" class="nav-link" data-page="profile">
+                    <i class="fas fa-user"></i> Profile
                 </a>
             </li>
         </ul>
@@ -580,77 +43,82 @@
                 </div>
             </div>
             
-            <div class="dashboard-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Calf</div>
-                        <div class="card-trend">↑ 0.5"</div>
+            <div class="today-plan">
+                <!-- Exercises -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h2 class="plan-title">Exercises</h2>
+                        <button class="add-btn">+</button>
                     </div>
-                    <div class="card-value">15.5"</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 65%;"></div>
-                    </div>
+                    <ul class="plan-list">
+                        <li class="plan-item">
+                            <span>Deadlifts - 5x5</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="plan-item">
+                            <span>Sledgehammer - 10x30s</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="plan-item">
+                            <span>Battle Ropes</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
                 
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Neck</div>
-                        <div class="card-trend">↑ 0.25"</div>
+                <!-- Meals -->
+                <div class="plan-card">
+                    <div class="plan-header">
+                        <h2 class="plan-title">Meals</h2>
+                        <button class="add-btn">+</button>
                     </div>
-                    <div class="card-value">16.25"</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 80%;"></div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Biceps (L)</div>
-                        <div class="card-trend">↑ 0.3"</div>
-                    </div>
-                    <div class="card-value">14.8"</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 72%;"></div>
-                    </div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Biceps (R)</div>
-                        <div class="card-trend">↑ 0.2"</div>
-                    </div>
-                    <div class="card-value">15.0"</div>
-                    <div class="progress-bar">
-                        <div class="progress" style="width: 75%;"></div>
-                    </div>
+                    <ul class="plan-list">
+                        <li class="plan-item">
+                            <span>Pre: Coffee + Banana</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="plan-item">
+                            <span>Post: 2lb Steak</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                        <li class="plan-item">
+                            <span>Night: Casein</span>
+                            <div class="item-actions">
+                                <button class="item-btn"><i class="fas fa-edit"></i></button>
+                                <button class="item-btn"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
             
-            <div class="week-plan">
-                <!-- Today's Plan -->
-                <div class="day-card">
-                    <div class="day-header">Today's Plan</div>
-                    <div class="day-section">
-                        <h4>Exercises</h4>
-                        <ul class="day-list">
-                            <li>Deadlifts - 5x5</li>
-                            <li>Sledgehammer - 10x30s</li>
-                            <li>Battle Ropes</li>
-                        </ul>
-                    </div>
-                    <div class="day-section">
-                        <h4>Meals</h4>
-                        <ul class="day-list">
-                            <li>Pre: Coffee + Banana</li>
-                            <li>Post: 2lb Steak</li>
-                            <li>Night: Casein</li>
-                        </ul>
-                    </div>
+            <!-- Water Tracker -->
+            <div class="water-tracker">
+                <h2 class="water-header">Water Intake</h2>
+                <div class="water-display">2.5L</div>
+                <div class="water-buttons">
+                    <button class="water-btn" id="add-250ml">+250ml</button>
+                    <button class="water-btn" id="add-500ml">+500ml</button>
+                    <button class="water-btn" id="reset-water">Reset</button>
                 </div>
             </div>
         </div>
-        
-        <!-- Weekly Plan Page -->
+         <!-- Weekly Plan Page -->
         <div id="weekly-plan" class="page-content">
             <div class="page-header">
                 <h1 class="page-title">Weekly War Plan</h1>
@@ -796,6 +264,7 @@
             </div>
         </div>
         
+        
         <!-- Exercise Bank Page -->
         <div id="exercise-bank" class="page-content">
             <div class="page-header">
@@ -879,244 +348,159 @@
                         <p>Primal power development. 10x30s rounds.</p>
                     </div>
                 </div>
-                
-                <!-- Additional Exercises -->
-                <div class="bank-card">
-                    <img src="https://media.giphy.com/media/l0HU20BZ6LbSEITza/giphy.gif" alt="Calf" class="bank-gif">
-                    <div class="bank-content">
-                        <h3>Calf Raises</h3>
-                        <div class="bank-meta">
-                            <span>Strength</span>
-                            <span>Warrior</span>
-                        </div>
-                        <p>Don't skip leg day. 10x20 heavy weight.</p>
-                    </div>
-                </div>
-                
-                <div class="bank-card">
-                    <img src="https://media.giphy.com/media/l0HU1QxYw2XyfX7g4/giphy.gif" alt="Pull-ups" class="bank-gif">
-                    <div class="bank-content">
-                        <h3>Weighted Pull-ups</h3>
-                        <div class="bank-meta">
-                            <span>Strength</span>
-                            <span>Elite</span>
-                        </div>
-                        <p>Build back and grip strength. 5x5 with added weight.</p>
-                    </div>
-                </div>
-                
-                <div class="bank-card">
-                    <img src="https://media.giphy.com/media/l0HUnNQx8dXW6XHk4/giphy.gif" alt="Farmers Walk" class="bank-gif">
-                    <div class="bank-content">
-                        <h3>Farmers Walk</h3>
-                        <div class="bank-meta">
-                            <span>Strength</span>
-                            <span>Warrior</span>
-                        </div>
-                        <p>Full body strength and endurance. Walk until failure.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Add Exercise Form (hidden by default) -->
-            <div class="measurement-form" id="add-exercise-form" style="display: none;">
-                <h2>Add New Weapon</h2>
-                <div class="measurement-grid">
-                    <div class="form-group">
-                        <label for="ex-name">Exercise Name</label>
-                        <input type="text" id="ex-name" placeholder="e.g. Atlas Stone">
-                    </div>
-                    <div class="form-group">
-                        <label for="ex-type">Type</label>
-                        <select id="ex-type">
-                            <option>Strength</option>
-                            <option>Power</option>
-                            <option>Destruction</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ex-level">Level</label>
-                        <select id="ex-level">
-                            <option>Beginner</option>
-                            <option>Warrior</option>
-                            <option>Elite</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="ex-gif">GIF URL</label>
-                        <input type="text" id="ex-gif" placeholder="Paste GIF URL">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="ex-desc">Description</label>
-                    <textarea id="ex-desc" rows="3" placeholder="Describe the exercise"></textarea>
-                </div>
-                <button class="btn btn-primary">Save Weapon</button>
-                <button class="btn btn-outline" id="cancel-add-exercise">Cancel</button>
             </div>
         </div>
         
-        <!-- Measurements Page -->
-        <div id="measurements" class="page-content">
-            <div class="page-header">
-                <h1 class="page-title">Body Metrics</h1>
-                <div class="header-actions">
-                    <button class="btn btn-primary">Save</button>
-                </div>
-            </div>
-                <h2>Record New Measurements</h2>
-                <div class="measurement-grid">
-                    <div class="form-group">
-                        <label for="measure-date">Date</label>
-                        <input type="date" id="measure-date">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-weight">Weight (kg)</label>
-                        <input type="number" id="measure-weight" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-neck">Neck (cm)</label>
-                        <input type="number" id="measure-neck" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-biceps">Biceps (cm)</label>
-                        <input type="number" id="measure-biceps" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-chest">Chest (cm)</label>
-                        <input type="number" id="measure-chest" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-waist">Waist (cm)</label>
-                        <input type="number" id="measure-waist" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-thighs">Thighs (cm)</label>
-                        <input type="number" id="measure-thighs" step="0.1">
-                    </div>
-                    <div class="form-group">
-                        <label for="measure-calves">Calves (cm)</label>
-                        <input type="number" id="measure-calves" step="0.1">
-                    </div>
-                </div>
-            </div>
-            
-            <div class="measurement-history">
-                <h2>History</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Weight</th>
-                            <th>Neck</th>
-                            <th>Biceps</th>
-                            <th>Chest</th>
-                            <th>Waist</th>
-                            <th>Thighs</th>
-                            <th>Calves</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>2023-06-01</td>
-                            <td>85.5</td>
-                            <td>40.5</td>
-                            <td>38.0</td>
-                            <td>105.0</td>
-                            <td>86.0</td>
-                            <td>58.5</td>
-                            <td>39.0</td>
-                        </tr>
-                        <tr>
-                            <td>2023-05-01</td>
-                            <td>86.2</td>
-                            <td>40.0</td>
-                            <td>37.5</td>
-                            <td>104.0</td>
-                            <td>87.0</td>
-                            <td>57.5</td>
-                            <td>38.5</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+       
     </main>
 
+    <!-- Exercise Selection Modal -->
+    <div id="exercise-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Select Exercises</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="selection-grid">
+                <div class="selection-item">
+                    <h3>Deadlift</h3>
+                    <p>Strength</p>
+                    <p>5x5</p>
+                </div>
+                <div class="selection-item">
+                    <h3>Squat</h3>
+                    <p>Strength</p>
+                    <p>5x5</p>
+                </div>
+                <div class="selection-item">
+                    <h3>Bench Press</h3>
+                    <p>Strength</p>
+                    <p>5x5</p>
+                </div>
+                <div class="selection-item">
+                    <h3>Pull-ups</h3>
+                    <p>Strength</p>
+                    <p>Max reps</p>
+                </div>
+                <div class="selection-item">
+                    <h3>Battle Ropes</h3>
+                    <p>Power</p>
+                    <p>10x30s</p>
+                </div>
+                <div class="selection-item">
+                    <h3>Sledgehammer</h3>
+                    <p>Power</p>
+                    <p>10x30s</p>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline close-modal">Cancel</button>
+                <button class="btn btn-primary">Add Selected</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-        const navLinks = document.querySelectorAll('.nav-link');
-        const pageContents = document.querySelectorAll('.page-content');
-        
-        // Function to show a specific page and hide others
-        function showPage(pageId) {
-            pageContents.forEach(c => {
-                if (c.id === pageId) {
-                    c.classList.add('active');
-                } else {
-                    c.classList.remove('active');
-                }
-            });
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageContents = document.querySelectorAll('.page-content');
             
-            navLinks.forEach(l => {
-                if (l.getAttribute('data-page') === pageId) {
-                    l.classList.add('active');
-                } else {
-                    l.classList.remove('active');
-                }
-            });
-        }
-        
-        // Set click handlers for navigation links
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Only prevent default for hash links
-                if (this.getAttribute('href') === '#') {
+            // Function to show a specific page and hide others
+            function showPage(pageId) {
+                pageContents.forEach(c => {
+                    if (c.id === pageId) {
+                        c.classList.add('active');
+                    } else {
+                        c.classList.remove('active');
+                    }
+                });
+                
+                navLinks.forEach(l => {
+                    if (l.getAttribute('data-page') === pageId) {
+                        l.classList.add('active');
+                    } else {
+                        l.classList.remove('active');
+                    }
+                });
+            }
+            
+            // Set click handlers for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
                     e.preventDefault();
-                }
-                
-                const pageId = this.getAttribute('data-page');
-                showPage(pageId);
-                
-                // Store the current page in localStorage
-                localStorage.setItem('currentPage', pageId);
-            });
-        });
-        
-        // Check for a stored page preference
-        const storedPage = localStorage.getItem('currentPage');
-        if (storedPage && document.getElementById(storedPage)) {
-            showPage(storedPage);
-        } else {
-            // Default to dashboard
-            showPage('dashboard');
-        }
-        
-        // Exercise Bank - Add New Exercise
-        const addExerciseBtn = document.getElementById('add-exercise-btn');
-        const addExerciseForm = document.getElementById('add-exercise-form');
-        const cancelAddExercise = document.getElementById('cancel-add-exercise');
-        
-        if (addExerciseBtn && addExerciseForm && cancelAddExercise) {
-            addExerciseBtn.addEventListener('click', function() {
-                addExerciseForm.style.display = 'block';
-                this.style.display = 'none';
+                    const pageId = this.getAttribute('data-page');
+                    showPage(pageId);
+                    localStorage.setItem('currentPage', pageId);
+                });
             });
             
-            cancelAddExercise.addEventListener('click', function() {
-                addExerciseForm.style.display = 'none';
-                addExerciseBtn.style.display = 'block';
+            // Check for a stored page preference
+            const storedPage = localStorage.getItem('currentPage');
+            if (storedPage && document.getElementById(storedPage)) {
+                showPage(storedPage);
+            } else {
+                showPage('dashboard');
+            }
+            
+            // Water Tracker Functionality
+            const waterDisplay = document.querySelector('.water-display');
+            const add250ml = document.getElementById('add-250ml');
+            const add500ml = document.getElementById('add-500ml');
+            const resetWater = document.getElementById('reset-water');
+            
+            let waterAmount = 0;
+            
+            function updateWaterDisplay() {
+                waterDisplay.textContent = (waterAmount / 1000).toFixed(1) + 'L';
+            }
+            
+            add250ml.addEventListener('click', function() {
+                waterAmount += 250;
+                updateWaterDisplay();
             });
-        }
-        
-        // Item Selection
-        const itemCards = document.querySelectorAll('.item-card');
-        itemCards.forEach(card => {
-            card.addEventListener('click', function() {
-                this.classList.toggle('selected');
+            
+            add500ml.addEventListener('click', function() {
+                waterAmount += 500;
+                updateWaterDisplay();
+            });
+            
+            resetWater.addEventListener('click', function() {
+                waterAmount = 0;
+                updateWaterDisplay();
+            });
+            
+            // Modal functionality
+            const exerciseModal = document.getElementById('exercise-modal');
+            const addExerciseBtns = document.querySelectorAll('.add-btn');
+            const closeModalBtns = document.querySelectorAll('.close-modal');
+            
+            addExerciseBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    exerciseModal.style.display = 'block';
+                });
+            });
+            
+            closeModalBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    exerciseModal.style.display = 'none';
+                });
+            });
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === exerciseModal) {
+                    exerciseModal.style.display = 'none';
+                }
+            });
+            
+            // Exercise selection
+            const selectionItems = document.querySelectorAll('.selection-item');
+            selectionItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                });
             });
         });
-    });
     </script>
 </body>
 </html>

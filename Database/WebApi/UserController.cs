@@ -453,8 +453,6 @@ namespace WebApi
                             user.PhotoMimeType = value?.ToString();
                             break;
 
-                        case "weightGoal":
-                            break;
                     }
                 }
 

@@ -245,3 +245,41 @@ body {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+.post-item {
+    position: relative;
+    overflow: hidden;
+}
+
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background-color 0.2s ease;
+}
+
+.close-button:hover {
+    background-color: darkred;
+}
+
+/* Optional: Responsive tweaks */
+@media (max-width: 600px) {
+    .close-button {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        top: 6px;
+        right: 6px;
+    }
+}

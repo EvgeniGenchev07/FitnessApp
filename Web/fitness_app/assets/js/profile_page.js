@@ -7,6 +7,51 @@ function getLanguageFromUrl() {
     }
     return 'en'; // Default to English
 }
+//Delete post
+async function deletePost(postId, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    try {
+        const language = getLanguageFromUrl();
+        const confirmMessage = language === 'bg' 
+            ? 'Сигурни ли сте, че искате да изтриете този пост? Това действие е необратимо!' 
+            : 'Are you sure you want to delete this post? This action cannot be undone!';
+        
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        const response = await fetch(`${apiUrl}/posts/${postId}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            const userData = JSON.parse(sessionStorage.getItem('user'));
+            if (userData && userData.posts) {
+                userData.posts = userData.posts.filter(post => post.id !== postId);
+                sessionStorage.setItem('user', JSON.stringify(userData));
+                
+                loadProfileData();
+                
+                const successMessage = language === 'bg' 
+                    ? 'Постът беше изтрит успешно!' 
+                    : 'Post deleted successfully!';
+                alert(successMessage);
+            }
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to delete post');
+        }
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        const language = getLanguageFromUrl();
+        alert(language === 'bg' 
+            ? 'Грешка при изтриване на поста: ' + error.message 
+            : 'Error deleting post: ' + error.message);
+    }
+}
+//Delete account
 async function deleteAccount() {
     try {
         const userData = JSON.parse(sessionStorage.getItem('user'));
@@ -60,7 +105,13 @@ function navigateToMainPage() {
     const language = getLanguageFromUrl();
     window.location.href = language === 'bg' ? 'index.html' : 'index_en.html';
 }
-
+function appendDeleteButton()
+{
+    const closeButtons = document.querySelectorAll('.close-button');
+    closeButtons.forEach(button => {
+        button.style.display = 'flex';
+    });;
+}
 function logout() {
     sessionStorage.removeItem('user');
     const language = getLanguageFromUrl();
@@ -113,39 +164,50 @@ function loadProfileData() {
         profileStats[2].textContent = userData.following?.length || '0';
 
         profileBio.innerHTML = userData.bio ? userData.bio.replace(/\n/g, '<br>') : 'AthloBoostX Warrior';
-
         if (userData.posts && userData.posts.length > 0) {
-            profilePostsContainer.innerHTML = '';
+        profilePostsContainer.innerHTML = '';
+        userData.posts.forEach(post => {
+        const postLink = document.createElement('a');
+        postLink.href = `post_preview.html?postId=${post.id}`; 
+        postLink.className = 'post-link'; 
 
-            userData.posts.forEach(post => {
-                const postItem = document.createElement('div');
-                postItem.className = 'post-item';
+        const postItem = document.createElement('div');
+        postItem.className = 'post-item';
 
-                const img = document.createElement('img');
-                if (post.image) {
-                    img.src = `data:image/jpeg;base64,${post.image}`; 
-                } else {
-                    img.src = 'post-placeholder.jpg';
-                }
-                img.alt = 'Post';
-                postItem.appendChild(img);
+        const img = document.createElement('img');
+        img.src = post.image
+            ? `data:image/jpeg;base64,${post.image}`
+            : 'post-placeholder.jpg';
+        img.alt = 'Post';
+        postItem.appendChild(img);
 
-                const postHover = document.createElement('div');
-                postHover.className = 'post-hover';
+        const postHover = document.createElement('div');
+        postHover.className = 'post-hover';
 
-                const likesSpan = document.createElement('span');
-                likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
+        const likesSpan = document.createElement('span');
+        likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
 
-                const commentsSpan = document.createElement('span');
-                commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
+        const commentsSpan = document.createElement('span');
+        commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
+        const closeButton = document.createElement('button');
+        closeButton.textContent = '✖';
+        closeButton.className = 'close-button';
+        closeButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            deletePost(post.id,e);
+        });
 
-                postHover.appendChild(likesSpan);
-                postHover.appendChild(commentsSpan);
-                postItem.appendChild(postHover);
+postItem.appendChild(closeButton);
 
-                profilePostsContainer.appendChild(postItem);
-            });
-        } else {
+        postHover.appendChild(likesSpan);
+        postHover.appendChild(commentsSpan);
+        postItem.appendChild(postHover);
+
+        postLink.appendChild(postItem); 
+        profilePostsContainer.appendChild(postLink); 
+    });
+}
+        else {
             const language=getLanguageFromUrl();
             if(language=="en")
             {

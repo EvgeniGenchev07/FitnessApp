@@ -156,9 +156,9 @@ public class PostsController : ControllerBase
             existingPost.Title = title;
             existingPost.Description = description;
 
+
             if (userId.HasValue)
             {
-                // ! Same here: Replace with actual user loading logic
                 var userProxyPost = await _postContext.ReadAsync(userId.Value, true, false);
                 if (userProxyPost?.User == null)
                 {
@@ -190,12 +190,23 @@ public class PostsController : ControllerBase
         try
         {
             var post = await _postContext.ReadAsync(id, true);
+
             if (post == null)
             {
                 return NotFound();
             }
 
+            var user = await _dbContext.Users
+                .Include(u => u.Posts)
+                .FirstOrDefaultAsync(u => u.Id == post.User.Id);
+
+            if (user == null)
+            {
+                return NotFound("User not found");
+            }
+            user.Posts.Remove(post);
             await _postContext.DeleteAsync(id);
+            await _dbContext.SaveChangesAsync();
             return NoContent();
         }
         catch (Exception ex)

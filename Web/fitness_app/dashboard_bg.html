@@ -348,6 +348,29 @@
                         <p>Primal power development. 10x30s rounds.</p>
                     </div>
                 </div>
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/3o6ZsVGl3uQxqgWb3q/giphy.gif" alt="Sledgehammer" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Sledgehammer</h3>
+                        <div class="bank-meta">
+                            <span>Destruction</span>
+                            <span>Elite</span>
+                        </div>
+                        <p>Primal power development. 10x30s rounds.</p>
+                    </div>
+                </div>
+                <!--Това е за карта за още информация-->
+                <div class="bank-card">
+                    <img src="https://media.giphy.com/media/3o6ZsVGl3uQxqgWb3q/giphy.gif" alt="Sledgehammer" class="bank-gif">
+                    <div class="bank-content">
+                        <h3>Sledgehammer</h3>
+                        <div class="bank-meta">
+                            <span>Destruction</span>
+                            <span>Elite</span>
+                        </div>
+                        <p>Primal power development. 10x30s rounds.</p>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -394,113 +417,46 @@
                 </div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-outline close-modal">Cancel</button>
                 <button class="btn btn-primary">Add Selected</button>
             </div>
         </div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            const pageContents = document.querySelectorAll('.page-content');
-            
-            // Function to show a specific page and hide others
-            function showPage(pageId) {
-                pageContents.forEach(c => {
-                    if (c.id === pageId) {
-                        c.classList.add('active');
-                    } else {
-                        c.classList.remove('active');
-                    }
-                });
-                
-                navLinks.forEach(l => {
-                    if (l.getAttribute('data-page') === pageId) {
-                        l.classList.add('active');
-                    } else {
-                        l.classList.remove('active');
-                    }
-                });
-            }
-            
-            // Set click handlers for navigation links
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageId = this.getAttribute('data-page');
-                    showPage(pageId);
-                    localStorage.setItem('currentPage', pageId);
-                });
-            });
-            
-            // Check for a stored page preference
-            const storedPage = localStorage.getItem('currentPage');
-            if (storedPage && document.getElementById(storedPage)) {
-                showPage(storedPage);
-            } else {
-                showPage('dashboard');
-            }
-            
-            // Water Tracker Functionality
-            const waterDisplay = document.querySelector('.water-display');
-            const add250ml = document.getElementById('add-250ml');
-            const add500ml = document.getElementById('add-500ml');
-            const resetWater = document.getElementById('reset-water');
-            
-            let waterAmount = 0;
-            
-            function updateWaterDisplay() {
-                waterDisplay.textContent = (waterAmount / 1000).toFixed(1) + 'L';
-            }
-            
-            add250ml.addEventListener('click', function() {
-                waterAmount += 250;
-                updateWaterDisplay();
-            });
-            
-            add500ml.addEventListener('click', function() {
-                waterAmount += 500;
-                updateWaterDisplay();
-            });
-            
-            resetWater.addEventListener('click', function() {
-                waterAmount = 0;
-                updateWaterDisplay();
-            });
-            
-            // Modal functionality
-            const exerciseModal = document.getElementById('exercise-modal');
-            const addExerciseBtns = document.querySelectorAll('.add-btn');
-            const closeModalBtns = document.querySelectorAll('.close-modal');
-            
-            addExerciseBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    exerciseModal.style.display = 'block';
-                });
-            });
-            
-            closeModalBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    exerciseModal.style.display = 'none';
-                });
-            });
-            
-            // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
-                if (e.target === exerciseModal) {
-                    exerciseModal.style.display = 'none';
-                }
-            });
-            
-            // Exercise selection
-            const selectionItems = document.querySelectorAll('.selection-item');
-            selectionItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    this.classList.toggle('selected');
-                });
-            });
-        });
-    </script>
+    <!--history window-->
+    <div id="history-modal" class="modal">
+    <div class="modal-content history-modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">War History</h2>
+            <button class="close-history-modal">&times;</button>
+        </div>
+        <div class="history-search-container">
+            <div class="history-search">
+                <input  type="date" id="history-date" class="history-input">
+                <button class="btn btn-primary" id="search-history">Search</button>
+            </div>
+        </div>
+        <div class="history-results-container">
+            <div class="history-results">
+                <div class="history-day">
+                    <h3 id="history-date-display">May 19, 2023</h3>
+                    <div class="history-sections-container">
+                        <div class="history-section-card">
+                            <h4 class="history-section-title"><i class="fas fa-dumbbell"></i> Exercises</h4>
+                            <ul class="history-list" id="history-exercises">
+                                <!-- Will be populated by JS -->
+                            </ul>
+                        </div>
+                        <div class="history-section-card">
+                            <h4 class="history-section-title"><i class="fas fa-utensils"></i> Meals</h4>
+                            <ul class="history-list" id="history-meals">
+                                <!-- Will be populated by JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/js/dashboard.js"></script>
 </body>
 </html>
