@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавяне на упражнение</title>
+    <link rel="stylesheet" href="assets/css/add_exercise.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Добави Упражнение</h1>
+        <form action="#" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="exerciseName">Име на упражнението:</label>
+                <input type="text" id="exerciseName" name="exerciseName" placeholder="Въведи заглавие..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <textarea id="description" name="description" placeholder="Детайли за упражнението..." required></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="sets">Серии:</label>
+                    <input type="number" id="sets" name="sets" min="1" max="20" placeholder="Брой сетове" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reps">Повторения:</label>
+                    <input type="number" id="reps" name="reps" min="1" max="100" placeholder="Брой повторения" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="difficulty">Ниво на трудност:</label>
+                <select id="difficulty" name="difficulty" required>
+                    <option value="">-- Избери ниво --</option>
+                    <option value="easy">Лесно</option>
+                    <option value="medium">Средно</option>
+                    <option value="hard">Трудно</option>
+                    <option value="expert">ЕКСТРЕМНО</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="exerciseImage">Снимка(GIF):</label>
+                <input type="file" id="exerciseImage" name="exerciseImage" accept="image/*,image/gif" required>
+            </div>
+
+            <button type="submit" id="submitBtn">ЗАПИШИ УПРАЖНЕНИЕТО</button>
+        </form>
+    </div>
+
+    <script src="assets/js/add_exercise.js"></script>
+</body>
+</html>

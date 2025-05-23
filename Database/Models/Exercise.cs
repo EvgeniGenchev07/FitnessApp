@@ -16,9 +16,11 @@ namespace Models
         public string Name { get; set; }
         [Required]
         public int EstimatedTime { get; set; }
+        public string Level { get; set; }
+        public byte[]? Photo { get; set; }
+        public string PhotoMimeType { get; set; }
         [Required]
         public List<Set> Sets { get; set; }
-
     }
 
 }

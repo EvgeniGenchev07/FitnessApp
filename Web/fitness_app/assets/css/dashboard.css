@@ -833,3 +833,324 @@
   color: black !important;
   border: 2px solid var(--primary);
 }
+/* Основни стилове за картата "Виж още" */
+.view-more-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--primary-darker);
+    transition: all 0.3s ease;
+    min-height: 180px;
+    border: 2px dashed var(--primary);
+}
+
+.view-more-card:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+}
+
+.view-more-btn {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    text-align: center;
+    width: 100%;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.plus-sign {
+    font-size: 3.5rem;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.view-more-btn h3 {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+/* Модален прозорец - респонсивни стилове */
+.modal-content {
+    width: 95%;
+    max-width: 800px;
+    margin: 2vh auto;
+    display: flex;
+    flex-direction: column;
+    max-height: 96vh;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1 1 300px;
+    min-width: 0;
+    padding: 12px 15px;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.filter-options {
+    display: flex;
+    gap: 10px;
+    padding: 0 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-select {
+    flex: 1 1 200px;
+    padding: 10px;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+.result-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+}
+
+.search-result-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--bg);
+    border-left: 3px solid var(--primary);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.search-result-item:hover {
+    background: var(--primary-darker);
+    transform: translateX(5px);
+}
+
+.search-result-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 15px;
+    border-radius: 4px;
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-info h4 {
+    margin: 0 0 5px 0;
+    color: var(--primary);
+}
+
+.result-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid var(--primary-darker);
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Респонсивни медийни заявки */
+@media (max-width: 768px) {
+    .modal-content {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        max-height: 100vh;
+        height: 100vh;
+    }
+    
+    .plus-sign {
+        font-size: 2.5rem;
+    }
+    
+    .view-more-btn h3 {
+        font-size: 1rem;
+    }
+    
+    .search-container, .filter-options {
+        padding: 0 10px;
+    }
+    
+    .search-input, .filter-select {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .view-more-card {
+        min-height: 120px;
+    }
+    
+    .plus-sign {
+        font-size: 2rem;
+    }
+    
+    .modal-title {
+        font-size: 1.2rem;
+    }
+    
+    .search-result-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .search-result-item img {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+}
+
+//new modal css
+/* Modal Search and Filter Styles */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 0 15px;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1 1 300px;
+    min-width: 0;
+    padding: 12px 15px;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+.filter-select {
+    flex: 1 1 200px;
+    padding: 10px;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.search-results {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+
+.search-result-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background: var(--bg);
+    border-left: 3px solid var(--primary);
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+    gap: 15px;
+}
+
+.search-result-item:hover {
+    background: var(--primary-darker);
+    transform: translateX(5px);
+}
+
+.search-result-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.result-info {
+    flex: 1;
+}
+
+.result-info h4 {
+    margin: 0 0 5px 0;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.result-info p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.result-info p:first-of-type {
+    margin-bottom: 5px;
+}
+
+.add-exercise-btn, .add-meal-btn {
+    padding: 8px 15px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.modal-footer {
+    padding: 15px;
+    border-top: 1px solid var(--primary-darker);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-result-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .search-result-item img {
+        width: 100%;
+        height: auto;
+        max-height: 150px;
+    }
+    
+    .add-exercise-btn, .add-meal-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-input, .filter-select {
+        flex: 1 1 100%;
+    }
+    
+    .search-result-item {
+        padding: 10px;
+    }
+}

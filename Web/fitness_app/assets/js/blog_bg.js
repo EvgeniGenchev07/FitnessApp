@@ -252,7 +252,6 @@ document.head.appendChild(style);
         document.head.appendChild(style);
     }
 
-    // Помощни функции
     function getImageHtml(photoData, mimeType, altText) {
         if (!photoData) {
             return `<img src="${config.DEFAULT_IMAGE}" alt="${altText}" loading="lazy">`;

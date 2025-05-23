@@ -11,22 +11,22 @@
     <!-- Side Navigation -->
     <nav class="side-nav">
         <div class="nav-header">
-            <h2>IRON DOMINANCE</h2>
+            <h2>AthloPlan</h2>
         </div>
         <ul class="nav-menu">
             <li class="nav-item">
                 <a href="#" class="nav-link active" data-page="dashboard">
-                    <i class="fas fa-fire"></i> Today's Plan
+                    <i class="fas fa-fire"></i> Днешния план
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" data-page="exercise-bank">
-                    <i class="fas fa-dumbbell"></i> Exercise Bank
+                    <i class="fas fa-dumbbell"></i> Упражнения
                 </a>
             </li>
             <li class="nav-item">
                 <a href="#" class="nav-link" data-page="profile">
-                    <i class="fas fa-user"></i> Profile
+                    <i class="fas fa-user"></i> Профил
                 </a>
             </li>
         </ul>
@@ -37,9 +37,9 @@
         <!-- Dashboard Page -->
         <div id="dashboard" class="page-content active">
             <div class="page-header">
-                <h1 class="page-title">Today's Battle Plan</h1>
+                <h1 class="page-title">План за деня</h1>
                 <div class="header-actions">
-                    <button class="btn btn-primary">Save Plan</button>
+                    <button class="btn btn-primary">Запазване</button>
                 </div>
             </div>
             
@@ -47,7 +47,7 @@
                 <!-- Exercises -->
                 <div class="plan-card">
                     <div class="plan-header">
-                        <h2 class="plan-title">Exercises</h2>
+                        <h2 class="plan-title">УПРАЖНЕНИЯ</h2>
                         <button class="add-btn">+</button>
                     </div>
                     <ul class="plan-list">
@@ -78,7 +78,7 @@
                 <!-- Meals -->
                 <div class="plan-card">
                     <div class="plan-header">
-                        <h2 class="plan-title">Meals</h2>
+                        <h2 class="plan-title">Хранене</h2>
                         <button class="add-btn">+</button>
                     </div>
                     <ul class="plan-list">
@@ -109,38 +109,44 @@
             
             <!-- Water Tracker -->
             <div class="water-tracker">
-                <h2 class="water-header">Water Intake</h2>
-                <div class="water-display">2.5L</div>
+                <h2 class="water-header">Прием на вода</h2>
+                <div class="water-display">0L</div>
                 <div class="water-buttons">
                     <button class="water-btn" id="add-250ml">+250ml</button>
                     <button class="water-btn" id="add-500ml">+500ml</button>
-                    <button class="water-btn" id="reset-water">Reset</button>
+                    <button class="water-btn" id="reset-water">Нулиране</button>
                 </div>
+            </div>
+        </div>
+        <!--Calories tracker-->
+        <div class="water-tracker">
+                <h2 class="water-header">Приети калории</h2>
+                <div class="water-display">0</div>
             </div>
         </div>
          <!-- Weekly Plan Page -->
         <div id="weekly-plan" class="page-content">
             <div class="page-header">
-                <h1 class="page-title">Weekly War Plan</h1>
+                <h1 class="page-title">Седмичен план</h1>
                 <div class="header-actions">
-                    <button class="btn btn-primary" id="save-plan-btn">Save Plan</button>
-                    <button class="btn btn-outline" id="history-plan-btn">History</button>
+                    <button class="btn btn-primary" id="save-plan-btn">Запазване</button>
+                    <button class="btn btn-outline" id="history-plan-btn">История</button>
                 </div>
             </div>
             
             <div class="week-plan">
                 <!-- Monday -->
                 <div class="day-card" data-day="monday">
-                    <div class="day-header">Monday - Destruction</div>
+                    <div class="day-header">Понеделник</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Deadlifts - 5x5</li>
                             <li>Sledgehammer - 10x30s</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Coffee + Banana</li>
                             <li>Post: 2lb Steak</li>
@@ -150,16 +156,16 @@
                 
                 <!-- Tuesday -->
                 <div class="day-card" data-day="tuesday">
-                    <div class="day-header">Tuesday - Power</div>
+                    <div class="day-header">Вторник</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+</button></h4>
                         <ul class="day-list exercise-list">
                             <li>Tire Flips - 10x10</li>
                             <li>Box Jumps - 5x10</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Oatmeal + Eggs</li>
                             <li>Post: Chicken + Rice</li>
@@ -169,16 +175,16 @@
                 
                 <!-- Wednesday -->
                 <div class="day-card" data-day="wednesday">
-                    <div class="day-header">Wednesday - Strength</div>
+                    <div class="day-header">Сряда</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Squats - 5x5</li>
                             <li>Pull-ups - Max</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Banana + PB</li>
                             <li>Post: Salmon</li>
@@ -188,16 +194,16 @@
                 
                 <!-- Thursday -->
                 <div class="day-card" data-day="thursday">
-                    <div class="day-header">Thursday - Endurance</div>
+                    <div class="day-header">Четвъртък</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Rucking - 5 miles</li>
                             <li>Sandbag Carries</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Coffee + MCT</li>
                             <li>Post: Beef</li>
@@ -207,16 +213,16 @@
                 
                 <!-- Friday -->
                 <div class="day-card" data-day="friday">
-                    <div class="day-header">Friday - Arms & Neck</div>
+                    <div class="day-header">Петък</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Neck Harness</li>
                             <li>Barbell Curls</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Eggs</li>
                             <li>Post: Chicken</li>
@@ -226,16 +232,16 @@
                 
                 <!-- Saturday -->
                 <div class="day-card" data-day="saturday">
-                    <div class="day-header">Saturday - Calves & Core</div>
+                    <div class="day-header">Събота</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Calf Raises</li>
                             <li>Leg Raises</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Pre: Yogurt</li>
                             <li>Post: Steak</li>
@@ -245,16 +251,16 @@
                 
                 <!-- Sunday -->
                 <div class="day-card" data-day="sunday">
-                    <div class="day-header">Sunday - Recovery</div>
+                    <div class="day-header">Неделя</div>
                     <div class="day-section">
-                        <h4>Exercises <button class="btn btn-outline btn-small add-exercise-btn">+ Add</button></h4>
+                        <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
                         <ul class="day-list exercise-list">
                             <li>Cold Plunge</li>
                             <li>Sauna</li>
                         </ul>
                     </div>
                     <div class="day-section">
-                        <h4>Meals <button class="btn btn-outline btn-small add-meal-btn">+ Add</button></h4>
+                        <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
                         <ul class="day-list meal-list">
                             <li>Cheat Meal</li>
                             <li>Hydrate</li>
@@ -268,9 +274,9 @@
         <!-- Exercise Bank Page -->
         <div id="exercise-bank" class="page-content">
             <div class="page-header">
-                <h1 class="page-title">Exercise Arsenal</h1>
+                <h1 class="page-title">Упражнения</h1>
                 <div class="header-actions">
-                    <button class="btn btn-primary" id="add-exercise-btn">Add Weapon</button>
+                    <button class="btn btn-primary" id="add-exercise-btn" onclick="openAddExercise()">Добави</button>
                 </div>
             </div>
             
@@ -359,79 +365,137 @@
                         <p>Primal power development. 10x30s rounds.</p>
                     </div>
                 </div>
-                <!--Това е за карта за още информация-->
-                <div class="bank-card">
-                    <img src="https://media.giphy.com/media/3o6ZsVGl3uQxqgWb3q/giphy.gif" alt="Sledgehammer" class="bank-gif">
+                <div class="bank-card view-more-card">
                     <div class="bank-content">
-                        <h3>Sledgehammer</h3>
-                        <div class="bank-meta">
-                            <span>Destruction</span>
-                            <span>Elite</span>
+                        <button class="view-more-btn">
+                            <span class="plus-sign">+</span>
+                            <h3>Виж още</h3>
+                        </button>
+                    </div>
+                </div>
+                <div id="view-more-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">ТЪРСИ УПРАЖНЕНИЯ</h3>
+                            <button class="close-modal">&times;</button>
                         </div>
-                        <p>Primal power development. 10x30s rounds.</p>
+                        <div class="search-container">
+                            <input type="text" id="exercise-search" placeholder="Въведете име на упражнение..." 
+                                class="search-input" aria-label="Търсене на упражнения">
+                            <button id="search-btn" class="btn btn-primary">Търси</button>
+                        </div>
+                        <div class="search-results"></div> <!-- Контейнер за резултатите -->
                     </div>
                 </div>
             </div>
         </div>
-        
-       
+    </div> 
     </main>
 
     <!-- Exercise Selection Modal -->
-    <div id="exercise-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Select Exercises</h2>
-                <button class="close-modal">&times;</button>
+<div id="exercise-selection-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Избери упражнение</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="search-container">
+            <input type="text" id="exercise-search" placeholder="Търси упражнения..." class="search-input">
+        </div>
+        <div class="search-results" id="exercise-results">
+            <!-- Results will be populated here -->
+            <div class="search-result-item">
+                <img src="https://media.giphy.com/media/l0HU7JI1u2J9wYe2A/giphy.gif" alt="Deadlift">
+                <div class="result-info">
+                    <h4>Deadlift</h4>
+                    <p>Сила • Експерт</p>
+                    <p>5x5 повторения</p>
+                </div>
+                <button class="btn btn-primary add-exercise-btn">Добави</button>
             </div>
-            <div class="selection-grid">
-                <div class="selection-item">
-                    <h3>Deadlift</h3>
-                    <p>Strength</p>
-                    <p>5x5</p>
+            <div class="search-result-item">
+                <img src="https://media.giphy.com/media/xT5LMHxhOfscxPfIfm/giphy.gif" alt="Squat">
+                <div class="result-info">
+                    <h4>Barbell Squat</h4>
+                    <p>Сила • Напреднал</p>
+                    <p>5x5 повторения</p>
                 </div>
-                <div class="selection-item">
-                    <h3>Squat</h3>
-                    <p>Strength</p>
-                    <p>5x5</p>
-                </div>
-                <div class="selection-item">
-                    <h3>Bench Press</h3>
-                    <p>Strength</p>
-                    <p>5x5</p>
-                </div>
-                <div class="selection-item">
-                    <h3>Pull-ups</h3>
-                    <p>Strength</p>
-                    <p>Max reps</p>
-                </div>
-                <div class="selection-item">
-                    <h3>Battle Ropes</h3>
-                    <p>Power</p>
-                    <p>10x30s</p>
-                </div>
-                <div class="selection-item">
-                    <h3>Sledgehammer</h3>
-                    <p>Power</p>
-                    <p>10x30s</p>
-                </div>
+                <button class="btn btn-primary add-exercise-btn">Добави</button>
             </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary">Add Selected</button>
+            <div class="search-result-item">
+                <img src="https://media.giphy.com/media/3o6Zt6ML6BklcajjsA/giphy.gif" alt="Battle Ropes">
+                <div class="result-info">
+                    <h4>Battle Ropes</h4>
+                    <p>Мощност • Начинаещ</p>
+                    <p>10x30 секунди</p>
+                </div>
+                <button class="btn btn-primary add-exercise-btn">Добави</button>
             </div>
         </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-exercise">Отказ</button>
+            <button class="btn btn-primary" id="confirm-exercise">Потвърди избор</button>
+        </div>
     </div>
+</div>
+
+<!-- Meal Selection Modal -->
+<div id="meal-selection-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 class="modal-title">Избери храна</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="search-container">
+            <input type="text" id="meal-search" placeholder="Търси храни..." class="search-input">
+        </div>
+        <div class="search-results" id="meal-results">
+            <!-- Results will be populated here -->
+            <div class="search-result-item">
+                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd" alt="Салата">
+                <div class="result-info">
+                    <h4>Зелена салата с пилешко</h4>
+                    <p>Обяд • 450 калории</p>
+                    <p>Протеин: 35g | Въглехидрати: 20g | Мазнини: 25g</p>
+                </div>
+                <button class="btn btn-primary add-meal-btn">Добави</button>
+            </div>
+            <div class="search-result-item">
+                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061" alt="Овесени ядки">
+                <div class="result-info">
+                    <h4>Овесени ядки с банан и мед</h4>
+                    <p>Закуска • 350 калории</p>
+                    <p>Протеин: 12g | Въглехидрати: 60g | Мазнини: 8g</p>
+                </div>
+                <button class="btn btn-primary add-meal-btn">Добави</button>
+            </div>
+            <div class="search-result-item">
+                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c" alt="Салата">
+                <div class="result-info">
+                    <h4>Гръцка салата</h4>
+                    <p>Вечеря • 400 калории</p>
+                    <p>Протеин: 15g | Въглехидрати: 25g | Мазнини: 30g</p>
+                </div>
+                <button class="btn btn-primary add-meal-btn">Добави</button>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="cancel-meal">Отказ</button>
+            <button class="btn btn-primary" id="confirm-meal">Потвърди избор</button>
+        </div>
+    </div>
+</div>
     <!--history window-->
     <div id="history-modal" class="modal">
     <div class="modal-content history-modal-content">
         <div class="modal-header">
-            <h2 class="modal-title">War History</h2>
+            <h2 class="modal-title">История</h2>
             <button class="close-history-modal">&times;</button>
         </div>
         <div class="history-search-container">
             <div class="history-search">
                 <input  type="date" id="history-date" class="history-input">
-                <button class="btn btn-primary" id="search-history">Search</button>
+                <button class="btn btn-primary" id="search-history">Търсене</button>
             </div>
         </div>
         <div class="history-results-container">
@@ -440,13 +504,13 @@
                     <h3 id="history-date-display">May 19, 2023</h3>
                     <div class="history-sections-container">
                         <div class="history-section-card">
-                            <h4 class="history-section-title"><i class="fas fa-dumbbell"></i> Exercises</h4>
+                            <h4 class="history-section-title"><i class="fas fa-dumbbell"></i> Упражнения</h4>
                             <ul class="history-list" id="history-exercises">
                                 <!-- Will be populated by JS -->
                             </ul>
                         </div>
                         <div class="history-section-card">
-                            <h4 class="history-section-title"><i class="fas fa-utensils"></i> Meals</h4>
+                            <h4 class="history-section-title"><i class="fas fa-utensils"></i> Хранене</h4>
                             <ul class="history-list" id="history-meals">
                                 <!-- Will be populated by JS -->
                             </ul>
@@ -456,6 +520,7 @@
             </div>
         </div>
     </div>
+    
 </div>
 <script src="assets/js/dashboard.js"></script>
 </body>
