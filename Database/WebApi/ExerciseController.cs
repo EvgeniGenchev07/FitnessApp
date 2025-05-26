@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using DBContexts;
 using Models;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi
 {
@@ -48,6 +49,19 @@ namespace WebApi
                 await _exerciseContext.CreateAsync(exercise);
 
                 return Ok(new { message = "Exercise created successfully", exercise.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllExercises()
+        {
+            try
+            {
+                var exercises = await _dbContext.Exercises.ToListAsync();
+                return Ok(exercises);
             }
             catch (Exception ex)
             {

@@ -9,6 +9,9 @@ using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Newtonsoft.Json;
+using System.Text.Json;
+using System.IO;
 
 [ApiController]
 [Route("posts/")]
@@ -251,6 +254,59 @@ public class PostsController : ControllerBase
                 .ToListAsync();
 
             return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpPost("{postId}/like")]
+    public async Task<IActionResult> LikePost(int postId, [FromQuery] int userId)
+    {
+        try
+        {
+            var post = await _postContext.ReadAsync(postId, false, false);
+            if (post == null) return NotFound("Post not found");
+
+            var user = await _dbContext.Users.FindAsync(userId);
+            if (user == null) return BadRequest("User not found");
+
+            var existingLike = await _dbContext.Likes
+                .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+            if (existingLike == null)
+            {
+                var like = new Like { PostId = postId, UserId = userId };
+                _dbContext.Likes.Add(like);
+                post.Likes++;
+                await _postContext.UpdateAsync(post, false);
+                await _dbContext.SaveChangesAsync();
+                return Ok(new { Likes = post.Likes, Liked = true });
+            }
+            else
+            {
+                _dbContext.Likes.Remove(existingLike);
+                post.Likes--;
+                await _postContext.UpdateAsync(post, false);
+                await _dbContext.SaveChangesAsync();
+                return Ok(new { Likes = post.Likes, Liked = false });
+            }
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+    [HttpGet("{postId}/check-like")]
+    public async Task<IActionResult> CheckIfLiked(int postId, [FromQuery] int userId)
+    {
+        try
+        {
+            var like = await _dbContext.Likes
+                .FirstOrDefaultAsync(l => l.PostId == postId && l.UserId == userId);
+
+            return Ok(new { liked = like != null });
         }
         catch (Exception ex)
         {

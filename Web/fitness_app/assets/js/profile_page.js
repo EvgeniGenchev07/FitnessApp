@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.6:5000';
+const apiUrl = 'http://192.168.100.7:5000';
 // Navigation functions with URL-based language detection
 function getLanguageFromUrl() {
     const currentUrl = window.location.pathname;

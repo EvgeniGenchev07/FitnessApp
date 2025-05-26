@@ -9,12 +9,12 @@ namespace DBContexts
         internal DbSet<Workout> Workouts { get; set; }
         internal DbSet<Set> Sets { get; set; }
         internal DbSet<Meal> Meals { get; set; }
-        internal DbSet<Food> Foods { get; set; }
-        internal DbSet<Exercise> Exercises { get; set; }
+        public DbSet<Food> Foods { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
         internal DbSet<Schedule> Schedules { get; set; }
         internal DbSet<Comment> Comments { get; set; }
         public DbSet<Post> Posts { get; set; }
-
+        public DbSet<Like> Likes { get; set; }
         public AthloboostDbContext() : base()
         {
         }

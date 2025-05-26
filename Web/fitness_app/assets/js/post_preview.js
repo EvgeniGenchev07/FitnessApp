@@ -1,5 +1,5 @@
-const apiUrl = 'http://192.168.100.6:5000';
-
+const apiUrl = 'http://192.168.100.7:5000';
+const userData = JSON.parse(sessionStorage.getItem('user'));
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const postId = urlParams.get('postId');
@@ -57,5 +57,61 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     } catch (err) {
         document.querySelector('.article-content').innerHTML = `<p style="color:red;">Грешка: ${err.message}</p>`;
+    }
+});
+
+const likeIcon = document.getElementById("likeIcon");
+const likeCount = document.getElementById("likeCount");
+let liked = false; 
+let count = parseInt(likeCount.textContent);
+const urlParams = new URLSearchParams(window.location.search);
+const postId = urlParams.get('postId');
+const userId = userData.id;
+
+async function checkIfLiked() {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/check-like?userId=${userId}`);
+        if (response.ok) {
+            const data = await response.json();
+            liked = data.liked;
+            if (liked) {
+                likeIcon.classList.add("liked");
+            } else {
+                likeIcon.classList.remove("liked");
+            }
+        }
+    } catch (error) {
+        console.error("Грешка при проверка на лайк:", error);
+    }
+}
+
+checkIfLiked();
+
+likeIcon.addEventListener("click", async () => {
+    try {
+        const response = await fetch(`${apiUrl}/posts/${postId}/like?userId=${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            liked = data.liked;
+            count = data.likes;
+            likeCount.textContent = count;
+            
+            if (liked) {
+                likeIcon.classList.add("liked");
+            } else {
+                likeIcon.classList.remove("liked");
+            }
+        } else {
+            throw new Error('Неуспешно изпълнение на заявката');
+        }
+    } catch (error) {
+        console.error('Грешка при изпращането:', error);
+        likeIcon.classList.toggle("liked");
     }
 });

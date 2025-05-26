@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const config = {
-        API_URL: 'http://192.168.100.6:5000/posts/all',
+        API_URL: 'http://192.168.100.7:5000/posts/all',
         DEFAULT_IMAGE: 'img/default-post-image.jpg',
         DEFAULT_USER: 'Анонимен',
         MONTH_NAMES: ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'],
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </a>
                     </div>
                     <div class="blog_details">
-                        <a class="d-inline-block" href="blog_details.html?id=${safePost.id}">
+                        <a class="d-inline-block" href="post_preview.html?postId=${safePost.id}">
                             <h2 class="blog-head">${safePost.title}</h2>
                         </a>
                         <p><a href="post_preview.html?postId=${safePost.id}">Прочетете повече...</a></p>

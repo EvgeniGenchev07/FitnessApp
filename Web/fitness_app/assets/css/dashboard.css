@@ -317,7 +317,6 @@
         }
         
         .day-section h4 {
-            font-size: 0.8rem;
             margin-bottom: 5px;
             color: var(--primary);
         }
@@ -1140,9 +1139,6 @@
         max-height: 150px;
     }
     
-    .add-exercise-btn, .add-meal-btn {
-        width: 100%;
-    }
 }
 
 @media (max-width: 480px) {
@@ -1153,4 +1149,110 @@
     .search-result-item {
         padding: 10px;
     }
+}
+.calories-tracker 
+{
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    padding: 15px;
+    margin-top: 20px;
+    border-left: 4px solid var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+        
+.calories-header 
+{
+    font-size: 1.3rem;
+    color: var(--primary);
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+        
+.calories-display 
+{
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 15px;
+    color: var(--text);
+}
+/* Add Exercise Button in Modal */
+.add-exercise-btn-modal {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+    background: var(--primary);
+    color: var(--secondary);
+    white-space: nowrap;
+}
+
+.add-exercise-btn-modal:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.add-exercise-btn-modal.selected {
+    background: #00aa00;
+    color: var(--text);
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.add-exercise-btn-modal.selected:hover {
+    background: #008800;
+    box-shadow: 0 4px 12px rgba(0, 170, 0, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .add-exercise-btn-modal {
+        padding: 8px 15px;
+        font-size: 0.8rem;
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .add-exercise-btn-modal {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+}
+.item-delete-btn {
+    background: transparent !important; /* Ensure no background color */
+    border: none !important; /* Remove any borders */
+    padding: 0; /* Remove padding to avoid extra space */
+    margin: 0; /* Remove margin to align properly */
+    cursor: pointer; /* Keep cursor pointer for usability */
+    display: inline-flex; /* Ensure the button wraps the icon tightly */
+    align-items: center;
+    justify-content: center;
+}
+
+.item-delete-btn i.fas.fa-trash {
+    background: transparent; /* Ensure the icon has no background */
+    color: red; /* Keep the red color as specified */
+    font-size: 16px; /* Adjust size if needed */
+    padding: 0; /* Remove any padding */
+}
+
+.plan-item, .day-list-item {
+    display: flex; /* Ensure the list item aligns content properly */
+    align-items: center; /* Center vertically */
+    justify-content: space-between; /* Space out content and button */
+    background: transparent; /* Ensure the list item has no background */
+}
+
+.btn-delete:hover {
+    opacity: 0.7; /* Optional: Add hover effect for better UX */
 }

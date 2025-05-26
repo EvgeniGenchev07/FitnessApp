@@ -10,6 +10,7 @@ public class Post
     public string Description { get; set; }
     public string Title { get; set; }
     public DateTime Created { get; set; }
+    public List<Like> LikesList { get; set; } = new List<Like>();
     public int Likes { get; set; }
     public byte[] Photo { get; set; }
     public string PhotoMimeType { get; set; } 

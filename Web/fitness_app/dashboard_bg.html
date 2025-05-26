@@ -50,28 +50,7 @@
                         <h2 class="plan-title">УПРАЖНЕНИЯ</h2>
                         <button class="add-btn">+</button>
                     </div>
-                    <ul class="plan-list">
-                        <li class="plan-item">
-                            <span>Deadlifts - 5x5</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li class="plan-item">
-                            <span>Sledgehammer - 10x30s</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li class="plan-item">
-                            <span>Battle Ropes</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
+                    <ul class="plan-list" id="today_plan_exercise">
                     </ul>
                 </div>
                 
@@ -81,32 +60,16 @@
                         <h2 class="plan-title">Хранене</h2>
                         <button class="add-btn">+</button>
                     </div>
-                    <ul class="plan-list">
-                        <li class="plan-item">
-                            <span>Pre: Coffee + Banana</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li class="plan-item">
-                            <span>Post: 2lb Steak</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
-                        <li class="plan-item">
-                            <span>Night: Casein</span>
-                            <div class="item-actions">
-                                <button class="item-btn"><i class="fas fa-edit"></i></button>
-                                <button class="item-btn"><i class="fas fa-trash"></i></button>
-                            </div>
-                        </li>
+                    <ul class="plan-list" id="today_plan_food">
                     </ul>
                 </div>
             </div>
-            
+            <!--Calories tracker-->
+            <div class="calories-tracker">
+                    <h2 class="calories-header">Приети калории</h2>
+                    <div class="calories-display">0</div>
+                </div>
+            </div>
             <!-- Water Tracker -->
             <div class="water-tracker">
                 <h2 class="water-header">Прием на вода</h2>
@@ -116,12 +79,6 @@
                     <button class="water-btn" id="add-500ml">+500ml</button>
                     <button class="water-btn" id="reset-water">Нулиране</button>
                 </div>
-            </div>
-        </div>
-        <!--Calories tracker-->
-        <div class="water-tracker">
-                <h2 class="water-header">Приети калории</h2>
-                <div class="water-display">0</div>
             </div>
         </div>
          <!-- Weekly Plan Page -->
@@ -140,16 +97,12 @@
                     <div class="day-header">Понеделник</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Deadlifts - 5x5</li>
-                            <li>Sledgehammer - 10x30s</li>
+                        <ul class="day-list exercise-list" id="monday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Coffee + Banana</li>
-                            <li>Post: 2lb Steak</li>
+                        <ul class="day-list meal-list" id="monday_food">
                         </ul>
                     </div>
                 </div>
@@ -159,16 +112,12 @@
                     <div class="day-header">Вторник</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+</button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Tire Flips - 10x10</li>
-                            <li>Box Jumps - 5x10</li>
+                        <ul class="day-list exercise-list" id="tuesday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Oatmeal + Eggs</li>
-                            <li>Post: Chicken + Rice</li>
+                        <ul class="day-list meal-list" id="tuesday_food">
                         </ul>
                     </div>
                 </div>
@@ -178,16 +127,12 @@
                     <div class="day-header">Сряда</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Squats - 5x5</li>
-                            <li>Pull-ups - Max</li>
+                        <ul class="day-list exercise-list" id="wednesday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Banana + PB</li>
-                            <li>Post: Salmon</li>
+                        <ul class="day-list meal-list" id="wednesday_food">
                         </ul>
                     </div>
                 </div>
@@ -197,16 +142,12 @@
                     <div class="day-header">Четвъртък</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Rucking - 5 miles</li>
-                            <li>Sandbag Carries</li>
+                        <ul class="day-list exercise-list" id="thursday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Coffee + MCT</li>
-                            <li>Post: Beef</li>
+                        <ul class="day-list meal-list" id="thursday_food">
                         </ul>
                     </div>
                 </div>
@@ -216,16 +157,12 @@
                     <div class="day-header">Петък</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Neck Harness</li>
-                            <li>Barbell Curls</li>
+                        <ul class="day-list exercise-list" id="friday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Eggs</li>
-                            <li>Post: Chicken</li>
+                        <ul class="day-list meal-list" id="friday_food">
                         </ul>
                     </div>
                 </div>
@@ -235,16 +172,12 @@
                     <div class="day-header">Събота</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Calf Raises</li>
-                            <li>Leg Raises</li>
+                        <ul class="day-list exercise-list" id="saturday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Pre: Yogurt</li>
-                            <li>Post: Steak</li>
+                        <ul class="day-list meal-list" id="saturday_food">
                         </ul>
                     </div>
                 </div>
@@ -254,16 +187,12 @@
                     <div class="day-header">Неделя</div>
                     <div class="day-section">
                         <h4>Упражнения <button class="btn btn-outline btn-small add-exercise-btn">+ </button></h4>
-                        <ul class="day-list exercise-list">
-                            <li>Cold Plunge</li>
-                            <li>Sauna</li>
+                        <ul class="day-list exercise-list" id="sunday_exercise">
                         </ul>
                     </div>
                     <div class="day-section">
                         <h4>Хранене <button class="btn btn-outline btn-small add-meal-btn">+ </button></h4>
-                        <ul class="day-list meal-list">
-                            <li>Cheat Meal</li>
-                            <li>Hydrate</li>
+                        <ul class="day-list meal-list" id="sunday_food">
                         </ul>
                     </div>
                 </div>

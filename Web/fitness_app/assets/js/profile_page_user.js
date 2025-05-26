@@ -1,5 +1,5 @@
-const apiUrl = 'http://192.168.100.6:5000';
-
+const apiUrl = 'http://192.168.100.7:5000';
+let latestPostId=-1;
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('userId');
@@ -80,11 +80,6 @@ function loadData(userData) {
     if (userData.instagram) {
         document.querySelector('.media-link:nth-child(3)').href = userData.instagram;
     }
-    
-    // Update last post if available
-    if (userData.lastPost) {
-        document.querySelector('.post-title').textContent = userData.lastPost.title;
-    }
  
     if (userData.photo) {
     const base64String = userData.photo.trim().replace(/^data:image\/[a-z]+;base64,/, '');
@@ -111,6 +106,16 @@ function loadData(userData) {
         postCover.style.backgroundPosition = 'center'; 
         postCover.style.backgroundSize = 'cover'; 
         postCover.style.backgroundRepeat = 'no-repeat';
-        document.querySelector('.last-post .post-CTA').textContent="Виж" 
+        document.querySelector('.last-post .post-CTA').textContent="Виж";
+        latestPostId=latestPost.id;
+        document.querySelector('.last-post .post-CTA').addEventListener('click', () => openPost(latestPostId));
+    }
+}
+
+function openPost(pathId)
+{
+    if(pathId!=-1)
+    {
+        window.location.href=`post_preview.html?postId=${pathId}`;
     }
 }
