@@ -105,7 +105,7 @@ export const Languages = {
         explore: {
             title: 'Explore',
             timeAgo: '{{time}}',
-            like: 'Like',
+            like: '{{likes}} Likes',
             comment: 'Comment',
             share: 'Share',
             noPosts: 'No posts available',

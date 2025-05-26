@@ -14,18 +14,71 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useState } from 'react';
 import {useFocusEffect} from "expo-router";
-import {GetAllPosts} from "@/serviceLayer/managerHandler";
-import Status from "@/serviceLayer/status"; // Import useState
+import {GetAllPosts, SearchPostResults} from "@/serviceLayer/managerHandler";
+import Status from "@/serviceLayer/status";
 
 interface Post {
     id: string;
-    user: string;
-    avatar: string;
-    time: string;
-    content: string;
-    image?: string;
+    user: User;
+    created: string;
+    description: string;
+    photo?: [];
+    avatar:[];
+    likes:number;
 }
+interface User{
+    id: number;
+    userName: string;
+}
+const convertToImage = (photo: any) => {
+    if (!photo) {
+        return require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg');
+    }
+    try {
+        // If photo is already a base64 string, just add the data URL prefix
+        if (typeof photo === 'string') {
+            if (photo.startsWith('data:image')) {
+                return photo;
+            }
+            return `data:image/jpeg;base64,${photo}`;
+        }
+        // If photo is a byte array, convert it
+        if (Array.isArray(photo)) {
+            const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
+            const base64String = btoa(binaryString);
+            return `data:image/jpeg;base64,${base64String}`;
+        }
+        return null;
+    } catch (error) {
+        console.error('Error converting photo:', error);
+        return null;
+    }
+};
+function timeSince(postDate) {
+    const now = new Date();
+    const date = new Date(postDate); // e.g. "2025-05-14T19:37:20.439Z"
+    const seconds = Math.floor((now - date) / 1000);
 
+    const intervals = {
+        year: 31536000,
+        month: 2592000,
+        week: 604800,
+        day: 86400,
+        hour: 3600,
+        minute: 60,
+    };
+
+    if (seconds < 5) return "just now";
+
+    for (const [unit, value] of Object.entries(intervals)) {
+        const interval = Math.floor(seconds / value);
+        if (interval >= 1) {
+            return interval === 1 ? `1 ${unit} ago` : `${interval} ${unit}s ago`;
+        }
+    }
+
+    return `${seconds} seconds ago`;
+}
 
 export default function ExploreScreen() {
     const { colors } = useTheme();
@@ -43,10 +96,10 @@ export default function ExploreScreen() {
     useEffect(() => {
         loadPosts();
     }, []);
-    useFocusEffect(()=>{
+    /*useFocusEffect(()=>{
 
         loadPosts();
-    })
+    })*/
     const SearchBar = () => (
         <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
             <Ionicons name="search" size={20} color={colors.text} style={styles.searchIcon} />
@@ -55,7 +108,13 @@ export default function ExploreScreen() {
                 placeholder={t('explore.search')}
                 placeholderTextColor={colors.text + '80'}
                 value={searchQuery}
-                onChangeText={setSearchQuery}
+                onChangeText={async (query)=>{
+                    setSearchQuery(query);
+                    const res = await SearchPostResults(query);
+                    if(res.status === Status.OK){
+                        setPosts(res.data);
+                    }
+                }}
             />
         </View>
     );
@@ -64,18 +123,18 @@ export default function ExploreScreen() {
     const renderPost = ({ item }: { item: Post }) => (
         <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.userRow}>
-                <Image source={{ uri: item.avatar }} style={styles.avatar} />
+                <Image source={{ uri: convertToImage(item.avatar) }} style={styles.avatar} />
                 <View>
-                    <ThemedText style={styles.username}>{item.user}</ThemedText>
-                    <ThemedText style={styles.time}>{t('explore.timeAgo').replace('{{time}}', item.time)}</ThemedText>
+                    <ThemedText style={styles.username}>{item.user.userName}</ThemedText>
+                    <ThemedText style={styles.time}>{t('explore.timeAgo').replace('{{time}}', timeSince(item.created))}</ThemedText>
                 </View>
             </View>
-            <ThemedText style={styles.content}>{item.content}</ThemedText>
-            {item.image && <Image source={{ uri: item.image }} style={styles.postImage} />}
-            <View style={[styles.actionRow, { borderTopColor: colors.border }]}>
+            <ThemedText style={styles.content}>{item.description}</ThemedText>
+            {item.photo && <Image source={{ uri: convertToImage(item.photo) }} style={styles.postImage} />}
+            <View style={[styles.actionRow]}>
                 <TouchableOpacity style={styles.actionButton}>
                     <Ionicons name="heart-outline" size={22} color={colors.text} />
-                    <ThemedText style={styles.actionText}>{t('explore.like')}</ThemedText>
+                    <ThemedText style={styles.actionText}>{t('explore.like').replace('{{likes}}', item.likes.toString())}</ThemedText>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.actionButton}>
                     <Ionicons name="chatbubble-outline" size={22} color={colors.text} />
@@ -109,8 +168,9 @@ export default function ExploreScreen() {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         padding: 16,
-        paddingBottom: 100, // Adjusted padding to avoid overlap with tab bar if needed
+        paddingBottom: 100,
     },
     searchContainer: {
         flexDirection: 'row',
@@ -165,7 +225,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         paddingTop: 8,
-        borderTopWidth: 1,
     },
     actionButton: {
         flexDirection: 'row',

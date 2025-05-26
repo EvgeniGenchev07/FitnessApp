@@ -34,6 +34,7 @@ namespace DBContexts
                 user.HasIndex(u => u.Email)
                     .IsUnique();
             });
+            modelBuilder.Entity<Comment>().HasOne(c => c.User).WithMany();   
 
             base.OnModelCreating(modelBuilder);
         }

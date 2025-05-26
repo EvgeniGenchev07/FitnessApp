@@ -1,7 +1,8 @@
 import {router} from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Status from "@/serviceLayer/status";
-const url = "http://172.20.10.8:5000/";
+import {fetch} from "expo/fetch";
+const url = "http://192.168.50.166:5000/";
 let isRunning = false;
 
 
@@ -21,9 +22,7 @@ async function Login(email, password) {
                     password,
                 })
             });
-
             const data = await res.json();
-            console.log(data);
             if(data == 3){
                 responseMessage = { status: Status.Incorrect };
             }
@@ -170,6 +169,56 @@ async function GetPosts(){
         return responseMessage;
     }
 }
+async function SearchPosts(query){
+    if (!isRunning) {
+        isRunning = true;
+        let responseMessage = "";
+        try{
+            const res = await fetch(`${url}posts/search/${query}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            const responseData = await res.json();
+            if (res.ok) {
+                responseMessage = { status: Status.OK, data:responseData };
+            } else {
+                responseMessage = { status: Status.ServerError, error: responseData };
+            }
+        } catch (error) {
+            console.error('Server error:', error);
+            responseMessage = { status: Status.ServerError, error };
+        }
+        isRunning = false;
+        return responseMessage;
+    }
+}
+async function DeleteUser(user){
+    if (!isRunning) {
+        isRunning = true;
+        let responseMessage = "";
+        try {
+            const res = await fetch(`${url}user/delete`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: user })
+            });
+            if (res.ok) {
+                responseMessage = { status: Status.OK };
+            } else {
+                responseMessage = { status: Status.ServerError };
+            }
+        } catch (error) {
+            console.error('Server error:', error);
+            responseMessage = { status: Status.ServerError, error };
+        }
+        isRunning = false;
+        return responseMessage;
+    }
+}
 const _Login = Login;
 export {_Login as HttpGetUser};
 
@@ -185,3 +234,7 @@ const _UpdateProfile = UpdateProfile;
 export {_UpdateProfile as HttpPatchProfile};
 const _GetPosts = GetPosts;
 export {_GetPosts as HttpGetAllPosts};
+const _SearchPosts = SearchPosts;
+export {_SearchPosts as HttpSearchPosts};
+const _DeleteUser = DeleteUser;
+export {_DeleteUser as HttpDeleteUser};

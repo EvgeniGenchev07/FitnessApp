@@ -208,7 +208,7 @@ export default function HomeScreen() {
                             >
                                 <ThemedText style={styles.cardTitle}>{workout.title}</ThemedText>
                                 <ThemedText style={styles.cardSubtitle}>
-                                    {t('home.exercises',{ count: workout?.exercises?.length||0 })}
+                                    {t('home.exercises').replace('{count}', (workout?.exercises?.length||0).toString())}
                                 </ThemedText>
                             </LinearGradient>
                         </TouchableOpacity>

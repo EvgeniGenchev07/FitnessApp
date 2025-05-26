@@ -42,7 +42,7 @@ export const Colors = {
         blur: 'rgba(0, 0, 0, 0.8)',
         blurBorder: 'rgba(255, 255, 255, 0.1)',
         inputColor: '#1c1c1e',
-        borderColor: '#2c2c2e',
+        borderColor: primaryColor,
         linkText: tintColorDark,
         buttonBackground: tintColorDark,
         shadow: 'rgba(0, 0, 0, 0.3)',

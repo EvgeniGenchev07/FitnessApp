@@ -242,13 +242,58 @@ public class PostsController : ControllerBase
                     p.Photo,
                     p.Language,
                     p.PhotoMimeType,
+                    Avatar = p.User.Photo,
                     User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
                     Comments = p.Comments.Select(c => new
                     {
                         c.Id,
                         c.Description,
                         c.CreatedAt,
-                        UserId = c.UserID
+                        c.User
+                    })
+                })
+                .ToListAsync();
+
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
+
+    [HttpGet]
+    [Route("search/{query}")]
+    public async Task<IActionResult> SearchPosts(string query)
+    {
+        try
+        {
+            var postsQuery = _dbContext.Posts
+                .Include(p => p.User)
+                .AsQueryable();
+
+            postsQuery = postsQuery.Include(p => p.Comments).ThenInclude(c=>c.User);
+
+            var result = await postsQuery
+                .Where(p => p.Description.ToLower().Contains(query.ToLower())) 
+                .Select(p => new
+                {
+                    p.Id,
+                    p.Title,
+                    p.Description,
+                    p.Created,
+                    p.Likes,
+                    p.Photo,
+                    p.Language,
+                    p.PhotoMimeType,
+                    Avatar = p.User.Photo,
+                    User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
+                    Comments = p.Comments.Select(c => new
+                    {
+                        c.Id,
+                        c.Description,
+                        c.CreatedAt,
+                        c.User
                     })
                 })
                 .ToListAsync();

@@ -5,7 +5,7 @@ import {
     HttpGetUser,
     HttpGetWorkouts,
     HttpPatchProfile,
-    HttpPostUser
+    HttpPostUser, HttpSearchPosts, HttpDeleteUser
 } from "./httpManager";
 import Status from "@/serviceLayer/status";
 import {router} from "expo-router";
@@ -241,6 +241,58 @@ async function GetAllPosts(){
         return {status: Status.OK, data:res.data};
     }
 }
+async function SearchForPosts(query){
+    try{
+        if(!query || !query.toString().trim().length > 0)
+        {
+            return await HttpGetAllPosts();
+        }
+        else {
+            const res = await HttpSearchPosts(query);
+            if (!res || res.status !== Status.OK) {
+                console.error('Server searchForPosts failed:', res);
+                return {status: Status.ServerError};
+            }
+            return {status: Status.OK, data: res.data};
+        }
+    }
+    catch(error){
+        console.error('Error saving searchForPosts failed:', error);
+        return {status:Status.ServerError};
+    }
+}
+async function ClearStorage() {
+    await SecureStore.deleteItemAsync('user');
+    await AsyncStorage.clear();
+}
+async function Logout(){
+    try{
+        await ClearStorage();
+        return Status.OK;
+    }
+    catch(error){
+        console.error('Error logging out:', error);
+        return Status.ServerError;
+    }
+}
+async function DeleteAccount(){
+    try{
+        const user = await SecureStore.getItemAsync('user');
+        const res = await HttpDeleteUser(user);
+        if(!res || res.status != Status.OK){
+            console.error('Server deleteUser failed:', res);
+            return Status.ServerError;
+        }
+        else{
+            await ClearStorage();
+            return Status.OK;
+        }
+    }
+    catch(error){
+        console.error('Error logging out:', error);
+        return Status.ServerError;
+    }
+}
 const _Login = Login;
 export {_Login as Login};
 const _Register = Register;
@@ -261,3 +313,9 @@ const _UpdateMeals = UpdateMeals;
 export {_UpdateMeals as UpdateMeals};
 const _GetAllPosts = GetAllPosts;
 export {_GetAllPosts as GetAllPosts};
+const _SearchForPosts = SearchForPosts;
+export {_SearchForPosts as SearchPostResults};
+const _Logout = Logout;
+export {_Logout as Logout};
+const _DeleteAccount = DeleteAccount;
+export {_DeleteAccount as DeleteAccount};

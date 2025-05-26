@@ -1,94 +1,134 @@
-import React, {useState} from 'react';
-import {View, Text, Image, ImageBackground, TouchableOpacity, StyleSheet, StatusBar, SafeAreaView} from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
-import Icon from 'react-native-vector-icons/Feather';
-import {router} from "expo-router";
+import React, { useRef, useEffect } from 'react';
+import { View, StyleSheet, Dimensions, StatusBar, Animated, TouchableOpacity, Platform, Text, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router, useRouter } from "expo-router";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const FitnessScreen = () => {
+const { width, height } = Dimensions.get('window');
+
+// Replace this with your own image
+
+const GetStarted = () => {
+    const router = useRouter();
+    const fadeAnim = useRef(new Animated.Value(0)).current;
+    const slideAnim = useRef(new Animated.Value(50)).current;
+
+    useEffect(() => {
+        Animated.parallel([
+            Animated.timing(fadeAnim, {
+                toValue: 1,
+                duration: 1000,
+                useNativeDriver: true,
+            }),
+            Animated.timing(slideAnim, {
+                toValue: 0,
+                duration: 1000,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    }, []);
 
     return (
-        <LinearGradient
-            // Background Linear Gradient
-            colors={['rgba(0,0,0,0.8)', 'transparent']}
-            style={styles.background}
-        >
-            <View style={styles.content}>
-                <Text style={styles.title}>ATHLO</Text>
-                <Image source={require('@/assets/images/app-icon.png')} style={styles.runnerImage}/>
-                <Text style={styles.title}>BOOSTX</Text>
-
-            </View>
-
+        <View style={styles.container}>
+            <StatusBar barStyle="light-content" />
             <LinearGradient
-                // Background Linear Gradient
-                style={styles.blackBox}
-                colors={['rgba(60,60,60,0.8)', 'rgba(0,0,0,1)']}
-            >
-                <View style={styles.tag}>
-                    <Text style={styles.tagline}>FIND YOUR</Text>
-                    <Text style={styles.tagline}>STRENGTH</Text>
+                colors={['#181A1B', '#232323']}
+                style={StyleSheet.absoluteFill}
+            />
+            <Animated.View style={[styles.content, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+                <View style={styles.logoContainer}>
+                    <MaterialCommunityIcons name="dumbbell" size={60} color="#ff0019" />
                 </View>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() => router.push('/login')}>
-                    <Text style={styles.buttonText}>Get Started</Text>
+                <Text style={styles.subtitle}>ATHLOBOOSTX</Text>
+                <Text style={styles.title}>VOLUME UP YOUR{"\n"}BODY GOALS</Text>
+                <Image source={require('../assets/images/intro.png')} style={styles.heroImage} resizeMode="cover" />
+                <TouchableOpacity style={styles.ctaButton} onPress={() => router.push('/login')}>
+                    <Text style={styles.ctaButtonText}>START BUILDING YOUR BODY</Text>
                 </TouchableOpacity>
-            </LinearGradient>
-        </LinearGradient>
+                <TouchableOpacity style={styles.registerLink} onPress={() => router.push('/register')}>
+                    <Text style={styles.registerText}>DON'T HAVE ANY ACCOUNT? <Text style={styles.registerTextBold}>REGISTER</Text></Text>
+                </TouchableOpacity>
+            </Animated.View>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    background: {
+    container: {
         flex: 1,
-        justifyContent: 'flex-end',
-        alignItems: 'center',
-    },
-    runnerImage: {
-        height: 250,
-        resizeMode: 'contain',
+        backgroundColor: '#181A1B',
     },
     content: {
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 40,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    blackBox: {
-        borderRadius: 25,
-        width: '80%',
-        height: '25%',
-        paddingVertical: 20,
-        paddingHorizontal: 30,
+        flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: '15%',
-    },
-    tag: {
-        marginBottom: '10%',
-    },
-    tagline: {
-        fontSize: 22,
-        fontStyle: 'italic',
-        color: 'white',
-        marginBottom: 10,
-    },
-    button: {
-        backgroundColor: 'rgba(0, 0, 0, 0)',
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: '#fff',
-        paddingVertical: 10,
         paddingHorizontal: 20,
-        marginBottom: '5%'
     },
-    buttonText: {
-        fontSize: 16,
+    logoContainer: {
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        backgroundColor: 'rgba(59, 59, 59, 0.26)',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
+    subtitle: {
+        color: '#ff0019',
+        fontSize: 18,
+        letterSpacing: 2,
+        marginBottom: 10,
+        fontWeight: '600',
+    },
+    title: {
+        color: '#fff',
+        fontSize: 36,
         fontWeight: 'bold',
-        color: 'white',
+        textAlign: 'center',
+        marginBottom: 30,
+        letterSpacing: 1,
+        lineHeight: 44,
+    },
+    heroImage: {
+        width: width - 40,
+        height: width * 0.75,
+        borderRadius: 20,
+        marginBottom: 40,
+        borderWidth: 1,
+        borderColor: 'rgba(230, 255, 0, 0.2)',
+    },
+    ctaButton: {
+        backgroundColor: '#ff0019',
+        borderRadius: 12,
+        paddingVertical: 18,
+        paddingHorizontal: 24,
+        width: '100%',
+        marginBottom: 20,
+        shadowColor: '#ff0019',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 12,
+        elevation: 8,
+    },
+    ctaButtonText: {
+        color: '#181A1B',
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center',
+        letterSpacing: 1,
+    },
+    registerLink: {
+        marginTop: 10,
+    },
+    registerText: {
+        color: '#B0B3B8',
+        fontSize: 14,
+        textAlign: 'center',
+    },
+    registerTextBold: {
+        color: '#ff0019',
+        fontWeight: 'bold',
     },
 });
 
-export default FitnessScreen;
+export default GetStarted;

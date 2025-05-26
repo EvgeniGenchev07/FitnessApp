@@ -24,6 +24,12 @@ namespace WebApi
             _userLoginContext = userLogin;
             _dbContext = dbContext;
         }
+
+        public class DeleteUserRequest
+        {
+            public string Email { get; set; }
+        }
+
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetUserById(int userId)
         {
@@ -465,12 +471,17 @@ namespace WebApi
             }
         }
 
-        [HttpDelete("{email}")] 
-        public async Task<IActionResult> DeleteUser( string email)
+        [HttpDelete]
+        [Route("delete")]
+        public async Task<IActionResult> DeleteUser([FromBody] DeleteUserRequest request)
         {
+            if (request == null || string.IsNullOrEmpty(request.Email))
+            {
+                return BadRequest("Email is required");
+            }
             try
             {
-                await _userContext.DeleteAsync(email);
+                await _userContext.DeleteAsync(request.Email);
                 return Ok();
             }
             catch (Exception ex)

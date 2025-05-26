@@ -29,7 +29,7 @@ export default function RootLayout() {
                 );
             }
             else {
-                router.push('/login');
+                router.push('/');
                 SplashScreen.hideAsync();
             }
         }

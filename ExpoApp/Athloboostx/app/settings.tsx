@@ -24,6 +24,8 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import Status from '@/serviceLayer/status';
+import { DeleteAccount, Logout } from '@/serviceLayer/managerHandler';
 
 const SettingsScreen = () => {
     const { t } = useLanguage();
@@ -47,8 +49,14 @@ const SettingsScreen = () => {
                     text: t('settings.confirm'),
                     onPress: async () => {
                         try {
-                            await SecureStore.deleteItemAsync('token');
-                            router.replace('/');
+                            const res = await Logout();
+                            if(!res || res !== Status.OK){
+                                Alert.alert(t('settings.errorLoggingOut'));
+                                return;
+                            }
+                            else{
+                                router.replace('/');
+                            }
                         } catch (error) {
                             console.error('Error logging out:', error);
                         }
@@ -72,9 +80,14 @@ const SettingsScreen = () => {
                     style: 'destructive',
                     onPress: async () => {
                         try {
-                            // TODO: Implement account deletion API call
-                            await SecureStore.deleteItemAsync('token');
-                            router.replace('/');
+                            const res = await DeleteAccount();
+                            if(!res || res !== Status.OK){
+                                Alert.alert(t('settings.errorDeletingAccount'));
+                                return;
+                            }
+                            else{
+                                router.replace('/');
+                            }
                         } catch (error) {
                             console.error('Error deleting account:', error);
                         }

@@ -34,13 +34,13 @@ const ChangePasswordScreen = () => {
             return;
         }
 
-        router.push('/test');
+        router.back();
     };
 
     return (
         <SafeAreaView style={[styles.container, {backgroundColor: colors.background}]}>
             <ThemedView type={'top_bar'}>
-                <TouchableOpacity style={styles.top_icon_content} onPress={() => router.push('/test')}>
+                <TouchableOpacity style={styles.top_icon_content} onPress={() => router.back()}>
                     <Icon name="chevron-left" size={28} color="red"/>
                     <ThemedText type={'bar'}>Back</ThemedText>
                 </TouchableOpacity>
@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     top_icon_content: {
+        marginTop: 20,
         flexDirection: 'row',
     },
     input: {
