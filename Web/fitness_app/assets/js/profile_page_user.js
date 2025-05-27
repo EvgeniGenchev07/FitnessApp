@@ -13,13 +13,21 @@ document.addEventListener('DOMContentLoaded', function() {
     else{
         language="en";
     }
+    
+    if (!user) {
+        alert(language === "bg" ? "Моля, влезте в профила си!" : "Please log in!");
+        window.location.href = language === "bg" ? "signUp_bg.html" : "signUp.html";
+        return;
+    }
     if (userId) {
         if(userId==user.id)
         {
             showProfile(language);
         }
+        else{
         document.body.classList.add('visible')
         fetchUserProfile(userId,language);
+        }
     } else {
         document.querySelector('.profile-card').innerHTML = 
             '<div class="error-message"><p>No user specified</p></div>';
@@ -28,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function showProfile(language)
 {
-    if(language==="bg")
+    if(language=="bg")
     {
         window.location.href="profile_page_bg.html";
     }

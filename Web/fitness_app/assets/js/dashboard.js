@@ -677,7 +677,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateCaloriesDisplay() {
         const meals = document.querySelectorAll('#today_plan_food li');
-        let totalCalories = 0;
+        let totalCalories = document.querySelector('.calories-display').value;
         
         meals.forEach(meal => {
             const calories = meal.dataset.calories;
@@ -741,7 +741,6 @@ function populateExerciseResults(exercises) {
         const isSelected = selectedExercises.some(ex => ex.id === exercise.id);
         
         exerciseItem.innerHTML = `
-            <img src="${exercise.imageUrl || 'https://media.giphy.com/media/l0HU7JI1u2J9wYe2A/giphy.gif'}" alt="${exercise.name}">
             <div class="result-info">
                 <h4>${exercise.name}</h4>
                 <p>${exercise.category || 'Сила'} • ${exercise.difficulty || 'Начинаещ'}</p>
@@ -886,3 +885,4 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+//meal for today
