@@ -27,16 +27,15 @@ public class UserContext : IDatabase<User, string>
         if (useNavigationalProperties)
             query = query
                 .Include(u => u.Workouts)
-                .ThenInclude(w=>w.Exercises)
-                .ThenInclude(e=>e.Sets)
+                .ThenInclude(w => w.Exercises)
+                .ThenInclude(e => e.Sets)
                 .Include(u => u.Meals)
-                .ThenInclude(m=>m.Foods)
+                .ThenInclude(m => m.Foods)
                 .Include(u => u.Schedule)
                 .Include(u => u.Exercises)
                 .Include(u => u.Followers)
                 .Include(u => u.Following)
-                .Include(u => u.Posts)
-                .ThenInclude(p => p.Comments);
+                .Include(u => u.Posts);
                 
         if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
         User user = await query.FirstOrDefaultAsync(u => u.Email == key);

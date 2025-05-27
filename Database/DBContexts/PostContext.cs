@@ -24,8 +24,7 @@ public class PostContext : IDatabase<Post, int>
 
         if (useNavigationalProperties)
         {
-            query = query.Include(p => p.Comments)
-                         .Include(p => p.User);
+            query = query.Include(p => p.User);
         }
 
         if (isReadOnly)
@@ -54,12 +53,6 @@ public class PostContext : IDatabase<Post, int>
 
         if (navigationalProperties)
         {
-            if (entity.Comments != null)
-            {
-                _dbContext.Comments.RemoveRange(existingPost.Comments ?? []);
-                existingPost.Comments = entity.Comments;
-            }
-
             if (entity.User != null)
             {
                 existingPost.User = entity.User;
@@ -83,9 +76,6 @@ public class PostContext : IDatabase<Post, int>
 
         if (post != null)
         {
-            if (post.Comments != null)
-                _dbContext.Comments.RemoveRange(post.Comments);
-
             _dbContext.Posts.Remove(post);
             await _dbContext.SaveChangesAsync();
         }

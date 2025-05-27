@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.7:5000';
+const apiUrl = 'http://192.168.56.1:5000';
 const currentPath = window.location.pathname;
 const isBulgarian = currentPath.includes('_bg.html');
 // JavaScript functions to show/hide the forms with zoom-in and fade animation

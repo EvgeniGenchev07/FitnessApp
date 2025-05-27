@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.7:5000';
+const apiUrl = 'http://192.168.56.1:5000';
 // Navigation functions with URL-based language detection
 function getLanguageFromUrl() {
     const currentUrl = window.location.pathname;
@@ -184,11 +184,6 @@ function loadProfileData() {
         const postHover = document.createElement('div');
         postHover.className = 'post-hover';
 
-        const likesSpan = document.createElement('span');
-        likesSpan.textContent = `❤️ ${post.likes?.length || '0'}`;
-
-        const commentsSpan = document.createElement('span');
-        commentsSpan.textContent = `💬 ${post.comments?.length || '0'}`;
         const closeButton = document.createElement('button');
         closeButton.textContent = '✖';
         closeButton.className = 'close-button';
@@ -199,8 +194,6 @@ function loadProfileData() {
 
 postItem.appendChild(closeButton);
 
-        postHover.appendChild(likesSpan);
-        postHover.appendChild(commentsSpan);
         postItem.appendChild(postHover);
 
         postLink.appendChild(postItem); 

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const config = {
-        API_URL: 'http://192.168.100.7:5000/posts/all',
+        API_URL: 'http://192.168.56.1:5000/posts/all',
         DEFAULT_IMAGE: 'img/default-post-image.jpg',
         DEFAULT_USER: 'Anonymous',
         MONTH_NAMES: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'],

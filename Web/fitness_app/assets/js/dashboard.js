@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.100.7:5000';
+const apiUrl = 'http://192.168.56.1:5000';
 let allExercises = [];
 let allFoods=[];
 async function fetchFoods(){

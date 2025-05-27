@@ -101,15 +101,7 @@ public class PostsController : ControllerBase
                 post.Language,
                 post.Photo,
                 post.PhotoMimeType,
-                User = post.User != null ? new { post.User.Id,post.User.UserName } : null,
-                Comments = includeComments && post.Comments != null
-                    ? post.Comments.Select(c => new
-                    {
-                        c.Id,
-                        c.Description,
-                        c.CreatedAt
-                    })
-                    : null
+                User = post.User != null ? new { post.User.Id, post.User.UserName } : null,
             });
         }
         catch (Exception ex)
@@ -228,7 +220,6 @@ public class PostsController : ControllerBase
                 .Include(p => p.User)
                 .AsQueryable();
 
-                postsQuery = postsQuery.Include(p => p.Comments);
 
             var result = await postsQuery
                 .OrderByDescending(p => p.Created) 
@@ -244,13 +235,6 @@ public class PostsController : ControllerBase
                     p.PhotoMimeType,
                     Avatar = p.User.Photo,
                     User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
-                    Comments = p.Comments.Select(c => new
-                    {
-                        c.Id,
-                        c.Description,
-                        c.CreatedAt,
-                        c.User
-                    })
                 })
                 .ToListAsync();
 
@@ -272,7 +256,6 @@ public class PostsController : ControllerBase
                 .Include(p => p.User)
                 .AsQueryable();
 
-            postsQuery = postsQuery.Include(p => p.Comments).ThenInclude(c=>c.User);
 
             var result = await postsQuery
                 .Where(p => p.Description.ToLower().Contains(query.ToLower())) 
@@ -287,14 +270,7 @@ public class PostsController : ControllerBase
                     p.Language,
                     p.PhotoMimeType,
                     Avatar = p.User.Photo,
-                    User = p.User != null ? new { p.User.Id, p.User.UserName } : null,
-                    Comments = p.Comments.Select(c => new
-                    {
-                        c.Id,
-                        c.Description,
-                        c.CreatedAt,
-                        c.User
-                    })
+                    User = p.User != null ? new { p.User.Id, p.User.UserName } : null
                 })
                 .ToListAsync();
 
