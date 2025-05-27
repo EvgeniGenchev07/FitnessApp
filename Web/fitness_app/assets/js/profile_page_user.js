@@ -2,17 +2,42 @@ const apiUrl = 'http://192.168.56.1:5000';
 let latestPostId=-1;
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
+    const currentUrl=window.location.pathname;
     const userId = urlParams.get('userId');
-    
+    const user=JSON.parse(sessionStorage.getItem('user'));
+    let language;
+    if(currentUrl.includes("_bg.html"))
+    {
+        language="bg";
+    }
+    else{
+        language="en";
+    }
     if (userId) {
-        fetchUserProfile(userId);
+        if(userId==user.id)
+        {
+            showProfile(language);
+        }
+        document.body.classList.add('visible')
+        fetchUserProfile(userId,language);
     } else {
         document.querySelector('.profile-card').innerHTML = 
             '<div class="error-message"><p>No user specified</p></div>';
     }
 });
 
-async function fetchUserProfile(userId) {
+function showProfile(language)
+{
+    if(language==="bg")
+    {
+        window.location.href="profile_page_bg.html";
+    }
+    else{
+        window.location.href="profile_page.html"
+    }
+}
+
+async function fetchUserProfile(userId,language) {
     try {
         const response = await fetch(`${apiUrl}/user/${userId}`, {
             method: 'GET',
@@ -26,7 +51,7 @@ async function fetchUserProfile(userId) {
         }
         
         const userData = await response.json();
-        loadData(userData);
+        loadData(userData,language);
     } catch (error) {
         console.error('Error fetching user profile:', error);
         document.querySelector('.profile-card').innerHTML = 
@@ -34,7 +59,7 @@ async function fetchUserProfile(userId) {
     }
 }
 
-function loadData(userData) {
+function loadData(userData,language) {
     // Update basic profile information
     if (userData.userName) {
         document.querySelector('.username').textContent = userData.userName;
@@ -44,7 +69,13 @@ function loadData(userData) {
     if (userData.bio) {
         document.querySelector('.bio-text').textContent = userData.bio;
     } else {
-        document.querySelector('.bio-text').textContent = "No bio";
+        if(language=="bg")
+        {
+            document.querySelector('.bio-text').textContent = "Няма био";
+        }
+        else{
+            document.querySelector('.bio-text').textContent = "No bio";
+        }
     }
     
     // Update profile statistics
@@ -106,7 +137,13 @@ function loadData(userData) {
         postCover.style.backgroundPosition = 'center'; 
         postCover.style.backgroundSize = 'cover'; 
         postCover.style.backgroundRepeat = 'no-repeat';
-        document.querySelector('.last-post .post-CTA').textContent="Виж";
+        if(language=="bg")
+        {
+            document.querySelector('.last-post .post-CTA').textContent="Виж";
+        }
+        else{
+            document.querySelector('.last-post .post-CTA').textContent="View";
+        }
         latestPostId=latestPost.id;
         document.querySelector('.last-post .post-CTA').addEventListener('click', () => openPost(latestPostId));
     }

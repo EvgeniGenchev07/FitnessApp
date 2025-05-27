@@ -675,7 +675,6 @@ document.addEventListener('DOMContentLoaded', function () {
         updateCaloriesDisplay();
     });
 
-    // Update calories display function
     function updateCaloriesDisplay() {
         const meals = document.querySelectorAll('#today_plan_food li');
         let totalCalories = 0;
@@ -692,8 +691,6 @@ document.addEventListener('DOMContentLoaded', function () {
             displayElement.textContent = totalCalories;
         }
     }
-
-    // Initialize calories display on page load
     updateCaloriesDisplay();
 });
 
@@ -868,5 +865,24 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('cancel-exercise').addEventListener('click', function() {
         selectedExercises = [];
         document.getElementById('exercise-selection-modal').style.display = 'none';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
+
+    hamburger.addEventListener('click', () => {
+        navMenu.classList.toggle('open');
+        hamburger.innerHTML = navMenu.classList.contains('open')
+            ? '<i class="fas fa-times"></i>'
+            : '<i class="fas fa-bars"></i>';
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('open');
+            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+        });
     });
 });

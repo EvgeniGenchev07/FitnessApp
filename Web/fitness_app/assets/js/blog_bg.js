@@ -22,6 +22,13 @@ document.addEventListener('DOMContentLoaded', function() {
         setupPagination();
         await renderPage();
         setupResponsiveImages();
+         refreshInterval = setInterval(async () => {
+            await loadPosts();
+            renderPage();
+        }, 3000);
+        window.addEventListener('unload', () => {
+            clearInterval(refreshInterval);
+        });
     }
 
     async function loadPosts() {
@@ -79,7 +86,6 @@ document.addEventListener('DOMContentLoaded', function() {
             mimeType: post.photoMimeType || 'image/jpeg',
             username: post.user?.userName || config.DEFAULT_USER,
             userId: post.user?.id || 0,
-            commentsCount: post.comments?.length || 0,
             language:post.language
         };
         function getUserHtml(username, userId) {
@@ -103,7 +109,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         <ul class="blog-info-link">
                             <li> ${getUserHtml(safePost.username, safePost.userId)}</li>
                             <li><i class="fa fa-heart"></i> ${safePost.likes} Харесвания</li>
-                            <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Коментара</li>
                         </ul>
                     </div>
                 </article>

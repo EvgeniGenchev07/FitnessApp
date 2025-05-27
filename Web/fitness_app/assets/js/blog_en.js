@@ -20,6 +20,13 @@ document.addEventListener('DOMContentLoaded', function() {
         setupPagination();
         renderPage();
         setupResponsiveImages();
+         refreshInterval = setInterval(async () => {
+            await loadPosts();
+            renderPage();
+        }, 3000);
+        window.addEventListener('unload', () => {
+            clearInterval(refreshInterval);
+        });
     }
 
     async function loadPosts() {
@@ -101,9 +108,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     </a>
                     <p><a href="post_preview.html?postId=${safePost.id}">Read more...</a></p>
                     <ul class="blog-info-link">
-                        <li><i class="fa fa-user"></i> ${getUserHtml(safePost.username, safePost.userId)}</li>
+                        <li></i> ${getUserHtml(safePost.username, safePost.userId)}</li>
                         <li><i class="fa fa-heart"></i> ${safePost.likes} Likes</li>
-                        <li><i class="fa fa-comments"></i> ${safePost.commentsCount} Comments</li>
                     </ul>
                 </div>
             </article>

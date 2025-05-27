@@ -45,16 +45,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         articleContent.innerHTML = `
             <p>${safePost.description}</p>
         `;
-
-        const commentsList = document.getElementById('commentsList');
-        commentsList.innerHTML = safePost.comments.map(c => `
-            <div class="comment">
-                <div class="comment-author">АНОНИМЕН</div>
-                <div class="comment-date">${new Date(c.createdAt).toLocaleString('bg-BG')}</div>
-                <div class="comment-text">${c.description}</div>
-            </div>
-        `).join('');
-
     } catch (err) {
         document.querySelector('.article-content').innerHTML = `<p style="color:red;">Грешка: ${err.message}</p>`;
     }
