@@ -191,6 +191,7 @@ namespace WebApi
                         user.Bio,
                         Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
                         user.Height,
+                        user.Weight,
                         user.Facebook,
                         user.X,
                         user.Instagram,

@@ -2,8 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const userData = JSON.parse(sessionStorage.getItem('user'));
     const defaultAvatar= 'assets/img/index/avatar.jpg';
     const currentPath = window.location.pathname;
-    const isEnglish = currentPath.includes('_en.html');
-
+    const isBulgarian = currentPath.includes('_bg.html');
     if (userData) {
         const logoDiv = document.querySelector('.logo');
         if (!logoDiv) return;
@@ -49,18 +48,18 @@ document.addEventListener('DOMContentLoaded', function () {
             dropdownMenu.style.zIndex = '1000';
 
             const profileLink = document.createElement('a');
-            profileLink.href = isEnglish ? 'profile_page.html' : 'profile_page_bg.html';
-            profileLink.textContent = isEnglish ? 'Profile' : 'Профил';
+            profileLink.href = isBulgarian==false ? 'profile_page.html' : 'profile_page_bg.html';
+            profileLink.textContent = isBulgarian==false ? 'Profile' : 'Профил';
             profileLink.style.cssText = 'display: block; padding: 5px 0; color: #333; text-decoration: none;';
 
             const logoutLink = document.createElement('a');
             logoutLink.href = "#";
-            logoutLink.textContent = isEnglish ? 'Logout' : 'Изход';
+            logoutLink.textContent = isBulgarian==false ? 'Logout' : 'Изход';
             logoutLink.style.cssText = 'display: block; padding: 5px 0; color: #333; text-decoration: none;';
             logoutLink.addEventListener('click', function (e) {
                 e.preventDefault();
                 sessionStorage.removeItem('user');
-                window.location.href = isEnglish ? 'index_en.html' : 'index.html';
+                window.location.href = isBulgarian==false ? 'index_en.html' : 'index.html';
             });
 
             dropdownMenu.appendChild(profileLink);
@@ -84,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             // 💻 Desktop view
             const newLink = document.createElement('a');
-            newLink.href = isEnglish ? 'profile_page.html' : 'profile_page_bg.html';
+            newLink.href = isBulgarian==false ? 'profile_page.html' : 'profile_page_bg.html';
 
             const avatarImg = document.createElement('img');
             avatarImg.src = avatarSrc;

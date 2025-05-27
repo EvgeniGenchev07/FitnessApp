@@ -195,7 +195,6 @@ function loadProfileData() {
 postItem.appendChild(closeButton);
 
         postItem.appendChild(postHover);
-
         postLink.appendChild(postItem); 
         profilePostsContainer.appendChild(postLink); 
     });
@@ -218,4 +217,33 @@ postItem.appendChild(closeButton);
 }
 
 // Load profile data when page loads
-document.addEventListener('DOMContentLoaded', loadProfileData);
+document.addEventListener('DOMContentLoaded', loadProfileData); 
+
+function updateSessionData() {
+    fetch(`${apiUrl}/login/js`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: JSON.parse(sessionStorage.getItem('user')).email,
+            password: '' 
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data) {
+            sessionStorage.setItem('user', JSON.stringify(data));
+            if (JSON.stringify(data) !== JSON.stringify(JSON.parse(sessionStorage.getItem('user')))) {
+                loadProfileData();
+            }
+        }
+    })
+    .catch(error => console.error('Error updating session:', error));
+}
+
+const updateInterval = setInterval(updateSessionData, 3000);
+
+window.addEventListener('beforeunload', () => {
+    clearInterval(updateInterval);
+});

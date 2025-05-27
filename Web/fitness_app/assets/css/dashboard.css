@@ -1031,7 +1031,6 @@
     }
 }
 
-//new modal css
 /* Modal Search and Filter Styles */
 .search-container {
     display: flex;
@@ -1256,3 +1255,71 @@
 .btn-delete:hover {
     opacity: 0.7; /* Optional: Add hover effect for better UX */
 }
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
+.nav-menu {
+    transition: max-height 0.3s ease-in-out;
+}
+
+@media (max-width: 767px) {
+    .hamburger {
+        display: block;
+    }
+
+    .side-nav {
+        padding: 10px;
+    }
+
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        width: 100%;
+    }
+
+    .nav-menu.open {
+        display: flex;
+        max-height: 500px;
+        overflow: visible;
+    }
+
+    .nav-item {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .nav-link {
+        display: block;
+        padding: 15px;
+        border-bottom: 2px solid var(--primary-darker);
+        white-space: normal;
+    }
+
+    .nav-link i {
+        margin-right: 10px;
+    }
+
+    .nav-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .nav-header h2 {
+        margin: 0;
+    }
+}
+
