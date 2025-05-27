@@ -16,6 +16,7 @@ import { useState } from 'react';
 import {useFocusEffect} from "expo-router";
 import {GetAllPosts, SearchPostResults} from "@/serviceLayer/managerHandler";
 import Status from "@/serviceLayer/status";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Post {
     id: string;
@@ -26,23 +27,28 @@ interface Post {
     avatar:[];
     likes:number;
 }
+
 interface User{
     id: number;
     userName: string;
 }
+
+type ApiResponse = {
+    status: Status;
+    data?: Post[];
+} | string;
+
 const convertToImage = (photo: any) => {
     if (!photo) {
         return require('@/assets/images/man-avatar-icon-free-vector-3688420316.jpg');
     }
     try {
-        // If photo is already a base64 string, just add the data URL prefix
         if (typeof photo === 'string') {
             if (photo.startsWith('data:image')) {
                 return photo;
             }
             return `data:image/jpeg;base64,${photo}`;
         }
-        // If photo is a byte array, convert it
         if (Array.isArray(photo)) {
             const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
             const base64String = btoa(binaryString);
@@ -54,12 +60,13 @@ const convertToImage = (photo: any) => {
         return null;
     }
 };
-function timeSince(postDate) {
-    const now = new Date();
-    const date = new Date(postDate); // e.g. "2025-05-14T19:37:20.439Z"
-    const seconds = Math.floor((now - date) / 1000);
 
-    const intervals = {
+function timeSince(postDate: string): string {
+    const now = new Date();
+    const date = new Date(postDate);
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+    const intervals: Record<string, number> = {
         year: 31536000,
         month: 2592000,
         week: 604800,
@@ -83,23 +90,59 @@ function timeSince(postDate) {
 export default function ExploreScreen() {
     const { colors } = useTheme();
     const { t } = useLanguage();
-    const [searchQuery, setSearchQuery] = useState(''); // Add state for search query
-    const [posts,setPosts] = React.useState<Post[]>([]);
-    const loadPosts = async () => {
-        const res = await GetAllPosts();
-        if (res.status === Status.OK){
-            setPosts(res.data);
-        } else{
-            Alert.alert("Something went wrong!");
-        }
-    }
+    const [searchQuery, setSearchQuery] = useState('');
+    const [posts, setPosts] = React.useState<Post[]>([]);
+    const [likedPosts, setLikedPosts] = useState<Set<string>>(new Set());
+
     useEffect(() => {
         loadPosts();
+        loadLikedPosts();
     }, []);
-    /*useFocusEffect(()=>{
 
-        loadPosts();
-    })*/
+    const loadLikedPosts = async () => {
+        try {
+            const storedLikes = await AsyncStorage.getItem('likedPosts');
+            if (storedLikes) {
+                setLikedPosts(new Set(JSON.parse(storedLikes)));
+            }
+        } catch (error) {
+            console.error('Error loading liked posts:', error);
+        }
+    };
+
+    const handleLike = async (postId: string) => {
+        try {
+            const newLikedPosts = new Set(likedPosts);
+            const updatedPosts = posts.map(post => {
+                if (post.id === postId) {
+                    const newLikes = post.likes + (newLikedPosts.has(postId) ? -1 : 1);
+                    if (newLikedPosts.has(postId)) {
+                        newLikedPosts.delete(postId);
+                    } else {
+                        newLikedPosts.add(postId);
+                    }
+                    return { ...post, likes: newLikes };
+                }
+                return post;
+            });
+
+            setPosts(updatedPosts);
+            setLikedPosts(newLikedPosts);
+            await AsyncStorage.setItem('likedPosts', JSON.stringify([...newLikedPosts]));
+        } catch (error) {
+            console.error('Error updating like:', error);
+        }
+    };
+
+    const loadPosts = async () => {
+        const res = await GetAllPosts();
+        if (typeof res === 'object' && res.status === Status.OK && Array.isArray(res.data)) {
+            setPosts(res.data);
+        } else {
+            Alert.alert("Something went wrong!");
+        }
+    };
+
     const SearchBar = () => (
         <View style={[styles.searchContainer, { backgroundColor: colors.card }]}>
             <Ionicons name="search" size={20} color={colors.text} style={styles.searchIcon} />
@@ -111,14 +154,13 @@ export default function ExploreScreen() {
                 onChangeText={async (query)=>{
                     setSearchQuery(query);
                     const res = await SearchPostResults(query);
-                    if(res.status === Status.OK){
+                    if (typeof res === 'object' && res.status === Status.OK && Array.isArray(res.data)) {
                         setPosts(res.data);
                     }
                 }}
             />
         </View>
     );
-
 
     const renderPost = ({ item }: { item: Post }) => (
         <View style={[styles.card, { backgroundColor: colors.card }]}>
@@ -131,18 +173,22 @@ export default function ExploreScreen() {
             </View>
             <ThemedText style={styles.content}>{item.description}</ThemedText>
             {item.photo && <Image source={{ uri: convertToImage(item.photo) }} style={styles.postImage} />}
-            <View style={[styles.actionRow]}>
-                <TouchableOpacity style={styles.actionButton}>
-                    <Ionicons name="heart-outline" size={22} color={colors.text} />
-                    <ThemedText style={styles.actionText}>{t('explore.like').replace('{{likes}}', item.likes.toString())}</ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                    <Ionicons name="chatbubble-outline" size={22} color={colors.text} />
-                    <ThemedText style={styles.actionText}>{t('explore.comment')}</ThemedText>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton}>
-                    <Feather name="share" size={20} color={colors.text} />
-                    <ThemedText style={styles.actionText}>{t('explore.share')}</ThemedText>
+            <View style={[styles.actionRow,{justifyContent:'flex-start'}]}>
+                <TouchableOpacity 
+                    style={styles.actionButton}
+                    onPress={() => handleLike(item.id)}
+                >
+                    <Ionicons 
+                        name={likedPosts.has(item.id) ? "heart" : "heart-outline"} 
+                        size={22} 
+                        color={likedPosts.has(item.id) ? colors.tint : colors.text} 
+                    />
+                    <ThemedText style={[
+                        styles.actionText,
+                        likedPosts.has(item.id) && { color: colors.tint }
+                    ]}>
+                        {t('explore.like').replace('{{likes}}', item.likes.toString())}
+                    </ThemedText>
                 </TouchableOpacity>
             </View>
         </View>
