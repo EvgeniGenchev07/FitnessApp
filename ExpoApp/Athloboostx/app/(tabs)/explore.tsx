@@ -101,9 +101,9 @@ export default function ExploreScreen() {
 
     const loadLikedPosts = async () => {
         try {
-            const storedLikes = await AsyncStorage.getItem('likedPosts');
+            const storedLikes = await GetAllPosts();
             if (storedLikes) {
-                setLikedPosts(new Set(JSON.parse(storedLikes)));
+                setLikedPosts(new Set(storedLikes.data));
             }
         } catch (error) {
             console.error('Error loading liked posts:', error);

@@ -5,8 +5,8 @@ import {
     ScrollView,
     TouchableOpacity,
     TextInput,
-    Alert,
     ActivityIndicator,
+    Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
@@ -94,7 +94,6 @@ export default function ScheduleScreen() {
             });
         } catch (error) {
             console.error('Error loading schedule:', error);
-            Alert.alert(t('common.error'), t('schedule.loadError'));
             setSchedule({
                 workouts: [],
                 startDate: Date.now(),
@@ -132,7 +131,6 @@ export default function ScheduleScreen() {
             }
 
             setSchedule(newSchedule);
-            Alert.alert(t('common.success'), t('schedule.updateSuccess'));
         } catch (error) {
             console.error('Error updating schedule:', error);
             Alert.alert(t('common.error'), t('schedule.updateError'));

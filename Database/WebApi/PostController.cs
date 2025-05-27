@@ -247,7 +247,7 @@ public class PostsController : ControllerBase
     }
 
     [HttpGet]
-    [Route("search/{query}")]
+    [Route("search{query}")]
     public async Task<IActionResult> SearchPosts(string query)
     {
         try

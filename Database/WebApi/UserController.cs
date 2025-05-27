@@ -116,7 +116,49 @@ namespace WebApi
                 Tuple<byte, User> response = await _userLoginContext.Login(data["email"].ToString(), data["password"].ToString());
                 if (response.Item1 == (byte)Error.Ok)
                 {
-                    return Ok(response.Item2);
+                    User user = response.Item2;
+                    return Ok(new
+                    {
+                        user.Id,
+                        user.UserName,
+                        user.Email,
+                        user.Bio,
+                        Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
+                        user.Height,
+                        user.Facebook,
+                        user.X,
+                        user.Instagram,
+                        user.Followers,
+                        user.Following,
+                        user.CreationDate,
+                        Password = "",
+                        Posts = user.Posts?.Select(p => new
+                        {
+                            p.Id,
+                            p.Title,
+                            p.Description,
+                            p.Created,
+                            Image = p.Photo != null ? Convert.ToBase64String(p.Photo) : null
+                        }),
+                        Workouts = user.Workouts?.Select(w => new
+                        {
+                            w.Id,
+                            w.Title,
+                            Exercises = w.Exercises?.Select(e => new
+                            {
+                                e.Name,
+                                e.EstimatedTime,
+                                Sets = e.Sets?.Select(s => new
+                                {
+                                    s.Reps,
+                                    s.Weight,
+                                    s.RestTime
+                                })
+                            })
+                        }),
+                        Meals = user.Meals,
+                        Schedule = user.Schedule
+                    });
                 }
                 return NotFound(response.Item1);
                 /*   if (user == null) return NotFound("User not found");

@@ -18,10 +18,21 @@ import { Ionicons } from '@expo/vector-icons';
 import {router, useFocusEffect} from "expo-router";
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
-import asyncStorage from "@react-native-async-storage/async-storage/src/AsyncStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
+import { GetAllPosts } from '@/serviceLayer/managerHandler';
+import Status from '@/serviceLayer/status';
 
 interface Post {
-    title: string;
+    id: string;
+    user: {
+        id: string;
+        userName: string;
+    };
+    created: string;
+    description: string;
+    photo?: string;
+    avatar?: string;
     likes: number;
 }
 
@@ -31,7 +42,7 @@ interface UserData {
     photo: string | null;
     followers: any[];
     following: any[];
-    posts: Post[];
+    email: string;
 }
 
 const STATUSBAR_HEIGHT = Platform.OS === 'android' ? (StatusBar.currentHeight as number) ?? 0 : 0;
@@ -48,54 +59,113 @@ export default function ProfileScreen() {
     const [following, setFollowing] = useState(0);
     const [likes, setLikes] = useState(0);
     const [posts, setPosts] = useState<Post[]>([]);
+    const [userEmail, setUserEmail] = useState<string>('');
+
     const loadUser = async () => {
-        const user_data = await asyncStorage.getItem('profile');
-        const user = JSON.parse(user_data);
-        setUserData(user);
-        if(user?.photo){
-            const imageUri = convertToImage(user.photo);
-            setImage({uri:imageUri});
+        try {
+            // Get user email from secure storage
+            const email = await SecureStore.getItemAsync('user');
+            if (!email) {
+                console.error('No user email found');
+                return;
+            }
+            setUserEmail(email);
+
+            // Load user profile data
+            const user_data = await AsyncStorage.getItem('profile');
+            if (!user_data) {
+                console.error('No profile data found');
+                return;
+            }
+            const user = JSON.parse(user_data);
+            setUserData(user);
+            
+            if(user?.photo){
+                const imageUri = convertToImage(user.photo);
+                if (imageUri) {
+                    setImage({uri: imageUri});
+                }
+            }
+            setUsername(user.userName);
+            setDescription(user.bio);
+            setFollowers(user.followers?.length || 0);
+            setFollowing(user.following?.length || 0);
+
+            // Load all posts and filter for user's posts
+                setPosts(user.posts||[]);
+                
+                // Calculate total likes from user's posts
+                const totalLikes = user.posts?.reduce((sum: number, post: Post) => sum + post.likes, 0) || 0;
+                setLikes(totalLikes);
+        } catch (error) {
+            console.error('Error loading user data:', error);
         }
-        setUsername(user.userName);
-        setDescription(user.bio);
-        setFollowers(user.followers.length);
-        setFollowing(user.following.length);
-        let totalLikes = 0;
-        const posts_data = await asyncStorage.getItem('posts');
-        const posts = JSON.parse(posts_data);
-        for (let post of posts || [])
-        {
-            totalLikes += post.likes;
-        }
-        setLikes(totalLikes);
-        if(posts) setPosts(posts);
     };
+
     useEffect(() => {
         loadUser();
     }, []);
+
     useFocusEffect(
-        useCallback(() =>{
+        useCallback(() => {
             loadUser();
         }, [])
     );
+
     const renderPost = ({ item }: { item: Post }) => (
         <View style={[styles.postItem, { borderColor: colors.border }]}>
-            <ThemedText style={styles.postText}>{item.title}</ThemedText>
+            {item.photo && (
+                <Image 
+                    source={{ uri: convertToImage(item.photo) || undefined }} 
+                    style={styles.postImage}
+                />
+            )}
+            <ThemedText style={styles.postText}>{item.description}</ThemedText>
+            <View style={styles.postStats}>
+                <ThemedText style={styles.postLikes}>
+                    {t('explore.like').replace('{{likes}}', item.likes.toString())}
+                </ThemedText>
+                <ThemedText style={styles.postDate}>
+                    {t('explore.timeAgo').replace('{{time}}', timeSince(item.created))}
+                </ThemedText>
+            </View>
         </View>
     );
+
+    const timeSince = (dateString: string) => {
+        const date = new Date(dateString);
+        const now = new Date();
+        const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+        
+        let interval = seconds / 31536000;
+        if (interval > 1) return Math.floor(interval) + 'y';
+        
+        interval = seconds / 2592000;
+        if (interval > 1) return Math.floor(interval) + 'mo';
+        
+        interval = seconds / 86400;
+        if (interval > 1) return Math.floor(interval) + 'd';
+        
+        interval = seconds / 3600;
+        if (interval > 1) return Math.floor(interval) + 'h';
+        
+        interval = seconds / 60;
+        if (interval > 1) return Math.floor(interval) + 'm';
+        
+        return Math.floor(seconds) + 's';
+    };
+
     const convertToImage = (photo: any) => {
         if (!photo) {
             return null;
         }
         try {
-            // If photo is already a base64 string, just add the data URL prefix
             if (typeof photo === 'string') {
                 if (photo.startsWith('data:image')) {
                     return photo;
                 }
                 return `data:image/jpeg;base64,${photo}`;
             }
-            // If photo is a byte array, convert it
             if (Array.isArray(photo)) {
                 const binaryString = photo.map(byte => String.fromCharCode(byte)).join('');
                 const base64String = btoa(binaryString);
@@ -107,6 +177,7 @@ export default function ProfileScreen() {
             return null;
         }
     };
+
     return (
         <ThemedView type={'default'} style={[styles.container, { paddingTop: STATUSBAR_HEIGHT + 50 }]}>
             {/* Profile Section */}
@@ -120,10 +191,10 @@ export default function ProfileScreen() {
             </View>
 
             <View style={styles.profileContainer}>
-                    <Image
-                        source={image}
-                        style={styles.profileImage}
-                    />
+                <Image
+                    source={image}
+                    style={styles.profileImage}
+                />
                 <ThemedText type={'subtitle'}>{username}</ThemedText>
                 <ThemedText style={styles.description} type={'description'}>
                     {description}
@@ -148,13 +219,6 @@ export default function ProfileScreen() {
                     <ThemedButton type={'default'} style={styles.follow_button} onPress={()=>router.push("/editProfile")}>
                         <ThemedText type={'button'}>{t('profile.editProfile')}</ThemedText>
                     </ThemedButton>
-                    {/*<ThemedButton type={'icon'} style={{ marginLeft: 10 }}>
-                        <Ionicons
-                            style={[styles.icon_social, { color: colors.borderColor }]}
-                            name="share-social"
-                            size={24}
-                        />
-                    </ThemedButton>*/}
                 </View>
             </View>
 
@@ -167,7 +231,7 @@ export default function ProfileScreen() {
             ) : (
                 <FlatList
                     data={posts}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item) => item.id.toString()}
                     renderItem={renderPost}
                     contentContainerStyle={{ paddingBottom: 50 }}
                 />
@@ -255,9 +319,30 @@ const styles = StyleSheet.create({
     postItem: {
         padding: 16,
         borderBottomWidth: 1,
+        marginBottom: 10,
+    },
+    postImage: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        marginBottom: 10,
     },
     postText: {
         fontSize: 16,
+        marginBottom: 8,
+    },
+    postStats: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    postLikes: {
+        fontSize: 14,
+        opacity: 0.7,
+    },
+    postDate: {
+        fontSize: 12,
+        opacity: 0.5,
     },
     emptyContainer: {
         flex: 1,

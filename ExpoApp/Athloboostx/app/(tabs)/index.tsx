@@ -881,45 +881,36 @@ const TodayWorkoutSection: React.FC<{
         return (
             <View style={styles.todayWorkoutCard}>
                 <LinearGradient
-                    colors={[currentWorkout.bgColor || colors.tint, (currentWorkout.bgColor || colors.tint) + '80']}
+                    colors={[colors.tint, colors.tint + '80']}
                     style={styles.todayWorkoutGradient}
                 >
                     <View style={styles.workoutHeader}>
                         <ThemedText style={styles.todayWorkoutTitle}>
                             {currentWorkout.title}
                         </ThemedText>
-                        <ThemedText style={styles.exerciseCount}>
-                            {`${currentWorkout.exercises.length} ${t('schedule.exercises')}`}
-                        </ThemedText>
                     </View>
 
-                    <ScrollView 
-                        style={styles.exercisesList}
-                        showsVerticalScrollIndicator={false}
-                    >
+                    <View style={styles.exercisesList}>
                         {currentWorkout.exercises.map((exercise, index) => (
                             <View 
                                 key={index} 
-                                style={[
-                                    styles.exerciseItem,
-                                    { backgroundColor: 'rgba(255, 255, 255, 0.1)' }
-                                ]}
+                                style={styles.exerciseItem}
                             >
-                                <View style={styles.exerciseHeader}>
+                                <View style={styles.exerciseContent}>
                                     <ThemedText style={styles.exerciseName}>
-                                        {exercise.name}
+                                        {`${index + 1}. ${exercise.name}`}
                                     </ThemedText>
                                     <View style={styles.exerciseDetails}>
                                         <View style={styles.exerciseDetail}>
                                             <Ionicons name="repeat" size={16} color="white" />
                                             <ThemedText style={styles.exerciseDetailText}>
-                                                {`${exercise.sets.length}x`}
+                                                {`${exercise.sets.reduce((acc, set) => acc + set.reps, 0)}`}
                                             </ThemedText>
                                         </View>
                                         <View style={styles.exerciseDetail}>
                                             <Ionicons name="fitness" size={16} color="white" />
                                             <ThemedText style={styles.exerciseDetailText}>
-                                                {`${exercise.sets.reduce((acc, set) => acc + set.reps, 0)}`}
+                                                {`${exercise.sets.length}`}
                                             </ThemedText>
                                         </View>
                                         <View style={styles.exerciseDetail}>
@@ -932,7 +923,7 @@ const TodayWorkoutSection: React.FC<{
                                 </View>
                             </View>
                         ))}
-                    </ScrollView>
+                    </View>
                 </LinearGradient>
             </View>
         );
@@ -1752,12 +1743,58 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 5,
-    } as TextStyle,
-    exerciseCount: {
+    },
+    exercisesList: {
+        marginTop: 10,
+    },
+    exerciseItem: {
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(255, 255, 255, 0.1)',
+    },
+    exerciseContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    exerciseName: {
         color: 'white',
-        opacity: 0.8,
         fontSize: 16,
-    } as TextStyle,
+        flex: 1,
+        marginRight: 10,
+    },
+    exerciseDetails: {
+        flexDirection: 'row',
+        gap: 12,
+    },
+    exerciseDetail: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 6,
+    },
+    exerciseDetailText: {
+        color: 'white',
+        fontSize: 14,
+        marginLeft: 4,
+    },
+    noWorkoutText: {
+        color: 'white',
+        fontSize: 18,
+        marginBottom: 15,
+    },
+    createWorkoutButton: {
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        padding: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    createWorkoutText: {
+        color: 'white',
+        fontSize: 16,
+    },
     workoutTimerContainer: {
         flex: 1,
     },
@@ -1806,22 +1843,6 @@ const styles = StyleSheet.create({
         color: 'white',
         opacity: 0.8,
         marginBottom: 20,
-    } as TextStyle,
-    exerciseDetails: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        gap: 10,
-    } as ViewStyle,
-    exerciseDetail: {
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        padding: 15,
-        borderRadius: 12,
-        flex: 1,
-    } as ViewStyle,
-    exerciseDetailText: {
-        fontSize: 18,
-        color: 'white',
-        marginTop: 8,
     } as TextStyle,
     restTimeInfo: {
         backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -1973,27 +1994,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         marginBottom: 10,
     } as ViewStyle,
-    exercisesList: {
-        maxHeight: 300,
-        marginTop: 15,
-    } as ViewStyle,
-    exerciseItem: {
-        borderRadius: 10,
-        padding: 15,
-        marginBottom: 10,
-    } as ViewStyle,
-    exerciseHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    } as ViewStyle,
-    exerciseName: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: 'white',
-        flex: 1,
-        marginRight: 10,
-    } as TextStyle,
     restDayContent: {
         padding: 20,
         alignItems: 'center',

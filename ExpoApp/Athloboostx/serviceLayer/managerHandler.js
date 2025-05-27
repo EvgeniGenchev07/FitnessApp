@@ -56,18 +56,18 @@ async function LocalSaveProfile(){
     const user = SecureStore.getItem('user');
     const res = await HttpGetProfile(user)
     const data = res.data;
-    await asyncStorage.setItem('workouts', JSON.stringify(data.workouts));
+    await asyncStorage.setItem('workouts', JSON.stringify(data?.workouts));
     await asyncStorage.setItem('profile', JSON.stringify({
-        userName: data.userName,
-        photo: data.photo,
+        userName: data?.userName,
+        photo: data?.photo,
         bio: data.bio,
         likes: data.likes,
         followers: data.followers,
         following: data.following
     }));
-    await asyncStorage.setItem('posts', JSON.stringify(data.posts));
-    await asyncStorage.setItem('meals', JSON.stringify(data.meals));
-    await asyncStorage.setItem('schedule', JSON.stringify(data.schedule));
+    await asyncStorage.setItem('posts', JSON.stringify(data?.posts));
+    await asyncStorage.setItem('meals', JSON.stringify(data?.meals));
+    await asyncStorage.setItem('schedule', JSON.stringify(data?.schedule));
 }
 async function SaveWorkout(workout) {
     try {

@@ -146,7 +146,6 @@ async function UpdateProfile(data){
 }
 async function GetPosts(){
     if (!isRunning) {
-        isRunning = true;
         let responseMessage = "";
         try {
             const res = await fetch(`${url}posts/all`, {
@@ -157,16 +156,15 @@ async function GetPosts(){
             });
             const responseData = await res.json();
             if (res.ok) {
-                responseMessage = { status: Status.OK, data:responseData };
+                console.log(responseData);
+                return { status: Status.OK, data:responseData };
             } else {
-                responseMessage = { status: Status.ServerError, error: responseData };
+                return { status: Status.ServerError, error: responseData };
             }
         } catch (error) {
             console.error('Server error:', error);
-            responseMessage = { status: Status.ServerError, error };
+            return { status: Status.ServerError, error };
         }
-        isRunning = false;
-        return responseMessage;
     }
 }
 async function SearchPosts(query){
