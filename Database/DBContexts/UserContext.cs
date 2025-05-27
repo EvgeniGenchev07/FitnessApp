@@ -33,8 +33,6 @@ public class UserContext : IDatabase<User, string>
                 .ThenInclude(m => m.Foods)
                 .Include(u => u.Schedule)
                 .Include(u => u.Exercises)
-                .Include(u => u.Followers)
-                .Include(u => u.Following)
                 .Include(u => u.Posts);
                 
         if (isReadOnly) query = query.AsNoTrackingWithIdentityResolution();
@@ -55,8 +53,8 @@ public class UserContext : IDatabase<User, string>
         userFromDb.Instagram = entity.Instagram;
         userFromDb.X = entity.X;
         userFromDb.Bio = entity.Bio;
-        userFromDb.Followers = entity.Followers;
-        userFromDb.Following = entity.Following;
+        userFromDb.FollowerIds = entity.FollowerIds;
+        userFromDb.FollowingIds = entity.FollowingIds;
         userFromDb.Bio = entity.Bio;
 
         if (navigationalProperties)
@@ -80,16 +78,6 @@ public class UserContext : IDatabase<User, string>
             {
                 userFromDb.Exercises.Clear();
                 userFromDb.Exercises = entity.Exercises;
-            }
-            if (entity.Followers != null)
-            {
-                userFromDb.Followers.Clear();
-                userFromDb.Followers = entity.Followers;
-            }
-            if (entity.Following != null)
-            {
-                userFromDb.Following.Clear();
-                userFromDb.Following = entity.Following;
             }
             if (entity.Posts != null)
             {
@@ -147,8 +135,6 @@ public class UserContext : IDatabase<User, string>
 
             var user = await _dbContext.Users
                 .Include(u => u.Posts)
-                .Include(u => u.Followers)
-                .Include(u => u.Following)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
             if (user == null)
