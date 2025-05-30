@@ -1,4 +1,5 @@
 const apiUrl = 'http://192.168.56.1:5000';
+let isUpdating = false;
 // Navigation functions with URL-based language detection
 function getLanguageFromUrl() {
     const currentUrl = window.location.pathname;
@@ -160,8 +161,8 @@ function loadProfileData() {
 
         profileName.textContent = userData.userName;
         profileStats[0].textContent = userData.posts?.length || '0';
-        profileStats[1].textContent = userData.followers?.length || '0';
-        profileStats[2].textContent = userData.following?.length || '0';
+        profileStats[1].textContent = userData.followerIds?.length || '0';
+        profileStats[2].textContent = userData.followingIds?.length || '0';
 
         profileBio.innerHTML = userData.bio ? userData.bio.replace(/\n/g, '<br>') : 'AthloBoostX Warrior';
         if (userData.posts && userData.posts.length > 0) {
@@ -219,31 +220,59 @@ postItem.appendChild(closeButton);
 // Load profile data when page loads
 document.addEventListener('DOMContentLoaded', loadProfileData); 
 
-function updateSessionData() {
-    fetch(`${apiUrl}/login/js`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email: JSON.parse(sessionStorage.getItem('user')).email,
-            password: '' 
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data) {
-            sessionStorage.setItem('user', JSON.stringify(data));
-            if (JSON.stringify(data) !== JSON.stringify(JSON.parse(sessionStorage.getItem('user')))) {
-                loadProfileData();
-            }
+//Не работи,трябва да го оправя
+async function updateSessionData() {
+    if (isUpdating) return; // Prevent overlapping updates
+    isUpdating = true;
+    
+    try {
+        const userData = JSON.parse(sessionStorage.getItem('user'));
+        if (!userData || !userData.email || !userData.password) {
+            console.log('No user credentials found in session');
+            return;
         }
-    })
-    .catch(error => console.error('Error updating session:', error));
+
+        const response = await fetch(`${apiUrl}/user/login/js`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: userData.email,
+                password: userData.password
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const updatedUserData = await response.json();
+        
+        const currentUserData = JSON.parse(sessionStorage.getItem('user'));
+        if (JSON.stringify(updatedUserData) !== JSON.stringify(currentUserData)) {
+            sessionStorage.setItem('user', JSON.stringify(updatedUserData));
+            loadProfileData(); 
+        }
+    } catch (error) {
+        console.error('Error updating session:', error);
+    } finally {
+        isUpdating = false;
+    }
 }
 
-const updateInterval = setInterval(updateSessionData, 3000);
+document.addEventListener('DOMContentLoaded', () => {
+    loadProfileData();
+    const userData = JSON.parse(sessionStorage.getItem('user'));
+    if (userData && userData.email) {
+        updateInterval = setInterval(updateSessionData, 3000);
+        
+        updateSessionData();
+    }
+});
 
 window.addEventListener('beforeunload', () => {
-    clearInterval(updateInterval);
+    if (updateInterval) {
+        clearInterval(updateInterval);
+    }
 });

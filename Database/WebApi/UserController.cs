@@ -53,8 +53,8 @@ namespace WebApi
                     user.Facebook,
                     user.X,
                     user.Instagram,
-                    user.Followers,
-                    user.Following,
+                    user.FollowerIds,
+                    user.FollowingIds,
                     user.CreationDate,
                     Password = "",
                     Posts = user.Posts?.Select(p => new {
@@ -129,8 +129,8 @@ namespace WebApi
                         user.Facebook,
                         user.X,
                         user.Instagram,
-                        user.Followers,
-                        user.Following,
+                        user.FollowerIds,
+                        user.FollowingIds,
                         user.CreationDate,
                         Password = "",
                         Posts = user.Posts?.Select(p => new
@@ -196,8 +196,8 @@ namespace WebApi
                         user.Facebook,
                         user.X,
                         user.Instagram,
-                        user.Followers,
-                        user.Following,
+                        user.FollowerIds,
+                        user.FollowingIds,
                         user.CreationDate,
                         Password = "",
                         Posts = user.Posts?.Select(p => new {
@@ -490,7 +490,6 @@ namespace WebApi
                         case "photoMimeType":
                             user.PhotoMimeType = value?.ToString();
                             break;
-
                     }
                 }
 
@@ -537,7 +536,90 @@ namespace WebApi
                 return StatusCode(500, ex.Message);
             }
         }
+        [HttpPost("follow")]
+        public async Task<IActionResult> FollowUser([FromBody] Dictionary<string, int> data)
+        {
+            try
+            {
+                int followerId = data["followerId"];
+                int followingId = data["followingId"];
+
+                var follower = await _userContext.GetUserByIdAsync(followerId);
+                var userToFollow = await _userContext.GetUserByIdAsync(followingId);
+
+                if (follower == null || userToFollow == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                follower.FollowingIds ??= new List<int>();
+                userToFollow.FollowerIds ??= new List<int>();
+
+                if (follower.FollowingIds.Contains(followingId))
+                {
+                    return BadRequest("Already following this user");
+                }
+
+                follower.FollowingIds.Add(followingId);
+                userToFollow.FollowerIds.Add(followerId);
+
+                await _userContext.UpdateAsync(follower, false);
+                await _userContext.UpdateAsync(userToFollow, false);
+
+                return Ok(new
+                {
+                    follower.FollowingIds,
+                    userToFollow.FollowerIds
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("unfollow")]
+        public async Task<IActionResult> UnfollowUser([FromBody] Dictionary<string, int> data)
+        {
+            try
+            {
+                int followerId = data["followerId"];
+                int followingId = data["followingId"];
+
+                var follower = await _userContext.GetUserByIdAsync(followerId);
+                var userToUnfollow = await _userContext.GetUserByIdAsync(followingId);
+
+                if (follower == null || userToUnfollow == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                follower.FollowingIds ??= new List<int>();
+                userToUnfollow.FollowerIds ??= new List<int>();
+
+                if (!follower.FollowingIds.Contains(followingId))
+                {
+                    return BadRequest("Not following this user");
+                }
 
 
+                follower.FollowingIds.Remove(followingId);
+                userToUnfollow.FollowerIds.Remove(followerId);
+
+
+                await _userContext.UpdateAsync(follower, false);
+                await _userContext.UpdateAsync(userToUnfollow,false);
+
+                return Ok(new
+                {
+                    follower.FollowingIds,
+                    userToUnfollow.FollowerIds
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }
