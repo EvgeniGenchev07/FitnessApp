@@ -22,12 +22,16 @@ export default function RootLayout() {
     useEffect(() => {
         if (loaded) {
             const res = IsLoggedIn();
-            if(!res){
+            if(res){
                 LocalSaveProfile().then(()=> {
                         router.push('/(tabs)');
                         SplashScreen.hideAsync();
                     }
-                );
+                ).catch(err => {
+                    router.push('/(tabs)');
+                    SplashScreen.hideAsync();
+                    console.error(err);
+                });
             }
             else {
                 router.push('/');

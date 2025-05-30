@@ -98,11 +98,12 @@ namespace WebApi
                 User user = await _userContext.ReadAsync(data["email"].ToString(), true, true);
                 if (user == null) return NotFound(Error.UserNotFound);
                 user.Password = "";
-                Console.WriteLine(JsonConvert.SerializeObject(user));
+                user.Posts.ForEach(p => p.User.Posts = new List<Post>());
                 return Ok(user);
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return StatusCode(500, ex.Message);
             }
         }
