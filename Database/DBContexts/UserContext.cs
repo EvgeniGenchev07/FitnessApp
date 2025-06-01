@@ -113,6 +113,10 @@ public class UserContext : IDatabase<User, string>
 
         if (user != null)
         {
+            if (user.Posts != null && user.Posts.Any())
+            {
+                _dbContext.Posts.RemoveRange(user.Posts);
+            }
             _dbContext.Workouts.RemoveRange(user.Workouts);
             _dbContext.Meals.RemoveRange(user.Meals);
             /*if (user.Schedule != null)

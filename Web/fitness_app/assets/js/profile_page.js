@@ -1,5 +1,6 @@
-const apiUrl = 'http://192.168.56.1:5000';
+const apiUrl = 'http://192.168.100.8:5000';
 let isUpdating = false;
+let updateInterval = null;
 // Navigation functions with URL-based language detection
 function getLanguageFromUrl() {
     const currentUrl = window.location.pathname;
@@ -71,8 +72,12 @@ async function deleteAccount() {
             return;
         }
 
-        const response = await fetch(`${apiUrl}/user/${encodeURIComponent(userData.email)}`, {
-            method: 'DELETE'
+        const response = await fetch(`${apiUrl}/user/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email: userData.email })
         });
 
         if (response.ok) {
@@ -220,28 +225,19 @@ postItem.appendChild(closeButton);
 // Load profile data when page loads
 document.addEventListener('DOMContentLoaded', loadProfileData); 
 
-//Не работи,трябва да го оправя
+
 async function updateSessionData() {
     if (isUpdating) return; // Prevent overlapping updates
     isUpdating = true;
     
     try {
         const userData = JSON.parse(sessionStorage.getItem('user'));
-        if (!userData || !userData.email || !userData.password) {
+        if (!userData) {
             console.log('No user credentials found in session');
             return;
         }
 
-        const response = await fetch(`${apiUrl}/user/login/js`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: userData.email,
-                password: userData.password
-            })
-        });
+        const response = await fetch(`${apiUrl}/user/refresh/${userData.id}`);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);

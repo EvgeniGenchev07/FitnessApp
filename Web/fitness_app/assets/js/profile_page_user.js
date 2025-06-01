@@ -1,4 +1,4 @@
-const apiUrl = 'http://192.168.56.1:5000';
+const apiUrl = 'http://192.168.100.8:5000';
 let latestPostId = -1;
 let currentUser = null;
 let profileUser = null;

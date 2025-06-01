@@ -33,6 +33,17 @@ namespace DBContexts
                 user.HasIndex(u => u.Email)
                     .IsUnique();
             });
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.User)
+                .WithMany(u => u.Posts)
+                .HasForeignKey("UserId") 
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Like>()
+                .HasOne<Post>() 
+                .WithMany(p => p.LikesList)
+                .HasForeignKey(l => l.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

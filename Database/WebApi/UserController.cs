@@ -621,5 +621,64 @@ namespace WebApi
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+        [HttpGet]
+        [Route("refresh/{userId}")]
+        public async Task<IActionResult> RefreshUser(int userId)
+        {
+            try
+            {
+                var user = await _userContext.GetUserByIdAsync(userId);
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                var userResponse = new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.Bio,
+                    Photo = user.Photo != null ? Convert.ToBase64String(user.Photo) : null,
+                    user.Height,
+                    user.Weight,
+                    user.Facebook,
+                    user.X,
+                    user.Instagram,
+                    user.FollowerIds,
+                    user.FollowingIds,
+                    user.CreationDate,
+                    Posts = user.Posts?.Select(p => new {
+                        p.Id,
+                        p.Title,
+                        p.Description,
+                        p.Created,
+                        Image = p.Photo != null ? Convert.ToBase64String(p.Photo) : null
+                    }).ToList(),
+                    Workouts = user.Workouts?.Select(w => new
+                    {
+                        w.Id,
+                        w.Title,
+                        Exercises = w.Exercises?.Select(e => new
+                        {
+                            e.Name,
+                            e.EstimatedTime,
+                            Sets = e.Sets?.Select(s => new
+                            {
+                                s.Reps,
+                                s.Weight,
+                                s.RestTime
+                            })
+                        })
+                    }).ToList(),
+                };
+
+                return Ok(userResponse);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

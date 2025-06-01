@@ -9,7 +9,7 @@
       "launchBrowser": false,
       "launchUrl": "",
       "use64Bit": true,
-      "applicationUrl": "http://192.168.50.166:5000",
+      "applicationUrl": "http://192.168.100.8:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
