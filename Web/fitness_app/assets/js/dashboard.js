@@ -1,6 +1,7 @@
-const apiUrl = 'http://192.168.100.8:5000';
+const apiUrl = 'http://192.168.56.1:5000';
 let allExercises = [];
 let allFoods=[];
+let selectedMeals=[];
 async function fetchFoods(){
     try {
         const response = await fetch(`${apiUrl}/food/all`);
@@ -677,8 +678,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function updateCaloriesDisplay() {
         const meals = document.querySelectorAll('#today_plan_food li');
-        let totalCalories = document.querySelector('.calories-display').value;
-        
+        let totalCalories = 0;
         meals.forEach(meal => {
             const calories = meal.dataset.calories;
             if (calories) {
@@ -886,3 +886,185 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 //meal for today
+// Функция за отваряне на модалния прозорец за хранене
+function openMealModal() {
+    const modal = document.getElementById('meal-selection-modal');
+    modal.style.display = 'block';
+    selectedMeals = [];
+    populateMealResults(allFoods);
+
+    const searchInput = document.getElementById('meal-search');
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const filteredMeals = allFoods.filter(meal =>
+            meal.name.toLowerCase().includes(searchTerm)
+        );
+        populateMealResults(filteredMeals);
+    });
+}
+
+// Функция за попълване на резултатите от търсенето на храни
+function populateMealResults(meals) {
+    const resultsContainer = document.getElementById('meal-results');
+    resultsContainer.innerHTML = '';
+
+    if (meals.length === 0) {
+        resultsContainer.innerHTML = '<p>Няма намерени храни</p>';
+        return;
+    }
+
+    meals.forEach(meal => {
+        const mealItem = document.createElement('div');
+        mealItem.className = 'search-result-item';
+
+        const isSelected = selectedMeals.some(m => m.id === meal.id);
+
+        mealItem.innerHTML = `
+            <div class="result-info">
+                <h4>${meal.name}</h4>
+                <p>${meal.type || 'Храна'} • ${meal.calories || 0} калории</p>
+                <p>Протеин: ${meal.protein || 0}g | Въглехидрати: ${meal.carbs || 0}g | Мазнини: ${meal.fat || 0}g</p>
+            </div>
+            <button class="btn ${isSelected ? 'btn-selected' : 'btn-primary'} select-meal-btn" 
+                    data-meal-id="${meal.id}">
+                ${isSelected ? 'Избрано ✓' : 'Избери'}
+            </button>
+        `;
+        resultsContainer.appendChild(mealItem);
+
+        mealItem.querySelector('.select-meal-btn').addEventListener('click', function() {
+            toggleMealSelection(meal);
+            this.textContent = selectedMeals.some(m => m.id === meal.id) ? 'Избрано ✓' : 'Избери';
+            this.className = `btn ${selectedMeals.some(m => m.id === meal.id) ? 'btn-selected' : 'btn-primary'} select-meal-btn`;
+        });
+    });
+}
+
+// Функция за превключване на избора на храна
+function toggleMealSelection(meal) {
+    const index = selectedMeals.findIndex(m => m.id === meal.id);
+    if (index === -1) {
+        selectedMeals.push(meal);
+    } else {
+        selectedMeals.splice(index, 1);
+    }
+}
+
+// Функция за добавяне на избраните храни към плановете
+function addSelectedMealsToPlans() {
+    selectedMeals.forEach(meal => {
+        addMealToTodayPlan(meal);
+        addMealToWeeklyPlan(meal);
+    });
+    selectedMeals = [];
+}
+
+// Функция за добавяне на храна към днешния план
+function addMealToTodayPlan(meal) {
+    const todayPlanList = document.getElementById('today_plan_food');
+    const mealItem = document.createElement('li');
+    mealItem.className = 'plan-item';
+    mealItem.dataset.mealId = meal.id;
+    mealItem.innerHTML = `
+        <span class="item-name">${meal.name}</span>
+        <span class="item-details">${meal.calories || 0} калории</span>
+        <button class="item-delete-btn btn-delete"><i class="fas fa-trash delete-meal" style="color:red; cursor: pointer; float: right;"></i></button>
+    `;
+    todayPlanList.appendChild(mealItem);
+    updateCaloriesTracker(meal.calories || 0);
+
+    mealItem.querySelector('.item-delete-btn').addEventListener('click', function() {
+        removeMealFromPlans(meal.id);
+    });
+}
+
+// Функция за добавяне на храна към седмичния план
+function addMealToWeeklyPlan(meal) {
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const today = new Date().getDay();
+    const currentDay = days[today];
+
+    const dayMealList = document.getElementById(`${currentDay}_food`);
+    if (dayMealList) {
+        const mealItem = document.createElement('li');
+        mealItem.className = 'day-list-item';
+        mealItem.dataset.mealId = meal.id;
+        mealItem.innerHTML = `
+            <span>${meal.name} (${meal.calories || 0} калории)</span>
+            <button class="item-delete-btn btn-delete"><i class="fas fa-trash delete-meal" style="color:red; cursor: pointer; float: right;"></i></button>
+        `;
+        dayMealList.appendChild(mealItem);
+
+        mealItem.querySelector('.item-delete-btn').addEventListener('click', function() {
+            removeMealFromPlans(meal.id);
+        });
+    }
+}
+
+// Функция за премахване на храна от плановете
+function removeMealFromPlans(mealId) {
+    const meal = allFoods.find(m => m.id === mealId);
+    document.querySelectorAll(`.plan-item[data-meal-id="${mealId}"]`).forEach(item => {
+        item.remove();
+        updateCaloriesTracker(-(meal.calories || 0));
+    });
+
+    const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    days.forEach(day => {
+        const item = document.querySelector(`#${day}_food .day-list-item[data-meal-id="${mealId}"]`);
+        if (item) item.remove();
+    });
+}
+
+// Функция за актуализиране на калорийния тракер
+function updateCaloriesTracker(calories) {
+    const caloriesDisplay = document.querySelector('.calories-display');
+    let currentCalories = parseInt(caloriesDisplay.textContent) || 0;
+    currentCalories += calories;
+    caloriesDisplay.textContent = currentCalories;
+}
+
+// Инициализация на събитията при зареждане на страницата
+document.addEventListener('DOMContentLoaded', function() {
+    fetchFoods();
+    document.querySelector('.today-plan .plan-card:nth-child(2) .add-btn').addEventListener('click', openMealModal);
+
+    document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.modal').style.display = 'none';
+            selectedMeals = [];
+        });
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target.className === 'modal') {
+            event.target.style.display = 'none';
+            selectedMeals = [];
+        }
+    });
+
+    const searchBtn = document.createElement('button');
+    searchBtn.id = 'search-meal-btn';
+    searchBtn.className = 'btn btn-primary';
+    searchBtn.textContent = 'Търси';
+    document.querySelector('#meal-selection-modal .search-container').appendChild(searchBtn);
+
+    searchBtn.addEventListener('click', function() {
+        const searchInput = document.getElementById('meal-search');
+        const searchTerm = searchInput.value.toLowerCase();
+        const filteredMeals = allFoods.filter(meal =>
+            meal.name.toLowerCase().includes(searchTerm)
+        );
+        populateMealResults(filteredMeals);
+    });
+
+    document.getElementById('confirm-meal').addEventListener('click', function() {
+        addSelectedMealsToPlans();
+        document.getElementById('meal-selection-modal').style.display = 'none';
+    });
+
+    document.getElementById('cancel-meal').addEventListener('click', function() {
+        selectedMeals = [];
+        document.getElementById('meal-selection-modal').style.display = 'none';
+    });
+});

@@ -459,3 +459,12 @@ C:\html\FitnessApp\Database\WebApi\obj\Debug\net9.0\refint\WebApi.dll
 C:\html\FitnessApp\Database\WebApi\obj\Debug\net9.0\WebApi.pdb
 C:\html\FitnessApp\Database\WebApi\obj\Debug\net9.0\WebApi.genruntimeconfig.cache
 C:\html\FitnessApp\Database\WebApi\obj\Debug\net9.0\ref\WebApi.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Caching.Abstractions.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Caching.Memory.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Configuration.Abstractions.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+C:\html\FitnessApp\Database\WebApi\bin\Debug\net9.0\Microsoft.Extensions.Primitives.dll

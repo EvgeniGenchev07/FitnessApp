@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\html\\FitnessApp\\Database\\WebApi\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:properties\\launchsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|c:\\html\\fitnessapp\\database\\webapi\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7B400120-B2A1-4843-8563-E0426A110B15}|WebApi.csproj|solutionrelative:usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -30,8 +34,12 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 4,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
@@ -47,6 +55,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "launchSettings.json",
+              "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\Properties\\launchSettings.json",
+              "RelativeDocumentMoniker": "Properties\\launchSettings.json",
+              "ToolTip": "C:\\html\\FitnessApp\\Database\\WebApi\\Properties\\launchSettings.json",
+              "RelativeToolTip": "Properties\\launchSettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAsAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-06-02T18:59:47.97Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\UserController.cs",
               "RelativeDocumentMoniker": "UserController.cs",
@@ -59,7 +80,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "AthloboostDbContext.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\DBContexts\\AthloboostDbContext.cs",
               "RelativeDocumentMoniker": "..\\DBContexts\\AthloboostDbContext.cs",
@@ -67,12 +88,11 @@
               "RelativeToolTip": "..\\DBContexts\\AthloboostDbContext.cs",
               "ViewState": "AgIAACIAAAAAAAAAAAAUwCoAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:23:17.744Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-26T08:23:17.744Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "FoodContext.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\DBContexts\\FoodContext.cs",
               "RelativeDocumentMoniker": "..\\DBContexts\\FoodContext.cs",
@@ -84,7 +104,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 4,
               "Title": "Schedule.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\Models\\Schedule.cs",
               "RelativeDocumentMoniker": "..\\Models\\Schedule.cs",
@@ -96,7 +116,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "Workout.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\Models\\Workout.cs",
               "RelativeDocumentMoniker": "..\\Models\\Workout.cs",
@@ -108,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "ExerciseController.cs",
               "DocumentMoniker": "C:\\html\\FitnessApp\\Database\\WebApi\\ExerciseController.cs",
               "RelativeDocumentMoniker": "ExerciseController.cs",
